@@ -1,5 +1,8 @@
 mod cli;
 mod cmd;
+mod downloader;
+mod fetcher;
+mod url;
 
 use cli::Cli;
 

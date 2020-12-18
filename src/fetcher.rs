@@ -1,3 +1,4 @@
+use crate::url;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -22,7 +23,7 @@ pub struct Releases {
 impl Releases {
     pub fn fetch() -> Self {
         Releases {
-            list: ureq::get("https://nodejs.org/download/release/index.json")
+            list: ureq::get(url::index().as_str())
                 .call()
                 .into_json_deserialize::<Vec<Release>>()
                 .unwrap(),
@@ -36,10 +37,10 @@ impl Releases {
         })
     }
 
-    pub fn latest(&mut self) -> Option<Release> {
-        self.list.drain(..).find(|x| match x.lts {
-            Lts::No(_) => true,
-            _ => false,
-        })
-    }
+    // pub fn latest(&mut self) -> Option<Release> {
+    //     self.list.drain(..).find(|x| match x.lts {
+    //         Lts::No(_) => true,
+    //         _ => false,
+    //     })
+    // }
 }
