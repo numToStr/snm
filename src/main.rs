@@ -1,26 +1,10 @@
 mod cli;
-mod url;
-mod versions;
+mod cmd;
 
-use cli::{Cli, SubCommand};
-use versions::Releases;
+use cli::Cli;
 
 fn main() {
-    let matches = Cli::new();
+    let app = Cli::new();
 
-    match matches.cmd {
-        SubCommand::Lts => {
-            let mut body = Releases::fetch();
-
-            println!("LTS :: {:#?}", body.lts().unwrap())
-        }
-        SubCommand::Latest => {
-            let mut body = Releases::fetch();
-
-            println!("Latest :: {:#?}", body.latest().unwrap())
-        }
-        _ => {
-            println!("Oops no command is found")
-        }
-    }
+    println!("CMD : {}", app.cmd.exec())
 }

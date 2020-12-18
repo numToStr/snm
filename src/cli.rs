@@ -1,52 +1,64 @@
+use crate::cmd::{install, latest, ls, ls_remote, lts, prune, r#use, remove, uninstall};
 use clap::Clap;
-
-#[derive(Clap, Debug, PartialEq, Eq)]
-pub struct Version {
-    #[clap(name = "version")]
-    version: String,
-}
 
 #[derive(Clap, Debug, PartialEq, Eq)]
 pub enum SubCommand {
     /// Install node <version> (downloading if necessary)
     #[clap(name = "install", aliases = &["i"])]
-    Install(Version),
+    Install(install::Install),
 
     /// Display downloaded node versions and install selection
     #[clap(name = "use", aliases = &["u"])]
-    Use,
+    Use(r#use::Use),
 
     /// Install the latest node release (downloading if necessary)
     #[clap(name = "latest")]
-    Latest,
+    Latest(latest::Latest),
 
     /// Install the latest LTS node release (downloading if necessary)
     #[clap(name = "lts")]
-    Lts,
+    Lts(lts::Lts),
 
     /// Output downloaded versions
     #[clap(name = "ls")]
-    Ls,
+    Ls(ls::Ls),
 
     /// Output downloaded versions
     #[clap(name = "ls-remote", aliases = &["lsr"])]
-    LsRemote(Version),
+    LsRemote(ls_remote::LsRemote),
 
     /// Remove the given downloaded version
     #[clap(name = "remove", aliases = &["rm"])]
-    Remove(Version),
+    Remove(remove::Remove),
 
     /// Remove all downloaded versions except the installed version
     #[clap(name = "prune")]
-    Prune,
+    Prune(prune::Prune),
 
     /// Remove the installed node and npm
     #[clap(name = "uninstall", aliases = &["un"])]
-    UnInstall,
+    UnInstall(uninstall::UnInstall),
+}
+
+impl SubCommand {
+    pub fn exec(&self) -> String {
+        match self {
+            Self::Install(m) => m.init(),
+            Self::Use(m) => m.init(),
+            Self::Latest(m) => m.init(),
+            Self::Lts(m) => m.init(),
+            Self::Ls(m) => m.init(),
+            Self::LsRemote(m) => m.init(),
+            Self::Remove(m) => m.init(),
+            Self::Prune(m) => m.init(),
+            Self::UnInstall(m) => m.init(),
+        }
+    }
 }
 
 #[derive(Clap, Debug)]
 #[clap(
+    name = "snm",
     version = "0.0.1",
     author = "Vikas Raj <vikasraj11@gmail.com>",
     about = "Simple and Stupid Node Manager"
