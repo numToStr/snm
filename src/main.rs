@@ -2,18 +2,19 @@ mod cli;
 mod url;
 mod versions;
 
+use cli::{Cli, SubCommand};
 use versions::Releases;
 
 fn main() {
-    let matches = cli::app();
+    let matches = Cli::new();
 
-    match matches.subcommand_name() {
-        Some("lts") => {
+    match matches.cmd {
+        SubCommand::Lts => {
             let mut body = Releases::fetch();
 
             println!("LTS :: {:#?}", body.lts().unwrap())
         }
-        Some("latest") => {
+        SubCommand::Latest => {
             let mut body = Releases::fetch();
 
             println!("Latest :: {:#?}", body.latest().unwrap())

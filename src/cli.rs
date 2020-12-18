@@ -1,42 +1,47 @@
-use clap::{App, ArgMatches, SubCommand};
+use clap::Clap;
 
-pub fn app() -> ArgMatches<'static> {
-    App::new("snm")
-        .version("0.0.1")
-        .author("Vikas Raj <vikasraj11@gmail.com>")
-        .about("Simple Node Manager")
-        // .arg(
-        //     Arg::with_name("config")
-        //         .short("c")
-        //         .long("config")
-        //         .value_name("FILE")
-        //         .help("Sets a custom config file")
-        //         .takes_value(true),
-        // )
-        // .arg(
-        //     Arg::with_name("INPUT")
-        //         .help("Sets the input file to use")
-        //         .required(true)
-        //         .index(1),
-        // )
-        .subcommand(
-            SubCommand::with_name("select")
-                .about("Display downloaded node versions and install selection"),
-        )
-        .subcommand(
-            SubCommand::with_name("latest")
-                .about("Install the latest node release (downloading if necessary)"),
-        )
-        .subcommand(
-            SubCommand::with_name("lts")
-                .about("Install the latest LTS node release (downloading if necessary)"),
-        )
-        // .arg(
-        //     Arg::with_name("version")
-        //         .short("v")
-        //         .help("Install node <version> (downloading if necessary)"),
-        // )
-        .get_matches()
+#[derive(Clap, Debug, PartialEq, Eq)]
+pub enum SubCommand {
+    /// Display downloaded node versions and install selection
+    #[clap(name = "select")]
+    Select,
+
+    /// Install the latest node release (downloading if necessary)
+    #[clap(name = "latest")]
+    Latest,
+
+    /// Install the latest LTS node release (downloading if necessary)
+    #[clap(name = "lts")]
+    Lts,
+
+    /// Output downloaded versions
+    #[clap(name = "ls")]
+    Ls,
+
+    /// Output downloaded versions
+    #[clap(name = "ls-remote", aliases = &["lsr"])]
+    LsRemote,
+
+    /// Remove all downloaded versions except the installed version
+    #[clap(name = "prune")]
+    Prune,
+}
+
+#[derive(Clap, Debug)]
+#[clap(
+    version = "0.0.1",
+    author = "Vikas Raj <vikasraj11@gmail.com>",
+    about = "Simple and Stupid Node Manager"
+)]
+pub struct Cli {
+    #[clap(subcommand)]
+    pub cmd: SubCommand,
+}
+
+impl Cli {
+    pub fn new() -> Self {
+        return Self::parse();
+    }
 }
 
 // n                              Display downloaded node versions and install selection
