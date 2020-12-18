@@ -1,10 +1,20 @@
 use clap::Clap;
 
 #[derive(Clap, Debug, PartialEq, Eq)]
+pub struct Version {
+    #[clap(name = "version")]
+    version: String,
+}
+
+#[derive(Clap, Debug, PartialEq, Eq)]
 pub enum SubCommand {
+    /// Install node <version> (downloading if necessary)
+    #[clap(name = "install", aliases = &["i"])]
+    Install(Version),
+
     /// Display downloaded node versions and install selection
-    #[clap(name = "select")]
-    Select,
+    #[clap(name = "use", aliases = &["u"])]
+    Use,
 
     /// Install the latest node release (downloading if necessary)
     #[clap(name = "latest")]
@@ -20,11 +30,19 @@ pub enum SubCommand {
 
     /// Output downloaded versions
     #[clap(name = "ls-remote", aliases = &["lsr"])]
-    LsRemote,
+    LsRemote(Version),
+
+    /// Remove the given downloaded version
+    #[clap(name = "remove", aliases = &["rm"])]
+    Remove(Version),
 
     /// Remove all downloaded versions except the installed version
     #[clap(name = "prune")]
     Prune,
+
+    /// Remove the installed node and npm
+    #[clap(name = "uninstall", aliases = &["un"])]
+    UnInstall,
 }
 
 #[derive(Clap, Debug)]
@@ -44,17 +62,18 @@ impl Cli {
     }
 }
 
-// n                              Display downloaded node versions and install selection
+// n use                          Display downloaded node versions and install selection
 // n latest                       Install the latest node release (downloading if necessary)
 // n lts                          Install the latest LTS node release (downloading if necessary)
-// n <version>                    Install node <version> (downloading if necessary)
-// n run <version> [args ...]     Execute downloaded node <version> with [args ...]
-// n which <version>              Output path for downloaded node <version>
-// n exec <vers> <cmd> [args...]  Execute command with modified PATH, so downloaded node <version> and npm first
+// n install <version>            Install node <version> (downloading if necessary)
 // n rm <version ...>             Remove the given downloaded version(s)
 // n prune                        Remove all downloaded versions except the installed version
-// n --latest                     Output the latest node version available
-// n --lts                        Output the latest LTS node version available
 // n ls                           Output downloaded versions
 // n ls-remote [version]          Output matching versions available for download
 // n uninstall                    Remove the installed node and npm
+//
+// n run <version> [args ...]     Execute downloaded node <version> with [args ...]
+// n which <version>              Output path for downloaded node <version>
+// n exec <vers> <cmd> [args...]  Execute command with modified PATH, so downloaded node <version> and npm first
+// n --latest                     Output the latest node version available
+// n --lts                        Output the latest LTS node version available
