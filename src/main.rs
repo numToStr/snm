@@ -3,6 +3,7 @@ mod cmd;
 mod downloader;
 mod fetcher;
 mod url;
+mod xtract;
 
 use cli::Cli;
 

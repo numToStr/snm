@@ -1,6 +1,6 @@
 use crate::fetcher::Release;
 use crate::url;
-use std::{fs::File, io::copy, path::Path};
+use crate::xtract::Xtract;
 use ureq;
 
 pub struct Downloader;
@@ -17,15 +17,12 @@ impl Downloader {
 
         println!("Installing : {}", &r.version);
         println!("Dowloading : {}", &url);
-        println!("Size : {}", &len);
+        println!("Size       : {}", &len);
 
-        let mut reader = res.into_reader();
-        let path_str = format!("{}.tar.gz", r.version);
-        let mut file = File::create(Path::new(path_str.as_str())).unwrap();
+        Xtract::new(res).extract_into("./");
 
-        copy(&mut reader, &mut file).unwrap();
-
-        path_str
+        // path_str
+        format!("Done {}", r.version)
     }
 }
 
