@@ -1,4 +1,5 @@
 use crate::cmd::{install, latest, ls, ls_remote, lts, prune, r#use, remove, uninstall};
+use crate::config::Config;
 use clap::Clap;
 
 #[derive(Clap, Debug, PartialEq, Eq)]
@@ -41,12 +42,12 @@ pub enum SubCommand {
 }
 
 impl SubCommand {
-    pub fn exec(&self) -> String {
+    pub fn exec(&self, config: Config) -> String {
         match self {
             Self::Install(m) => m.init(),
             Self::Use(m) => m.init(),
             Self::Latest(m) => m.init(),
-            Self::Lts(m) => m.init(),
+            Self::Lts(m) => m.init(config),
             Self::Ls(m) => m.init(),
             Self::LsRemote(m) => m.init(),
             Self::Remove(m) => m.init(),
@@ -64,6 +65,9 @@ impl SubCommand {
     about = "Simple and Stupid Node Manager"
 )]
 pub struct Cli {
+    #[clap(flatten)]
+    pub options: Config,
+
     #[clap(subcommand)]
     pub cmd: SubCommand,
 }

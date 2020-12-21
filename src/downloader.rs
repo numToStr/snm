@@ -1,25 +1,28 @@
 use crate::fetcher::Release;
 use crate::url;
 use crate::xtract::Xtract;
+use std::{fs, path::Path};
 use ureq;
 
 pub struct Downloader;
 
 impl Downloader {
-    pub fn download(&self, r: &Release) -> String {
-        let url = url::release(&r.version);
+    pub fn download<P: AsRef<Path>>(&self, r: &Release, path: P) -> String {
+        let bin = url::release(&r.version);
 
-        let res = ureq::get(&url).call();
+        let res = ureq::get(&bin.url).call();
         let len = res
             .header("Content-Length")
             .and_then(|x| x.parse::<usize>().ok())
             .unwrap();
 
         println!("Installing : {}", &r.version);
-        println!("Dowloading : {}", &url);
+        println!("Dowloading : {}", &bin.url);
         println!("Size       : {}", &len);
 
-        Xtract::new(res).extract_into("./");
+        Xtract::new(res).extract_into(&path);
+
+        fs::rename(path.as_ref().join(bin.name), path.as_ref().join(&r.version)).unwrap();
 
         // path_str
         format!("Done {}", r.version)

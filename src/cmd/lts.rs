@@ -1,3 +1,4 @@
+use crate::config::Config;
 use crate::downloader::Downloader;
 use crate::fetcher::Releases;
 use clap::Clap;
@@ -6,11 +7,9 @@ use clap::Clap;
 pub struct Lts;
 
 impl Lts {
-    pub fn init(&self) -> String {
-        let mut release = Releases::fetch();
+    pub fn init(&self, config: Config) -> String {
+        let release = Releases::fetch().lts().unwrap();
 
-        let r = release.lts().unwrap();
-
-        Downloader.download(&r)
+        Downloader.download(&release, config.release_dir())
     }
 }

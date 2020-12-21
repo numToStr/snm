@@ -1,4 +1,5 @@
 // use std::io::{copy, Read};
+use std::path::Path;
 use tar::Archive;
 // use tempfile::tempfile;
 use ureq::Response;
@@ -41,7 +42,7 @@ impl Xtract {
     }
 
     #[cfg(target_family = "unix")]
-    pub fn extract_into(self, path: &str) {
+    pub fn extract_into<P: AsRef<Path>>(self, path: P) {
         let xz_stream = XzDecoder::new(self.res.into_reader());
         let mut archive = Archive::new(xz_stream);
         archive.unpack(path).unwrap();
