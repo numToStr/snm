@@ -1,6 +1,7 @@
 mod cli;
 mod cmd;
 mod config;
+mod directory;
 mod downloader;
 mod fetcher;
 mod url;

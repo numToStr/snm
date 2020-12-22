@@ -8,11 +8,11 @@ use std::{
 #[derive(Clap, Debug)]
 pub struct Config {
     #[clap(hidden = true)]
-    base_dir: Option<PathBuf>,
+    pub base_dir: Option<PathBuf>,
 
     /// Only downloads the binary
     #[clap(short, long)]
-    download: bool,
+    pub download_only: bool,
 }
 
 impl Config {
@@ -36,7 +36,7 @@ impl Config {
         self.ensure_create(self.base_dir().join("releases"))
     }
 
-    // pub fn aliases(&self) -> PathBuf {
-    //     self.ensure_create(self.base_dir().join("aliases"))
-    // }
+    pub fn aliases(&self) -> PathBuf {
+        self.ensure_create(self.base_dir().join("aliases"))
+    }
 }

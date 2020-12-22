@@ -1,13 +1,15 @@
+use crate::config::Config;
+use crate::directory::Directory;
 use crate::fetcher::Release;
 use crate::url;
 use crate::xtract::Xtract;
-use std::{fs, path::Path};
+use std::path::PathBuf;
 use ureq;
 
 pub struct Downloader;
 
 impl Downloader {
-    pub fn download<P: AsRef<Path>>(&self, r: &Release, path: P) -> String {
+    pub fn download(&self, r: &Release, config: &Config) -> PathBuf {
         let bin = url::release(&r.version);
 
         let res = ureq::get(&bin.url).call();
@@ -20,12 +22,21 @@ impl Downloader {
         println!("Dowloading : {}", &bin.url);
         println!("Size       : {}", &len);
 
-        Xtract::new(res).extract_into(&path);
+        let release_dir = &config.release_dir();
 
-        fs::rename(path.as_ref().join(bin.name), path.as_ref().join(&r.version)).unwrap();
+        Xtract::new(res).extract_into(&release_dir);
 
-        // path_str
-        format!("Done {}", r.version)
+        let dest = release_dir.join(&r.version);
+
+        let dd = Directory::new(&dest);
+        dd.rename_from(&release_dir.join(bin.name)).unwrap();
+
+        // If we are only downloading then don't need to create a symlink to default
+        if !config.download_only {
+            dd.symlink_to(&config.aliases().join("default")).unwrap();
+        }
+
+        dest
     }
 }
 
