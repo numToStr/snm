@@ -19,12 +19,32 @@ impl<'d> Directory<'d> {
     /// [[ Unix ]] Create a symlink from destination path to the given path
     #[cfg(target_family = "unix")]
     pub fn symlink_to<P: AsRef<Path>>(&self, to: P) -> io::Result<()> {
+        self.remove_symlink(&to)?;
         std::os::unix::fs::symlink(&self.dest_path, to)
+    }
+
+    #[cfg(target_family = "unix")]
+    fn remove_symlink<P: AsRef<Path>>(&self, path: P) -> io::Result<()> {
+        if path.as_ref().exists() {
+            std::fs::remove_file(path)?
+        }
+
+        Ok(())
     }
 
     /// [[ Win ]] Create a symlink from destination path to the given path
     #[cfg(target_family = "windows")]
     pub fn symlink<P: AsRef<Path>>(&self, from: P, to: P) -> io::Result<()> {
-        std::os::windows::fs::symlink(from, to)
+        self.remove_symlink(&to)?;
+        std::os::windows::fs::symlink_dir(from, to)
+    }
+
+    #[cfg(target_family = "windows")]
+    fn remove_symlink<P: AsRef<Path>>(&self, path: P) -> io::Result<()> {
+        if path.as_ref().exists() {
+            std::fs::remove_dir(path)?
+        }
+
+        Ok(())
     }
 }

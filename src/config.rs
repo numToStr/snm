@@ -25,7 +25,7 @@ impl Config {
         path
     }
 
-    pub fn base_dir(&self) -> PathBuf {
+    pub fn snm_dir(&self) -> PathBuf {
         self.ensure_create(
             (self.base_dir.clone())
                 .unwrap_or_else(|| home_dir().expect("Can't get home directory.").join(".snm")),
@@ -33,10 +33,10 @@ impl Config {
     }
 
     pub fn release_dir(&self) -> PathBuf {
-        self.ensure_create(self.base_dir().join("releases"))
+        self.ensure_create(self.snm_dir().join("releases"))
     }
 
-    pub fn aliases(&self) -> PathBuf {
-        self.ensure_create(self.base_dir().join("aliases"))
+    pub fn alias_dir(&self) -> PathBuf {
+        self.ensure_create(self.snm_dir().join("aliases"))
     }
 }
