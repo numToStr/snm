@@ -21,20 +21,22 @@ pub struct Releases {
 }
 
 impl Releases {
-    pub fn fetch() -> Self {
-        Releases {
-            list: ureq::get(url::index().as_str())
-                .call()
-                .into_json_deserialize::<Vec<Release>>()
-                .unwrap(),
-        }
+    pub fn fetch() -> anyhow::Result<Self> {
+        let list = ureq::get(url::index().as_str())
+            .call()
+            .into_json_deserialize::<Vec<Release>>()?;
+
+        Ok(Releases { list })
     }
 
-    pub fn lts(&mut self) -> Option<Release> {
-        self.list.drain(..).find(|x| match x.lts {
-            Lts::Yes(_) => true,
-            _ => false,
-        })
+    pub fn lts(&mut self) -> anyhow::Result<Release> {
+        self.list
+            .drain(..)
+            .find(|x| match x.lts {
+                Lts::Yes(_) => true,
+                _ => false,
+            })
+            .ok_or(anyhow::Error::msg("Unable to find release"))
     }
 
     // pub fn latest(&mut self) -> Option<Release> {

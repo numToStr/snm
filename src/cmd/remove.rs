@@ -8,5 +8,9 @@ pub struct Remove {
 }
 
 impl super::Command for Remove {
-    fn init(&self, _: Config) {}
+    type InitResult = ();
+
+    fn init(&self, _: Config) -> anyhow::Result<Self::InitResult> {
+        Ok(())
+    }
 }

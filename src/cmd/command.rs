@@ -1,5 +1,8 @@
 use crate::config::Config;
+use anyhow::Result;
 
 pub trait Command {
-    fn init(&self, config: Config) -> ();
+    type InitResult;
+
+    fn init(&self, config: Config) -> Result<Self::InitResult>;
 }

@@ -8,5 +8,9 @@ pub struct Install {
 }
 
 impl super::Command for Install {
-    fn init(&self, _: Config) {}
+    type InitResult = ();
+
+    fn init(&self, _: Config) -> anyhow::Result<Self::InitResult> {
+        Ok(())
+    }
 }

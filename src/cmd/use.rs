@@ -5,5 +5,9 @@ use clap::Clap;
 pub struct Use;
 
 impl super::Command for Use {
-    fn init(&self, _: Config) {}
+    type InitResult = ();
+
+    fn init(&self, _: Config) -> anyhow::Result<Self::InitResult> {
+        Ok(())
+    }
 }

@@ -27,7 +27,9 @@ pub struct Env {
 }
 
 impl super::Command for Env {
-    fn init(&self, config: Config) {
+    type InitResult = ();
+
+    fn init(&self, config: Config) -> anyhow::Result<Self::InitResult> {
         let shell: Box<&dyn shell::Shell> = match &self.shell {
             ShellKind::Zsh(m) => Box::new(m),
             ShellKind::Fish(m) => Box::new(m),
@@ -41,5 +43,7 @@ impl super::Command for Env {
         );
 
         println!("{}", shell.env_var("SNM_LOGLEVEL", &config.log_level));
+
+        Ok(())
     }
 }

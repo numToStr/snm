@@ -5,5 +5,9 @@ use clap::Clap;
 pub struct Latest;
 
 impl super::Command for Latest {
-    fn init(&self, _: Config) {}
+    type InitResult = ();
+
+    fn init(&self, _: Config) -> anyhow::Result<Self::InitResult> {
+        Ok(())
+    }
 }

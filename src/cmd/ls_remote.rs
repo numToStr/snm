@@ -17,5 +17,9 @@ pub struct LsRemote {
 }
 
 impl super::Command for LsRemote {
-    fn init(&self, _: Config) {}
+    type InitResult = ();
+
+    fn init(&self, _: Config) -> anyhow::Result<Self::InitResult> {
+        Ok(())
+    }
 }

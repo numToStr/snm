@@ -7,9 +7,13 @@ use clap::Clap;
 pub struct Lts;
 
 impl super::Command for Lts {
-    fn init(&self, config: Config) {
-        let release = Releases::fetch().lts().unwrap();
+    type InitResult = ();
 
-        Downloader.download(&release, &config);
+    fn init(&self, config: Config) -> anyhow::Result<Self::InitResult> {
+        let release = Releases::fetch()?.lts()?;
+
+        Downloader.download(&release, &config)?;
+
+        Ok(())
     }
 }

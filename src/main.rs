@@ -10,8 +10,8 @@ mod xtract;
 
 use cli::Cli;
 
-fn main() {
+fn main() -> anyhow::Result<()> {
     let app = Cli::new();
 
-    app.cmd.exec(app.options);
+    app.cmd.exec(app.options)
 }

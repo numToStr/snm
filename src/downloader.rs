@@ -9,14 +9,14 @@ use ureq;
 pub struct Downloader;
 
 impl Downloader {
-    pub fn download(&self, r: &Release, config: &Config) -> PathBuf {
+    pub fn download(&self, r: &Release, config: &Config) -> anyhow::Result<PathBuf> {
         let bin = url::release(&r.version);
 
         let res = ureq::get(&bin.url).call();
         let len = res
             .header("Content-Length")
             .and_then(|x| x.parse::<usize>().ok())
-            .unwrap();
+            .ok_or(anyhow::Error::msg("Unable to get content length."))?;
 
         println!("Installing : {}", &r.version);
         println!("Dowloading : {}", &bin.url);
@@ -28,14 +28,14 @@ impl Downloader {
 
         let dest = release_dir.join(&r.version);
 
-        dir::rename(&release_dir.join(bin.name), &dest).unwrap();
+        dir::rename(&release_dir.join(bin.name), &dest)?;
 
         // If we are only downloading then don't need to create a symlink to default
         if !config.download_only {
-            dir::symlink_to(&dest, &config.alias_default()).unwrap();
+            dir::symlink_to(&dest, &config.alias_default())?;
         }
 
-        dest
+        Ok(dest)
     }
 }
 
