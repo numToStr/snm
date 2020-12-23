@@ -12,6 +12,16 @@ impl Downloader {
     pub fn download(&self, r: &Release, config: &Config) -> anyhow::Result<PathBuf> {
         let bin = url::release(&r.version);
 
+        let release_dir = &config.release_dir();
+        let dest = release_dir.join(&r.version);
+
+        if dest.exists() {
+            return Err(anyhow::Error::msg(format!(
+                "Binary with version ({}) is already exists.",
+                &r.version
+            )));
+        }
+
         let res = ureq::get(&bin.url).call();
         let len = res
             .header("Content-Length")
@@ -22,11 +32,7 @@ impl Downloader {
         println!("Dowloading : {}", &bin.url);
         println!("Size       : {}", &len);
 
-        let release_dir = &config.release_dir();
-
         Xtract::new(res).extract_into(&release_dir);
-
-        let dest = release_dir.join(&r.version);
 
         dir::rename(&release_dir.join(bin.name), &dest)?;
 
