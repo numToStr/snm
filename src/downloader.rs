@@ -1,5 +1,5 @@
 use crate::config::Config;
-use crate::directory::Directory;
+use crate::directory as dir;
 use crate::fetcher::Release;
 use crate::url;
 use crate::xtract::Xtract;
@@ -28,12 +28,11 @@ impl Downloader {
 
         let dest = release_dir.join(&r.version);
 
-        let dd = Directory::new(&dest);
-        dd.rename_from(&release_dir.join(bin.name)).unwrap();
+        dir::rename(&release_dir.join(bin.name), &dest).unwrap();
 
         // If we are only downloading then don't need to create a symlink to default
         if !config.download_only {
-            dd.symlink_to(&config.alias_dir().join("default")).unwrap();
+            dir::symlink_to(&dest, &config.alias_dir().join("default")).unwrap();
         }
 
         dest
