@@ -1,3 +1,4 @@
+use crate::config::Config;
 use clap::Clap;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
@@ -15,6 +16,6 @@ pub struct LsRemote {
     all: bool,
 }
 
-impl LsRemote {
-    pub fn init(&self) {}
+impl super::Command for LsRemote {
+    fn init(&self, _: Config) {}
 }

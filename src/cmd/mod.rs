@@ -1,3 +1,5 @@
+mod command;
+
 pub mod env;
 pub mod install;
 pub mod latest;
@@ -8,3 +10,4 @@ pub mod prune;
 pub mod remove;
 pub mod uninstall;
 pub mod r#use;
+pub use command::Command;

@@ -1,8 +1,9 @@
+use crate::config::Config;
 use clap::Clap;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct Prune;
 
-impl Prune {
-    pub fn init(&self) {}
+impl super::Command for Prune {
+    fn init(&self, _: Config) {}
 }

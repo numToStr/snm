@@ -1,3 +1,4 @@
+use crate::config::Config;
 use clap::Clap;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
@@ -6,6 +7,6 @@ pub struct Install {
     version: String,
 }
 
-impl Install {
-    pub fn init(&self) {}
+impl super::Command for Install {
+    fn init(&self, _: Config) {}
 }

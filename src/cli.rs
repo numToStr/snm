@@ -1,10 +1,12 @@
-use crate::cmd::{env, install, latest, ls, ls_remote, lts, prune, r#use, remove, uninstall};
+use crate::cmd::{
+    env, install, latest, ls, ls_remote, lts, prune, r#use, remove, uninstall, Command,
+};
 use crate::config::Config;
 use clap::Clap;
 
 #[derive(Clap, Debug, PartialEq, Eq)]
 pub enum SubCommand {
-    /// Remove the installed node and npm
+    /// Print and set up required environment variables for fnm
     #[clap(name = "env")]
     Env(env::Env),
 
@@ -49,15 +51,15 @@ impl SubCommand {
     pub fn exec(&self, config: Config) {
         match self {
             Self::Env(m) => m.init(config),
-            Self::Install(m) => m.init(),
-            Self::Use(m) => m.init(),
-            Self::Latest(m) => m.init(),
+            Self::Install(m) => m.init(config),
+            Self::Use(m) => m.init(config),
+            Self::Latest(m) => m.init(config),
             Self::Lts(m) => m.init(config),
-            Self::Ls(m) => m.init(),
-            Self::LsRemote(m) => m.init(),
-            Self::Remove(m) => m.init(),
-            Self::Prune(m) => m.init(),
-            Self::UnInstall(m) => m.init(),
+            Self::Ls(m) => m.init(config),
+            Self::LsRemote(m) => m.init(config),
+            Self::Remove(m) => m.init(config),
+            Self::Prune(m) => m.init(config),
+            Self::UnInstall(m) => m.init(config),
         }
     }
 }

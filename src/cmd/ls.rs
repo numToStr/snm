@@ -1,8 +1,9 @@
+use crate::config::Config;
 use clap::Clap;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct Ls;
 
-impl Ls {
-    pub fn init(&self) {}
+impl super::Command for Ls {
+    fn init(&self, _: Config) {}
 }

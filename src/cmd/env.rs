@@ -26,8 +26,8 @@ pub struct Env {
     shell: ShellKind,
 }
 
-impl Env {
-    pub fn init(&self, config: Config) {
+impl super::Command for Env {
+    fn init(&self, config: Config) {
         let shell: Box<&dyn shell::Shell> = match &self.shell {
             ShellKind::Zsh(m) => Box::new(m),
             ShellKind::Fish(m) => Box::new(m),

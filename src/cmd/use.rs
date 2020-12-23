@@ -1,8 +1,9 @@
+use crate::config::Config;
 use clap::Clap;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct Use;
 
-impl Use {
-    pub fn init(&self) {}
+impl super::Command for Use {
+    fn init(&self, _: Config) {}
 }

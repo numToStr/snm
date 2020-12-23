@@ -1,8 +1,9 @@
+use crate::config::Config;
 use clap::Clap;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct UnInstall;
 
-impl UnInstall {
-    pub fn init(&self) {}
+impl super::Command for UnInstall {
+    fn init(&self, _: Config) {}
 }
