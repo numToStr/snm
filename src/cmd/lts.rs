@@ -10,9 +10,10 @@ impl super::Command for Lts {
     type InitResult = ();
 
     fn init(&self, config: Config) -> anyhow::Result<Self::InitResult> {
-        let release = Releases::fetch()?.lts()?;
+        let mut release = Releases::fetch()?;
+        let release = release.lts()?;
 
-        Downloader.download(&release, &config)?;
+        Downloader.download(release, &config)?;
 
         Ok(())
     }

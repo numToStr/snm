@@ -29,9 +29,9 @@ impl Releases {
         Ok(Releases { list })
     }
 
-    pub fn lts(&mut self) -> anyhow::Result<Release> {
+    pub fn lts(&mut self) -> anyhow::Result<&Release> {
         self.list
-            .drain(..)
+            .iter()
             .find(|x| match x.lts {
                 Lts::Yes(_) => true,
                 _ => false,
@@ -39,9 +39,9 @@ impl Releases {
             .ok_or(anyhow::Error::msg("Unable to find release"))
     }
 
-    pub fn latest(&mut self) -> anyhow::Result<Release> {
+    pub fn latest(&mut self) -> anyhow::Result<&Release> {
         self.list
-            .drain(..)
+            .iter()
             .find(|x| match x.lts {
                 Lts::No(_) => true,
                 _ => false,
