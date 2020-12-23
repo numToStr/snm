@@ -11,11 +11,11 @@ pub enum SubCommand {
     Env(env::Env),
 
     /// Install node <version> (downloading if necessary)
-    #[clap(name = "install", aliases = &["i"])]
+    #[clap(name = "install", visible_alias = "i")]
     Install(install::Install),
 
     /// Display downloaded node versions and install selection
-    #[clap(name = "use", aliases = &["u"])]
+    #[clap(name = "use", visible_alias = "u")]
     Use(r#use::Use),
 
     /// Install the latest node release (downloading if necessary)
@@ -31,11 +31,11 @@ pub enum SubCommand {
     Ls(ls::Ls),
 
     /// Output downloaded versions
-    #[clap(name = "ls-remote", aliases = &["lsr"])]
+    #[clap(name = "ls-remote", visible_alias = "lsr")]
     LsRemote(ls_remote::LsRemote),
 
     /// Remove the given downloaded version
-    #[clap(name = "remove", aliases = &["rm"])]
+    #[clap(name = "remove", visible_alias = "rm")]
     Remove(remove::Remove),
 
     /// Remove all downloaded versions except the installed version
@@ -43,7 +43,7 @@ pub enum SubCommand {
     Prune(prune::Prune),
 
     /// Remove the installed node and npm
-    #[clap(name = "uninstall", aliases = &["un"])]
+    #[clap(name = "uninstall", visible_alias = "un")]
     UnInstall(uninstall::UnInstall),
 }
 
