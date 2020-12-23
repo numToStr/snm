@@ -39,10 +39,13 @@ impl Releases {
             .ok_or(anyhow::Error::msg("Unable to find release"))
     }
 
-    // pub fn latest(&mut self) -> Option<Release> {
-    //     self.list.drain(..).find(|x| match x.lts {
-    //         Lts::No(_) => true,
-    //         _ => false,
-    //     })
-    // }
+    pub fn latest(&mut self) -> anyhow::Result<Release> {
+        self.list
+            .drain(..)
+            .find(|x| match x.lts {
+                Lts::No(_) => true,
+                _ => false,
+            })
+            .ok_or(anyhow::Error::msg("Unable to find release."))
+    }
 }

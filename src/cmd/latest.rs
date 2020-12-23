@@ -1,4 +1,6 @@
 use crate::config::Config;
+use crate::downloader::Downloader;
+use crate::fetcher::Releases;
 use clap::Clap;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
@@ -7,7 +9,11 @@ pub struct Latest;
 impl super::Command for Latest {
     type InitResult = ();
 
-    fn init(&self, _: Config) -> anyhow::Result<Self::InitResult> {
+    fn init(&self, config: Config) -> anyhow::Result<Self::InitResult> {
+        let release = Releases::fetch()?.latest()?;
+
+        Downloader.download(&release, &config)?;
+
         Ok(())
     }
 }
