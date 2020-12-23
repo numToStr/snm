@@ -1,9 +1,13 @@
-use crate::cmd::{install, latest, ls, ls_remote, lts, prune, r#use, remove, uninstall};
+use crate::cmd::{env, install, latest, ls, ls_remote, lts, prune, r#use, remove, uninstall};
 use crate::config::Config;
 use clap::Clap;
 
 #[derive(Clap, Debug, PartialEq, Eq)]
 pub enum SubCommand {
+    /// Remove the installed node and npm
+    #[clap(name = "env")]
+    Env(env::Env),
+
     /// Install node <version> (downloading if necessary)
     #[clap(name = "install", aliases = &["i"])]
     Install(install::Install),
@@ -44,6 +48,7 @@ pub enum SubCommand {
 impl SubCommand {
     pub fn exec(&self, config: Config) -> String {
         match self {
+            Self::Env(m) => m.init(config),
             Self::Install(m) => m.init(),
             Self::Use(m) => m.init(),
             Self::Latest(m) => m.init(),

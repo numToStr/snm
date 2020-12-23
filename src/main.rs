@@ -4,6 +4,7 @@ mod config;
 mod directory;
 mod downloader;
 mod fetcher;
+mod shell;
 mod url;
 mod xtract;
 

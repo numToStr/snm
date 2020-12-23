@@ -1,3 +1,4 @@
+pub mod env;
 pub mod install;
 pub mod latest;
 pub mod ls;
