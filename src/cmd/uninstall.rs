@@ -4,7 +4,5 @@ use clap::Clap;
 pub struct UnInstall;
 
 impl UnInstall {
-    pub fn init(&self) -> String {
-        String::from("UnInstall")
-    }
+    pub fn init(&self) {}
 }

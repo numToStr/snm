@@ -7,13 +7,9 @@ use clap::Clap;
 pub struct Lts;
 
 impl Lts {
-    pub fn init(&self, config: Config) -> String {
+    pub fn init(&self, config: Config) {
         let release = Releases::fetch().lts().unwrap();
 
-        Downloader
-            .download(&release, &config)
-            .to_str()
-            .unwrap()
-            .to_string()
+        Downloader.download(&release, &config);
     }
 }

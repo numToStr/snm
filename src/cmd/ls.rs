@@ -4,7 +4,5 @@ use clap::Clap;
 pub struct Ls;
 
 impl Ls {
-    pub fn init(&self) -> String {
-        String::from("Ls")
-    }
+    pub fn init(&self) {}
 }

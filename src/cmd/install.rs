@@ -7,7 +7,5 @@ pub struct Install {
 }
 
 impl Install {
-    pub fn init(&self) -> String {
-        format!("Install {}", self.version)
-    }
+    pub fn init(&self) {}
 }

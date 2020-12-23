@@ -4,7 +4,5 @@ use clap::Clap;
 pub struct Use;
 
 impl Use {
-    pub fn init(&self) -> String {
-        String::from("Use")
-    }
+    pub fn init(&self) {}
 }

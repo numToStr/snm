@@ -13,5 +13,5 @@ use cli::Cli;
 fn main() {
     let app = Cli::new();
 
-    println!("CMD : {}", app.cmd.exec(app.options))
+    app.cmd.exec(app.options);
 }

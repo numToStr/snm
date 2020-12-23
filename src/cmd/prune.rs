@@ -4,7 +4,5 @@ use clap::Clap;
 pub struct Prune;
 
 impl Prune {
-    pub fn init(&self) -> String {
-        String::from("Prune")
-    }
+    pub fn init(&self) {}
 }

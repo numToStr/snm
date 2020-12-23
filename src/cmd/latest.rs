@@ -4,7 +4,5 @@ use clap::Clap;
 pub struct Latest;
 
 impl Latest {
-    pub fn init(&self) -> String {
-        String::from("Latest")
-    }
+    pub fn init(&self) {}
 }

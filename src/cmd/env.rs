@@ -27,7 +27,7 @@ pub struct Env {
 }
 
 impl Env {
-    pub fn init(&self, config: Config) -> String {
+    pub fn init(&self, config: Config) {
         let shell: Box<&dyn shell::Shell> = match &self.shell {
             ShellKind::Zsh(m) => Box::new(m),
             ShellKind::Fish(m) => Box::new(m),
@@ -41,7 +41,5 @@ impl Env {
         );
 
         println!("{}", shell.env_var("SNM_LOGLEVEL", &config.log_level));
-
-        String::new()
     }
 }

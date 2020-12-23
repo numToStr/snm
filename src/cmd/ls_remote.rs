@@ -16,7 +16,5 @@ pub struct LsRemote {
 }
 
 impl LsRemote {
-    pub fn init(&self) -> String {
-        String::from("LsRemote")
-    }
+    pub fn init(&self) {}
 }

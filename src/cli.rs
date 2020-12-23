@@ -46,7 +46,7 @@ pub enum SubCommand {
 }
 
 impl SubCommand {
-    pub fn exec(&self, config: Config) -> String {
+    pub fn exec(&self, config: Config) {
         match self {
             Self::Env(m) => m.init(config),
             Self::Install(m) => m.init(),

@@ -7,7 +7,5 @@ pub struct Remove {
 }
 
 impl Remove {
-    pub fn init(&self) -> String {
-        format!("Remove {}", self.version)
-    }
+    pub fn init(&self) {}
 }
