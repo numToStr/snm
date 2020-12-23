@@ -32,7 +32,7 @@ impl Downloader {
 
         // If we are only downloading then don't need to create a symlink to default
         if !config.download_only {
-            dir::symlink_to(&dest, &config.alias_dir().join("default")).unwrap();
+            dir::symlink_to(&dest, &config.alias_default()).unwrap();
         }
 
         dest
