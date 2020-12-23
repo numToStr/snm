@@ -5,6 +5,7 @@ mod directory;
 mod downloader;
 mod fetcher;
 mod shell;
+mod sysinfo;
 mod url;
 mod xtract;
 

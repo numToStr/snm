@@ -14,15 +14,26 @@ pub struct Binary {
     pub name: String,
 }
 
+#[cfg(unix)]
 pub fn release(v: &str) -> Binary {
-    // FIXME: different executable for
-    // 1. os ie. mac, win, linux
-    // 2. architecture i.e x86, x64, arm64
+    use crate::sysinfo::{platform_arch, platform_name};
 
-    let name = format!("node-{}-linux-x64", v);
+    let name = format!("node-{}-{}-{}", v, platform_name(), platform_arch());
 
     Binary {
         url: format!("{}/{}/{}.tar.xz", base_dist(), v, &name),
+        name,
+    }
+}
+
+#[cfg(windows)]
+pub fn release(v: &str) -> Binary {
+    use crate::sysinfo::platform_arch;
+
+    let name = format!("node-{}-win-{}", v, platform_arch());
+
+    Binary {
+        url: format!("{}/{}/{}.zip", base_dist(), v, &name),
         name,
     }
 }
