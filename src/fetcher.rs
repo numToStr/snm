@@ -1,16 +1,17 @@
 use crate::url;
-use serde::{Deserialize, Serialize};
+use crate::version::{NodeVersion, Version};
+use serde::Deserialize;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Deserialize)]
 #[serde(untagged)]
 pub enum Lts {
     No(bool),
     Yes(String),
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Deserialize)]
 pub struct Release {
-    pub version: String,
+    pub version: NodeVersion,
     pub date: String,
     pub lts: Lts,
     pub files: Vec<String>,
@@ -47,5 +48,12 @@ impl Releases {
                 _ => false,
             })
             .ok_or(anyhow::Error::msg("Unable to find release."))
+    }
+
+    pub fn find_releases(self, version: &Version) -> Vec<Release> {
+        self.list
+            .into_iter()
+            .filter(|v| version.match_version(&v.version))
+            .collect()
     }
 }

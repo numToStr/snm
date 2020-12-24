@@ -13,7 +13,7 @@ impl Downloader {
         let bin = url::release(&r.version);
 
         let release_dir = &config.release_dir();
-        let dest = release_dir.join(&r.version);
+        let dest = release_dir.join(&r.version.to_string());
 
         if dest.exists() {
             return Err(anyhow::Error::msg(format!(

@@ -1,3 +1,5 @@
+use crate::version::NodeVersion;
+
 pub fn base_dist<'a>() -> &'a str {
     "https://nodejs.org/download/release"
 }
@@ -15,7 +17,7 @@ pub struct Binary {
 }
 
 #[cfg(unix)]
-pub fn release(v: &str) -> Binary {
+pub fn release(v: &NodeVersion) -> Binary {
     use crate::sysinfo::{platform_arch, platform_name};
 
     let name = format!("node-{}-{}-{}", v, platform_name(), platform_arch());

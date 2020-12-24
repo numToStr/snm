@@ -7,6 +7,7 @@ mod fetcher;
 mod shell;
 mod sysinfo;
 mod url;
+mod version;
 mod xtract;
 
 use cli::Cli;
