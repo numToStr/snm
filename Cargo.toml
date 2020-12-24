@@ -14,6 +14,6 @@ semver = "0.11.0"
 serde = { version = "1.0.118", features = ["derive"] }
 tar = "0.4.30"
 tempfile = "3.1.0"
-ureq = { version = "1.5.4", features = ["json", "charset"] }
+ureq = { version = "2.0.0-rc4", features = ["json"] }
 xz2 = "0.1.6"
 zip = "0.5.9"

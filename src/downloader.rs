@@ -22,7 +22,7 @@ impl Downloader {
             )));
         }
 
-        let res = ureq::get(&bin.url).call();
+        let res = ureq::get(&bin.url).call()?;
         let len = res
             .header("Content-Length")
             .and_then(|x| x.parse::<usize>().ok())
