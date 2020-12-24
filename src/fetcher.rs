@@ -56,4 +56,10 @@ impl Releases {
             .filter(|v| version.match_version(&v.version))
             .collect()
     }
+
+    pub fn find_release(self, version: &Version) -> Option<Release> {
+        self.list
+            .into_iter()
+            .find(|v| version.match_version(&v.version))
+    }
 }
