@@ -11,10 +11,8 @@ mod url;
 mod version;
 mod xtract;
 
-use cli::Cli;
-
 fn main() -> anyhow::Result<()> {
-    let app = Cli::new();
+    let app = cli::parse();
 
     app.cmd.exec(app.options)
 }

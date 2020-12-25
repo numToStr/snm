@@ -1,4 +1,6 @@
-use crate::cmd::{env, install, latest, ls, ls_remote, lts, prune, r#use, uninstall, Command};
+use crate::cmd::{
+    completions, env, install, latest, ls, ls_remote, lts, prune, r#use, uninstall, Command,
+};
 use crate::config::Config;
 use clap::Clap;
 
@@ -7,6 +9,10 @@ pub enum SubCommand {
     /// Print and set up required environment variables for fnm
     #[clap(name = "env")]
     Env(env::Env),
+
+    /// Print and set up required environment variables for fnm
+    #[clap(name = "completions")]
+    Completions(completions::Completions),
 
     /// Install node <version> (downloading if necessary)
     #[clap(name = "install", visible_alias = "i")]
@@ -49,6 +55,7 @@ impl SubCommand {
     pub fn exec(&self, config: Config) -> anyhow::Result<()> {
         match self {
             Self::Env(m) => m.init(config),
+            Self::Completions(m) => m.init(config),
             Self::Install(m) => m.init(config),
             Self::Use(m) => m.init(config),
             Self::Latest(m) => m.init(config),
@@ -76,10 +83,8 @@ pub struct Cli {
     pub cmd: SubCommand,
 }
 
-impl Cli {
-    pub fn new() -> Self {
-        return Self::parse();
-    }
+pub fn parse() -> Cli {
+    return Cli::parse();
 }
 
 // n use                          Display downloaded node versions and install selection
