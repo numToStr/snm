@@ -14,7 +14,7 @@ pub fn symlink_to<P: AsRef<Path>>(from: P, to: P) -> io::Result<()> {
 }
 
 #[cfg(unix)]
-fn remove_symlink<P: AsRef<Path>>(path: P) -> io::Result<()> {
+pub fn remove_symlink<P: AsRef<Path>>(path: P) -> io::Result<()> {
     if path.as_ref().exists() {
         std::fs::remove_file(path)?
     }
@@ -30,7 +30,7 @@ pub fn symlink<P: AsRef<Path>>(from: P, to: P) -> io::Result<()> {
 }
 
 #[cfg(windows)]
-fn remove_symlink<P: AsRef<Path>>(path: P) -> io::Result<()> {
+pub fn remove_symlink<P: AsRef<Path>>(path: P) -> io::Result<()> {
     if path.as_ref().exists() {
         std::fs::remove_dir(path)?
     }
