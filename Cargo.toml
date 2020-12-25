@@ -19,3 +19,8 @@ tempfile = "3.1.0"
 ureq = { version = "2.0.0-rc4", features = ["json"] }
 xz2 = "0.1.6"
 zip = "0.5.9"
+
+[profile.release]
+lto = true
+codegen-units = 1
+opt-level = 'z'
