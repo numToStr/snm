@@ -38,10 +38,6 @@ pub enum SubCommand {
     #[clap(name = "ls-remote", visible_alias = "lsr")]
     LsRemote(ls_remote::LsRemote),
 
-    /// Remove the given downloaded version
-    // #[clap(name = "remove", visible_alias = "rm")]
-    // Remove(remove::Remove),
-
     /// Remove all downloaded versions except the installed version
     #[clap(name = "prune")]
     Prune(prune::Prune),
