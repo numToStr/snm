@@ -7,6 +7,7 @@ use std::str::FromStr;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct Install {
+    /// A version string. Can be a partial semver or a LTS version name by the format lts/NAME
     version: String,
 }
 

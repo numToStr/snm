@@ -49,13 +49,18 @@ impl NodeVersion {
         Ok(versions)
     }
 
-    pub fn list_aliases<'a>(&self, aliases: &'a Vec<Alias>) -> Vec<&'a str> {
-        let a: Vec<&Alias> = aliases
+    pub fn list_aliases<'a>(&self, aliases: &'a Vec<Alias>) -> Vec<&'a Alias> {
+        aliases
             .iter()
             .filter(|&alias| alias.version_str() == self.version_str())
-            .collect();
+            .collect::<Vec<&Alias>>()
+    }
 
-        a.iter().map(|&v| v.name()).collect::<Vec<&str>>()
+    pub fn list_aliases_str<'a>(&self, aliases: &'a Vec<Alias>) -> Vec<&'a str> {
+        self.list_aliases(aliases)
+            .iter()
+            .map(|&v| v.name())
+            .collect::<Vec<&str>>()
     }
 }
 

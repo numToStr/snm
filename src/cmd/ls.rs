@@ -14,7 +14,7 @@ impl super::Command for Ls {
         let aliases = Alias::list(config.alias_dir())?;
 
         for version in NodeVersion::list_versions(path)?.iter() {
-            let found = version.list_aliases(&aliases);
+            let found = version.list_aliases_str(&aliases);
 
             println!("- {}\t{}", version, found.join(", "));
         }

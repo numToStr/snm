@@ -1,6 +1,4 @@
-use crate::cmd::{
-    env, install, latest, ls, ls_remote, lts, prune, r#use, remove, uninstall, Command,
-};
+use crate::cmd::{env, install, latest, ls, ls_remote, lts, prune, r#use, uninstall, Command};
 use crate::config::Config;
 use clap::Clap;
 
@@ -35,8 +33,8 @@ pub enum SubCommand {
     LsRemote(ls_remote::LsRemote),
 
     /// Remove the given downloaded version
-    #[clap(name = "remove", visible_alias = "rm")]
-    Remove(remove::Remove),
+    // #[clap(name = "remove", visible_alias = "rm")]
+    // Remove(remove::Remove),
 
     /// Remove all downloaded versions except the installed version
     #[clap(name = "prune")]
@@ -57,7 +55,6 @@ impl SubCommand {
             Self::Lts(m) => m.init(config),
             Self::Ls(m) => m.init(config),
             Self::LsRemote(m) => m.init(config),
-            Self::Remove(m) => m.init(config),
             Self::Prune(m) => m.init(config),
             Self::UnInstall(m) => m.init(config),
         }
@@ -89,7 +86,6 @@ impl Cli {
 // n latest                       Install the latest node release (downloading if necessary)
 // n lts                          Install the latest LTS node release (downloading if necessary)
 // n install <version>            Install node <version> (downloading if necessary)
-// n rm <version ...>             Remove the given downloaded version(s)
 // n prune                        Remove all downloaded versions except the installed version
 // n ls                           Output downloaded versions
 // n ls-remote [version]          Output matching versions available for download
@@ -100,3 +96,5 @@ impl Cli {
 // n exec <vers> <cmd> [args...]  Execute command with modified PATH, so downloaded node <version> and npm first
 // n --latest                     Output the latest node version available
 // n --lts                        Output the latest LTS node version available
+//
+// n rm <version ...>             Remove the given downloaded version(s)
