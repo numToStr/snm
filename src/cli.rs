@@ -2,7 +2,7 @@ use crate::cmd::{
     completions, env, install, latest, ls, ls_remote, lts, prune, r#use, uninstall, Command,
 };
 use crate::config::Config;
-use clap::Clap;
+use clap::{crate_authors, crate_description, crate_name, crate_version, Clap};
 
 #[derive(Clap, Debug, PartialEq, Eq)]
 pub enum SubCommand {
@@ -70,10 +70,10 @@ impl SubCommand {
 
 #[derive(Clap, Debug)]
 #[clap(
-    name = "snm",
-    version = "0.0.1",
-    author = "Vikas Raj <vikasraj11@gmail.com>",
-    about = "Simple and Stupid Node Manager"
+    name = crate_name!(),
+    version = crate_version!(),
+    author = crate_authors!(),
+    about = crate_description!()
 )]
 pub struct Cli {
     #[clap(flatten)]
