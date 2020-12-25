@@ -1,15 +1,6 @@
 use crate::config::Config;
-use crate::shell;
+use crate::shell::{fish, zsh, Shell, ShellKind};
 use clap::Clap;
-
-#[derive(Debug, Clap, PartialEq, Eq)]
-pub enum ShellKind {
-    /// Setup the zsh shell environment
-    Zsh(shell::zsh::Zsh),
-
-    /// Setup the fish shell environment
-    Fish(shell::fish::Fish),
-}
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct EnvConfig {
@@ -30,9 +21,9 @@ impl super::Command for Env {
     type InitResult = ();
 
     fn init(&self, config: Config) -> anyhow::Result<Self::InitResult> {
-        let shell: Box<&dyn shell::Shell> = match &self.shell {
-            ShellKind::Zsh(m) => Box::new(m),
-            ShellKind::Fish(m) => Box::new(m),
+        let shell: Box<&dyn Shell> = match &self.shell {
+            ShellKind::Zsh => Box::new(&zsh::Zsh),
+            ShellKind::Fish => Box::new(&fish::Fish),
         };
 
         println!("{}", shell.path_env(&config.alias_default().join("bin")));
