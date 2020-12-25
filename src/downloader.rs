@@ -34,7 +34,7 @@ impl Downloader {
 
         Xtract::new(res).extract_into(&release_dir);
 
-        dir::rename(&release_dir.join(bin.name), &dest)?;
+        std::fs::rename(&release_dir.join(bin.name), &dest)?;
 
         // If we are only downloading then don't need to create a symlink to default
         if !config.download_only {

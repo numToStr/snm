@@ -1,11 +1,6 @@
 use std::io;
 use std::path::Path;
 
-/// Rename the given path to the destination path
-pub fn rename<P: AsRef<Path>>(from: P, to: P) -> io::Result<()> {
-    std::fs::rename(from, to)
-}
-
 /// Unix -- Create a symlink from destination path to the given path
 #[cfg(unix)]
 pub fn symlink_to<P: AsRef<Path>>(from: P, to: P) -> io::Result<()> {
