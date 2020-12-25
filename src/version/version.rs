@@ -10,15 +10,21 @@ pub enum Version {
 
 impl Version {
     /// Get a appropriate version from Vec<NodeVersion>
-    #[allow(dead_code)]
-    pub fn to_version<'a, T>(&self, versions: T) -> Option<&'a NodeVersion>
+    pub fn to_node_version<'a, T>(&self, versions: T) -> Option<&'a NodeVersion>
+    where
+        T: IntoIterator<Item = &'a NodeVersion>,
+    {
+        self.match_versions(versions).into_iter().max()
+    }
+
+    pub fn match_versions<'a, T>(&self, versions: T) -> Vec<&'a NodeVersion>
     where
         T: IntoIterator<Item = &'a NodeVersion>,
     {
         versions
             .into_iter()
             .filter(|&v| self.match_version(v))
-            .max()
+            .collect()
     }
 
     pub fn match_version(&self, version: &NodeVersion) -> bool {
@@ -144,7 +150,7 @@ mod tests {
             expected.clone(),
             NodeVersion::parse("7.0.1").unwrap(),
         ];
-        let result = Version::Major(6).to_version(&versions);
+        let result = Version::Major(6).to_node_version(&versions);
 
         assert_eq!(result, Some(&expected));
     }
@@ -159,7 +165,7 @@ mod tests {
             NodeVersion::parse("6.2.0").unwrap(),
             NodeVersion::parse("7.0.1").unwrap(),
         ];
-        let result = Version::Major(6).to_version(&versions);
+        let result = Version::Major(6).to_node_version(&versions);
 
         assert_ne!(result, Some(&expected));
     }
@@ -173,7 +179,7 @@ mod tests {
             expected.clone(),
             NodeVersion::parse("7.0.1").unwrap(),
         ];
-        let result = Version::MajorMinor(6, 0).to_version(&versions);
+        let result = Version::MajorMinor(6, 0).to_node_version(&versions);
 
         assert_eq!(result, Some(&expected));
     }
@@ -188,7 +194,7 @@ mod tests {
             NodeVersion::parse("6.0.5").unwrap(),
             NodeVersion::parse("7.0.1").unwrap(),
         ];
-        let result = Version::MajorMinor(6, 0).to_version(&versions);
+        let result = Version::MajorMinor(6, 0).to_node_version(&versions);
 
         assert_ne!(result, Some(&expected));
     }
