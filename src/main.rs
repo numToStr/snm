@@ -1,3 +1,4 @@
+mod alias;
 mod cli;
 mod cmd;
 mod config;

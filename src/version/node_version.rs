@@ -1,4 +1,6 @@
+use crate::alias::Alias;
 use serde::Deserialize;
+use std::path::Path;
 
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone)]
 pub enum NodeVersion {
@@ -24,6 +26,36 @@ impl NodeVersion {
         } else {
             Ok(Self::Alias(trimmed.to_string()))
         }
+    }
+
+    pub fn version_str(&self) -> String {
+        format!("{}", self)
+    }
+
+    pub fn list_versions<P: AsRef<Path>>(path: P) -> anyhow::Result<Vec<NodeVersion>> {
+        let mut versions = Vec::<NodeVersion>::new();
+        let dirs = std::fs::read_dir(&path)?;
+
+        for dir in dirs {
+            let dir = dir?.path();
+            let ver = dir.strip_prefix(&path)?.to_str();
+            let ver = NodeVersion::parse(ver.unwrap())?;
+            versions.push(ver);
+        }
+
+        // Sort in decreasing order;
+        versions.sort_by(|a, b| b.cmp(a));
+
+        Ok(versions)
+    }
+
+    pub fn list_aliases<'a>(&self, aliases: &'a Vec<Alias>) -> Vec<&'a str> {
+        let a: Vec<&Alias> = aliases
+            .iter()
+            .filter(|&alias| alias.version_str() == self.version_str())
+            .collect();
+
+        a.iter().map(|&v| v.name()).collect::<Vec<&str>>()
     }
 }
 
