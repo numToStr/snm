@@ -32,7 +32,7 @@ impl super::Command for LsRemote {
             _ => (releases.list, None),
         };
 
-        if releases.len() <= 0 {
+        if releases.is_empty() {
             println!("No releases found with the version {}", version.unwrap());
             return Ok(());
         }
