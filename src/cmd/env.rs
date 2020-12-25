@@ -3,15 +3,9 @@ use crate::shell::{fish, zsh, Shell, ShellKind};
 use clap::Clap;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
-pub struct EnvConfig {
+pub struct Env {
     #[clap(short, long)]
     use_on_cd: bool,
-}
-
-#[derive(Debug, Clap, PartialEq, Eq)]
-pub struct Env {
-    #[clap(flatten)]
-    env_config: EnvConfig,
 
     #[clap(subcommand)]
     shell: ShellKind,
