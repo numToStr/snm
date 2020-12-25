@@ -2,12 +2,11 @@ use crate::config::Config;
 use crate::fetcher::Releases;
 use crate::version::Version;
 use clap::Clap;
-use std::str::FromStr;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct LsRemote {
-    /// Version that needs to be queried
-    version: Option<String>,
+    /// Version that needs to be searched
+    version: Option<Version>,
 
     /// Number of result to be shown
     #[clap(short, default_value = "20")]
@@ -29,10 +28,7 @@ impl super::Command for LsRemote {
         let releases = Releases::fetch()?;
 
         let (releases, version) = match &self.version {
-            Some(v) => {
-                let ver = Version::from_str(&v)?;
-                (releases.find_releases(&ver), Some(ver))
-            }
+            Some(v) => (releases.find_releases(v), Some(v)),
             _ => (releases.list, None),
         };
 

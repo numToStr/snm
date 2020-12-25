@@ -2,12 +2,11 @@ use crate::alias::Alias;
 use crate::config::Config;
 use crate::version::{NodeVersion, Version};
 use clap::Clap;
-use std::str::FromStr;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct UnInstall {
     /// A version string. Can be a partial semver or a LTS version name by the format lts/NAME
-    version: String,
+    version: Version,
 
     /// Don't remove if the version is currently used.
     #[clap(short, long)]
@@ -18,13 +17,11 @@ impl super::Command for UnInstall {
     type InitResult = ();
 
     fn init(&self, config: Config) -> anyhow::Result<Self::InitResult> {
-        let version = Version::from_str(&self.version)?;
-
         let dir = config.release_dir();
         let downloaded = NodeVersion::list_versions(&dir)?;
         let matches: Vec<&NodeVersion> = downloaded
             .iter()
-            .filter(|&d| version.match_version(d))
+            .filter(|&d| self.version.match_version(d))
             .collect();
 
         if matches.is_empty() {
