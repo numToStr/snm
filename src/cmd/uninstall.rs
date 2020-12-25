@@ -19,10 +19,7 @@ impl super::Command for UnInstall {
     fn init(&self, config: Config) -> anyhow::Result<Self::InitResult> {
         let dir = config.release_dir();
         let downloaded = NodeVersion::list_versions(&dir)?;
-        let matches: Vec<&NodeVersion> = downloaded
-            .iter()
-            .filter(|&d| self.version.match_version(d))
-            .collect();
+        let matches = self.version.match_node_versions(&downloaded);
 
         if matches.is_empty() {
             println!("No downloaded version found.");

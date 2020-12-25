@@ -51,13 +51,13 @@ impl Releases {
     pub fn find_releases(self, version: &Version) -> Vec<Release> {
         self.list
             .into_iter()
-            .filter(|v| version.match_version(&v.version))
+            .filter(|v| version.match_node_version(&v.version))
             .collect()
     }
 
     pub fn find_release(self, version: &Version) -> Option<Release> {
         self.list
             .into_iter()
-            .find(|v| version.match_version(&v.version))
+            .find(|v| version.match_node_version(&v.version))
     }
 }

@@ -14,20 +14,20 @@ impl Version {
     where
         T: IntoIterator<Item = &'a NodeVersion>,
     {
-        self.match_versions(versions).into_iter().max()
+        self.match_node_versions(versions).into_iter().max()
     }
 
-    pub fn match_versions<'a, T>(&self, versions: T) -> Vec<&'a NodeVersion>
+    pub fn match_node_versions<'a, T>(&self, versions: T) -> Vec<&'a NodeVersion>
     where
         T: IntoIterator<Item = &'a NodeVersion>,
     {
         versions
             .into_iter()
-            .filter(|&v| self.match_version(v))
+            .filter(|&v| self.match_node_version(v))
             .collect()
     }
 
-    pub fn match_version(&self, version: &NodeVersion) -> bool {
+    pub fn match_node_version(&self, version: &NodeVersion) -> bool {
         match (self, version) {
             (Self::Full(a), b) if a == b => true,
             (Self::Major(major), NodeVersion::Semver(other)) => major == &other.major,
@@ -114,31 +114,31 @@ mod tests {
     #[test]
     fn test_match_full_version() {
         let ver = NodeVersion::parse("10.15.0").unwrap();
-        assert!(Version::Full(ver.clone()).match_version(&ver))
+        assert!(Version::Full(ver.clone()).match_node_version(&ver))
     }
 
     #[test]
     fn test_match_major_version() {
         let ver = NodeVersion::parse("10.15.0").unwrap();
-        assert!(Version::Major(10).match_version(&ver))
+        assert!(Version::Major(10).match_node_version(&ver))
     }
 
     #[test]
     fn test_not_match_major_version() {
         let ver = NodeVersion::parse("10.15.0").unwrap();
-        assert!(!Version::Major(19).match_version(&ver))
+        assert!(!Version::Major(19).match_node_version(&ver))
     }
 
     #[test]
     fn test_match_major_minor_version() {
         let ver = NodeVersion::parse("10.15.0").unwrap();
-        assert!(Version::MajorMinor(10, 15).match_version(&ver))
+        assert!(Version::MajorMinor(10, 15).match_node_version(&ver))
     }
 
     #[test]
     fn test_not_match_major_minor_version() {
         let ver = NodeVersion::parse("10.15.0").unwrap();
-        assert!(!Version::MajorMinor(10, 19).match_version(&ver))
+        assert!(!Version::MajorMinor(10, 19).match_node_version(&ver))
     }
 
     #[test]
