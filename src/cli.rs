@@ -6,11 +6,11 @@ use clap::{crate_authors, crate_description, crate_name, crate_version, Clap};
 
 #[derive(Clap, Debug, PartialEq, Eq)]
 pub enum SubCommand {
-    /// Print and set up required environment variables for fnm
+    /// Sets up the shell variables for snm
     #[clap(name = "env")]
     Env(env::Env),
 
-    /// Print and set up required environment variables for fnm
+    /// Prints shell's completion script for snm to the stdout
     #[clap(name = "completions")]
     Completions(completions::Completions),
 
