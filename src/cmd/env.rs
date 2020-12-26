@@ -22,12 +22,17 @@ impl super::Command for Env {
 
         println!("{}", shell.path_env(&config.alias_default().join("bin")));
 
+        println!("{}", shell.env_var("SNM_LOGLEVEL", &config.log_level));
+
         println!(
             "{}",
             shell.env_var("SNM_DIR", &config.snm_home().to_str().unwrap_or(""))
         );
 
-        println!("{}", shell.env_var("SNM_LOGLEVEL", &config.log_level));
+        println!(
+            "{}",
+            shell.env_var("SNM_NODE_DIST_MIRROR", &config.dist_mirror.to_string())
+        );
 
         Ok(())
     }
