@@ -1,6 +1,6 @@
 use crate::config::Config;
-use crate::directory as dir;
 use crate::fetcher::Release;
+use crate::symlink::symlink_to;
 use crate::url;
 use crate::xtract::Xtract;
 use std::path::PathBuf;
@@ -38,7 +38,7 @@ impl Downloader {
 
         // If we are only downloading then don't need to create a symlink to default
         if !config.download_only {
-            dir::symlink_to(&dest, &config.alias_default())?;
+            symlink_to(&dest, &config.alias_default())?;
         }
 
         Ok(dest)

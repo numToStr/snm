@@ -28,7 +28,7 @@ impl Alias {
     }
 
     pub fn remove_alias(&self) -> anyhow::Result<()> {
-        crate::directory::remove_symlink(&self.alias_path)?;
+        crate::symlink::remove_symlink(&self.alias_path)?;
         Ok(())
     }
 

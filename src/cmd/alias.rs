@@ -1,5 +1,5 @@
 use crate::config::Config;
-use crate::directory::symlink_to;
+use crate::symlink::symlink_to;
 use crate::version::{NodeVersion, Version};
 use clap::Clap;
 
