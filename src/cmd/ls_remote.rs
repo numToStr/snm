@@ -9,7 +9,7 @@ pub struct LsRemote {
     version: Option<Version>,
 
     /// Number of result to be shown
-    #[clap(short, default_value = "20")]
+    #[clap(short, long, default_value = "20", conflicts_with = "all")]
     count: usize,
 
     /// Show all the results that matches the version
