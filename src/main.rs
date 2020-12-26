@@ -1,4 +1,5 @@
 mod alias;
+mod archive;
 mod cli;
 mod cmd;
 mod config;
@@ -9,7 +10,6 @@ mod symlink;
 mod sysinfo;
 mod url;
 mod version;
-mod xtract;
 
 fn main() -> anyhow::Result<()> {
     let app = cli::parse();

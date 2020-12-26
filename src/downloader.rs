@@ -1,8 +1,8 @@
+use crate::archive::Archive;
 use crate::config::Config;
 use crate::fetcher::Release;
 use crate::symlink::symlink_to;
 use crate::url;
-use crate::xtract::Xtract;
 use std::path::PathBuf;
 use ureq;
 
@@ -32,7 +32,7 @@ impl Downloader {
         println!("Dowloading : {}", &bin.url);
         println!("Size       : {}", &len);
 
-        Xtract::new(res).extract_into(&release_dir);
+        Archive::new(res).extract_into(&release_dir)?;
 
         std::fs::rename(&release_dir.join(bin.name), &dest)?;
 

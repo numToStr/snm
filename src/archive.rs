@@ -1,6 +1,6 @@
 // use std::io::{copy, Read};
 use std::path::Path;
-use tar::Archive;
+use tar::Archive as Tar;
 // use tempfile::tempfile;
 use ureq::Response;
 use xz2::read::XzDecoder;
@@ -32,20 +32,20 @@ use xz2::read::XzDecoder;
 //     }
 // }
 
-pub struct Xtract {
+pub struct Archive {
     res: Response,
 }
 
-impl Xtract {
+impl Archive {
     pub fn new(res: Response) -> Self {
-        Xtract { res }
+        Archive { res }
     }
 
     #[cfg(target_family = "unix")]
-    pub fn extract_into<P: AsRef<Path>>(self, path: P) {
+    pub fn extract_into<P: AsRef<Path>>(self, path: P) -> anyhow::Result<()> {
         let xz_stream = XzDecoder::new(self.res.into_reader());
-        let mut archive = Archive::new(xz_stream);
-        archive.unpack(path).unwrap();
+        let mut archive = Tar::new(xz_stream);
+        archive.unpack(path).map_err(|e| anyhow::Error::new(e))
     }
 
     #[cfg(target_family = "windows")]
