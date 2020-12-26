@@ -22,8 +22,10 @@ pub struct Releases {
 }
 
 impl Releases {
-    pub fn fetch() -> anyhow::Result<Self> {
-        let list: Vec<Release> = ureq::get(url::index().as_str()).call()?.into_json()?;
+    pub fn fetch(base_url: &str) -> anyhow::Result<Self> {
+        let list: Vec<Release> = ureq::get(url::index(base_url).as_str())
+            .call()?
+            .into_json()?;
 
         Ok(Releases { list })
     }

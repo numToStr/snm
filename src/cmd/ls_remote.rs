@@ -20,12 +20,12 @@ pub struct LsRemote {
 impl super::Command for LsRemote {
     type InitResult = ();
 
-    fn init(&self, _: Config) -> anyhow::Result<Self::InitResult> {
+    fn init(&self, config: Config) -> anyhow::Result<Self::InitResult> {
         if !self.all {
             println!("-- Displaying {} results --", self.count)
         }
 
-        let releases = Releases::fetch()?;
+        let releases = Releases::fetch(&config.dist_mirror)?;
 
         let (releases, version) = match &self.version {
             Some(v) => (releases.find_releases(v), Some(v)),

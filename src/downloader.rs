@@ -10,7 +10,7 @@ pub struct Downloader;
 
 impl Downloader {
     pub fn download(&self, r: &Release, config: &Config) -> anyhow::Result<PathBuf> {
-        let bin = url::release(&r.version);
+        let bin = url::release(&config.dist_mirror, &r.version);
 
         let release_dir = &config.release_dir();
         let dest = release_dir.join(&r.version.to_string());

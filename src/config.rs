@@ -7,10 +7,25 @@ use std::{
 
 #[derive(Clap, Debug)]
 pub struct Config {
-    #[clap(long, env = "SNM_DIR", global = true)]
+    #[clap(long, name = "base-dir", env = "SNM_DIR", global = true)]
     pub snm_dir: Option<PathBuf>,
 
-    #[clap(long, env = "SNM_LOGLEVEL", default_value = "info", global = true)]
+    #[clap(
+        long = "node-dist-mirror",
+        name = "mirror",
+        env = "SNM_NODE_DIST_MIRROR",
+        default_value = "https://nodejs.org/dist",
+        global = true
+    )]
+    pub dist_mirror: String,
+
+    #[clap(
+        long,
+        name = "level",
+        env = "SNM_LOGLEVEL",
+        default_value = "info",
+        global = true
+    )]
     pub log_level: String,
 
     /// Only downloads the binary

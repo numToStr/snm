@@ -14,7 +14,7 @@ impl super::Command for Install {
     type InitResult = ();
 
     fn init(&self, config: Config) -> anyhow::Result<Self::InitResult> {
-        let release = Releases::fetch()?.find_release(&self.version);
+        let release = Releases::fetch(&config.dist_mirror)?.find_release(&self.version);
 
         match release {
             Some(r) => {

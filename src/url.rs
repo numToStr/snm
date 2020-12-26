@@ -1,14 +1,10 @@
 use crate::version::NodeVersion;
 
-pub fn base_dist<'a>() -> &'a str {
-    "https://nodejs.org/download/release"
+pub fn index(base_path: &str) -> String {
+    format!("{}/index.json", base_path)
 }
 
-pub fn index() -> String {
-    format!("{}/index.json", base_dist())
-}
-
-pub struct Binary {
+pub struct Dist {
     /// URL of the binary to be downloaded
     pub url: String,
 
@@ -17,25 +13,25 @@ pub struct Binary {
 }
 
 #[cfg(unix)]
-pub fn release(v: &NodeVersion) -> Binary {
+pub fn release(base_path: &str, v: &NodeVersion) -> Dist {
     use crate::sysinfo::{platform_arch, platform_name};
 
     let name = format!("node-{}-{}-{}", v, platform_name(), platform_arch());
 
-    Binary {
-        url: format!("{}/{}/{}.tar.xz", base_dist(), v, &name),
+    Dist {
+        url: format!("{}/{}/{}.tar.xz", base_path, v, &name),
         name,
     }
 }
 
 #[cfg(windows)]
-pub fn release(v: &str) -> Binary {
+pub fn release(base_path: &str, v: &NodeVersion) -> Binary {
     use crate::sysinfo::platform_arch;
 
     let name = format!("node-{}-win-{}", v, platform_arch());
 
     Binary {
-        url: format!("{}/{}/{}.zip", base_dist(), v, &name),
+        url: format!("{}/{}/{}.zip", base_path, v, &name),
         name,
     }
 }
