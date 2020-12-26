@@ -1,6 +1,6 @@
-use crate::url;
 use crate::version::{NodeVersion, Version};
 use serde::Deserialize;
+use url::Url;
 
 #[derive(Debug, Deserialize)]
 #[serde(untagged)]
@@ -22,8 +22,8 @@ pub struct Fetcher {
 }
 
 impl Fetcher {
-    pub fn fetch(base_url: &str) -> anyhow::Result<Self> {
-        let list: Vec<Release> = ureq::get(url::index(base_url).as_str())
+    pub fn fetch(base_url: &Url) -> anyhow::Result<Self> {
+        let list: Vec<Release> = ureq::get(crate::url::index(base_url).as_str())
             .call()?
             .into_json()?;
 

@@ -4,6 +4,7 @@ use std::{
     fs::create_dir_all,
     path::{Path, PathBuf},
 };
+use url::Url;
 
 #[derive(Clap, Debug)]
 pub struct Config {
@@ -17,7 +18,7 @@ pub struct Config {
         default_value = "https://nodejs.org/dist",
         global = true
     )]
-    pub dist_mirror: String,
+    pub dist_mirror: Url,
 
     #[clap(
         long,
