@@ -56,12 +56,12 @@ impl NodeVersion {
             .collect()
     }
 
-    pub fn list_aliases_str<'a>(&self, aliases: &'a Vec<Alias>) -> Vec<&'a str> {
-        self.list_aliases(aliases)
-            .into_iter()
-            .map(|verion| verion.name())
-            .collect()
-    }
+    // pub fn list_aliases_str<'a>(&self, aliases: &'a Vec<Alias>) -> Vec<&'a str> {
+    //     self.list_aliases(aliases)
+    //         .into_iter()
+    //         .map(|verion| verion.name())
+    //         .collect()
+    // }
 }
 
 impl std::fmt::Display for NodeVersion {
