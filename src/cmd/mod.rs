@@ -10,4 +10,5 @@ pub mod lts;
 pub mod prune;
 pub mod uninstall;
 pub mod r#use;
+pub mod which;
 pub use command::Command;
