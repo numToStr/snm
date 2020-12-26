@@ -30,7 +30,7 @@ impl Fetcher {
         Ok(Self { list })
     }
 
-    pub fn lts(&mut self) -> anyhow::Result<&Release> {
+    pub fn lts(&self) -> anyhow::Result<&Release> {
         self.list
             .iter()
             .find(|x| match x.lts {
@@ -40,7 +40,7 @@ impl Fetcher {
             .ok_or(anyhow::Error::msg("Unable to find release"))
     }
 
-    pub fn latest(&mut self) -> anyhow::Result<&Release> {
+    pub fn latest(&self) -> anyhow::Result<&Release> {
         self.list
             .iter()
             .find(|x| match x.lts {

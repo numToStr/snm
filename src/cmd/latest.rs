@@ -10,10 +10,10 @@ impl super::Command for Latest {
     type InitResult = ();
 
     fn init(&self, config: Config) -> anyhow::Result<Self::InitResult> {
-        let mut release = Fetcher::fetch(&config.dist_mirror)?;
-        let release = release.latest()?;
+        let releases = Fetcher::fetch(&config.dist_mirror)?;
+        let release = releases.latest()?;
 
-        Downloader.download(release, &config)?;
+        Downloader.download(&release, &config)?;
 
         Ok(())
     }

@@ -51,16 +51,16 @@ impl NodeVersion {
 
     pub fn list_aliases<'a>(&self, aliases: &'a Vec<Alias>) -> Vec<&'a Alias> {
         aliases
-            .iter()
+            .into_iter()
             .filter(|&alias| alias.version_str() == self.version_str())
-            .collect::<Vec<&Alias>>()
+            .collect()
     }
 
     pub fn list_aliases_str<'a>(&self, aliases: &'a Vec<Alias>) -> Vec<&'a str> {
         self.list_aliases(aliases)
-            .iter()
-            .map(|&v| v.name())
-            .collect::<Vec<&str>>()
+            .into_iter()
+            .map(|verion| verion.name())
+            .collect()
     }
 }
 
