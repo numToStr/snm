@@ -35,11 +35,11 @@ pub enum SubCommand {
     #[clap(name = "lts")]
     Lts(lts::Lts),
 
-    /// Output downloaded versions
+    /// List all the local downloaded versions w/ alias (if any)
     #[clap(name = "ls")]
     Ls(ls::Ls),
 
-    /// Output downloaded versions
+    /// List remote Node.js versions
     #[clap(name = "ls-remote", visible_alias = "lsr")]
     LsRemote(ls_remote::LsRemote),
 

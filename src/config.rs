@@ -8,9 +8,11 @@ use url::Url;
 
 #[derive(Clap, Debug)]
 pub struct Config {
+    /// Root directory of the snm installation
     #[clap(long, name = "base-dir", env = "SNM_DIR", global = true)]
     pub snm_dir: Option<PathBuf>,
 
+    /// Nodejs release mirror
     #[clap(
         long = "node-dist-mirror",
         name = "mirror",
@@ -20,6 +22,7 @@ pub struct Config {
     )]
     pub dist_mirror: Url,
 
+    /// Log level for the snm commands
     #[clap(
         long,
         name = "level",
@@ -29,7 +32,7 @@ pub struct Config {
     )]
     pub log_level: String,
 
-    /// Only downloads the binary
+    /// Only download the matching Nodejs version
     #[clap(short, long, global = true)]
     pub download_only: bool,
 }
