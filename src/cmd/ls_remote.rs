@@ -1,5 +1,5 @@
 use crate::config::Config;
-use crate::fetcher::Releases;
+use crate::fetcher::Fetcher;
 use crate::version::Version;
 use clap::Clap;
 
@@ -25,7 +25,7 @@ impl super::Command for LsRemote {
             println!("-- Displaying {} results --", self.count)
         }
 
-        let releases = Releases::fetch(&config.dist_mirror)?;
+        let releases = Fetcher::fetch(&config.dist_mirror)?;
 
         let (releases, version) = match &self.version {
             Some(v) => (releases.find_releases(v), Some(v)),

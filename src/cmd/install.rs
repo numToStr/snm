@@ -1,6 +1,6 @@
 use crate::config::Config;
 use crate::downloader::Downloader;
-use crate::fetcher::Releases;
+use crate::fetcher::Fetcher;
 use crate::version::Version;
 use clap::Clap;
 
@@ -14,7 +14,7 @@ impl super::Command for Install {
     type InitResult = ();
 
     fn init(&self, config: Config) -> anyhow::Result<Self::InitResult> {
-        let release = Releases::fetch(&config.dist_mirror)?.find_release(&self.version);
+        let release = Fetcher::fetch(&config.dist_mirror)?.find_release(&self.version);
 
         match release {
             Some(r) => {

@@ -17,17 +17,17 @@ pub struct Release {
     pub files: Vec<String>,
 }
 
-pub struct Releases {
+pub struct Fetcher {
     pub list: Vec<Release>,
 }
 
-impl Releases {
+impl Fetcher {
     pub fn fetch(base_url: &str) -> anyhow::Result<Self> {
         let list: Vec<Release> = ureq::get(url::index(base_url).as_str())
             .call()?
             .into_json()?;
 
-        Ok(Releases { list })
+        Ok(Self { list })
     }
 
     pub fn lts(&mut self) -> anyhow::Result<&Release> {
