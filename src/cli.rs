@@ -1,11 +1,16 @@
 use crate::cmd::{
-    completions, env, install, latest, ls, ls_remote, lts, prune, r#use, uninstall, which, Command,
+    alias, completions, env, install, latest, ls, ls_remote, lts, prune, r#use, uninstall, which,
+    Command,
 };
 use crate::config::Config;
 use clap::{crate_authors, crate_description, crate_name, crate_version, Clap};
 
 #[derive(Clap, Debug, PartialEq, Eq)]
 pub enum SubCommand {
+    /// Alias a version to a common name
+    #[clap(name = "alias")]
+    Alias(alias::Alias),
+
     /// Sets up the shell variables for snm
     #[clap(name = "env")]
     Env(env::Env),
@@ -54,6 +59,7 @@ pub enum SubCommand {
 impl SubCommand {
     pub fn exec(&self, config: Config) -> anyhow::Result<()> {
         match self {
+            Self::Alias(m) => m.init(config),
             Self::Env(m) => m.init(config),
             Self::Completions(m) => m.init(config),
             Self::Install(m) => m.init(config),

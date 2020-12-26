@@ -1,5 +1,6 @@
 mod command;
 
+pub mod alias;
 pub mod completions;
 pub mod env;
 pub mod install;
