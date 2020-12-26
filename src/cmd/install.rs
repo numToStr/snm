@@ -1,5 +1,5 @@
 use crate::config::Config;
-use crate::downloader::Downloader;
+use crate::downloader::download;
 use crate::fetcher::Fetcher;
 use crate::version::{NodeVersion, Version};
 use clap::Clap;
@@ -27,7 +27,7 @@ impl super::Command for Install {
 
             match release {
                 Some(r) => {
-                    Downloader.download(&r, &config)?;
+                    download(&r, &config)?;
                 }
                 _ => println!("No release found with the version {}", &self.version),
             }

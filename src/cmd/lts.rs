@@ -1,5 +1,5 @@
 use crate::config::Config;
-use crate::downloader::Downloader;
+use crate::downloader::download;
 use crate::fetcher::Fetcher;
 use clap::Clap;
 
@@ -13,7 +13,7 @@ impl super::Command for Lts {
         let releases = Fetcher::fetch(&config.dist_mirror)?;
         let release = releases.lts()?;
 
-        Downloader.download(&release, &config)?;
+        download(&release, &config)?;
 
         Ok(())
     }

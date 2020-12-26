@@ -6,43 +6,38 @@ use crate::url;
 use std::path::PathBuf;
 use ureq;
 
-pub struct Downloader;
+pub fn download(r: &Release, config: &Config) -> anyhow::Result<PathBuf> {
+    let release_dir = &config.release_dir();
+    let dest = release_dir.join(&r.version.to_string());
 
-impl Downloader {
-    pub fn download(&self, r: &Release, config: &Config) -> anyhow::Result<PathBuf> {
-        let bin = url::release(&config.dist_mirror, &r.version);
-
-        let release_dir = &config.release_dir();
-        let dest = release_dir.join(&r.version.to_string());
-
-        if dest.exists() {
-            return Err(anyhow::Error::msg(format!(
-                "Binary with version ({}) is already exists.",
-                &r.version
-            )));
-        }
-
-        let res = ureq::get(&bin.url).call()?;
-        let len = res
-            .header("Content-Length")
-            .and_then(|x| x.parse::<usize>().ok())
-            .ok_or(anyhow::Error::msg("Unable to get content length."))?;
-
-        println!("Installing : {}", &r.version);
-        println!("Dowloading : {}", &bin.url);
-        println!("Size       : {}", &len);
-
-        Archive::new(res).extract_into(&release_dir)?;
-
-        std::fs::rename(&release_dir.join(bin.name), &dest)?;
-
-        // If we are only downloading then don't need to create a symlink to default
-        if !config.download_only {
-            symlink_to(&dest, &config.alias_default())?;
-        }
-
-        Ok(dest)
+    if dest.exists() {
+        return Err(anyhow::Error::msg(format!(
+            "Version {} is already exists.",
+            &r.version
+        )));
     }
+
+    let dist = url::release(&config.dist_mirror, &r.version);
+    let res = ureq::get(&dist.url).call()?;
+    let len = res
+        .header("Content-Length")
+        .and_then(|x| x.parse::<usize>().ok())
+        .ok_or(anyhow::Error::msg("Unable to get content length."))?;
+
+    println!("Installing : {}", &r.version);
+    println!("Dowloading : {}", &dist.url);
+    println!("Size       : {}", &len);
+
+    Archive::new(res).extract_into(&release_dir)?;
+
+    std::fs::rename(&release_dir.join(dist.name), &dest)?;
+
+    // If we are only downloading then don't need to create a symlink to default
+    if !config.download_only {
+        symlink_to(&dest, &config.alias_default())?;
+    }
+
+    Ok(dest)
 }
 
 // installing : node-v14.15.3

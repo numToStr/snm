@@ -1,5 +1,5 @@
 use crate::config::Config;
-use crate::downloader::Downloader;
+use crate::downloader::download;
 use crate::fetcher::Fetcher;
 use clap::Clap;
 
@@ -13,7 +13,7 @@ impl super::Command for Latest {
         let releases = Fetcher::fetch(&config.dist_mirror)?;
         let release = releases.latest()?;
 
-        Downloader.download(&release, &config)?;
+        download(&release, &config)?;
 
         Ok(())
     }
