@@ -7,14 +7,14 @@ use std::{
 
 #[derive(Clap, Debug)]
 pub struct Config {
-    #[clap(long, env = "SNM_DIR")]
+    #[clap(long, env = "SNM_DIR", global = true)]
     pub snm_dir: Option<PathBuf>,
 
-    #[clap(long, env = "SNM_LOGLEVEL", default_value = "info")]
+    #[clap(long, env = "SNM_LOGLEVEL", default_value = "info", global = true)]
     pub log_level: String,
 
     /// Only downloads the binary
-    #[clap(short, long)]
+    #[clap(short, long, global = true)]
     pub download_only: bool,
 }
 
