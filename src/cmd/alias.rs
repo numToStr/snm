@@ -18,17 +18,14 @@ impl super::Command for Alias {
     fn init(&self, config: Config) -> anyhow::Result<Self::InitResult> {
         let dir = config.release_dir();
         let versions = NodeVersion::list_versions(&dir)?;
-        let found = self.version.to_node_version(&versions);
+        let version = self.version.to_node_version(&versions)?;
 
-        if let Some(version) = found {
-            symlink_to(
-                dir.join(version.version_str()),
-                config.alias_dir().join(&self.alias),
-            )?;
-            println!("Version {} is aliased to {}", version, &self.alias);
-        } else {
-            println!("Version {} not found locally", self.version);
-        }
+        symlink_to(
+            dir.join(version.version_str()),
+            config.alias_dir().join(&self.alias),
+        )?;
+
+        println!("Version {} is aliased to {}", version, &self.alias);
 
         Ok(())
     }

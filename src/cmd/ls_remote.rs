@@ -1,7 +1,9 @@
 use crate::config::Config;
 use crate::fetcher::Fetcher;
+use crate::pretty_error;
 use crate::version::Version;
 use clap::Clap;
+use colored::*;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct LsRemote {
@@ -33,8 +35,10 @@ impl super::Command for LsRemote {
         };
 
         if releases.is_empty() {
-            println!("No releases found with the version {}", version.unwrap());
-            return Ok(());
+            return pretty_error!(
+                "No releases found with the version {}",
+                version.unwrap().to_string().bold()
+            );
         }
 
         let releases = releases.into_iter();

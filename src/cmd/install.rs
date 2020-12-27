@@ -1,8 +1,10 @@
 use crate::config::Config;
 use crate::downloader::download;
 use crate::fetcher::Fetcher;
+use crate::pretty_error;
 use crate::version::{NodeVersion, Version};
 use clap::Clap;
+use colored::*;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct Install {
@@ -21,18 +23,23 @@ impl super::Command for Install {
         };
 
         if !can_install {
-            println!("Requested version ({}) is not installable", &self.version);
-        } else {
-            let release = Fetcher::fetch(&config.dist_mirror)?.find_release(&self.version);
-
-            match release {
-                Some(r) => {
-                    download(&r, &config)?;
-                }
-                _ => println!("No release found with the version {}", &self.version),
-            }
+            return pretty_error!(
+                "Unable to install the version {}",
+                &self.version.to_string().bold()
+            );
         }
 
-        Ok(())
+        let release = Fetcher::fetch(&config.dist_mirror)?.find_release(&self.version);
+
+        match release {
+            Some(r) => {
+                download(&r, &config)?;
+                Ok(())
+            }
+            _ => pretty_error!(
+                "No release found with the version {}",
+                &self.version.to_string().bold()
+            ),
+        }
     }
 }

@@ -1,4 +1,6 @@
+use crate::pretty_error_msg;
 use crate::version::{NodeVersion, Version};
+use colored::*;
 use serde::Deserialize;
 use url::Url;
 
@@ -37,7 +39,7 @@ impl Fetcher {
                 Lts::Yes(_) => true,
                 _ => false,
             })
-            .ok_or(anyhow::Error::msg("Unable to find release"))
+            .ok_or(pretty_error_msg!("Unable to find {} release", "lts".bold()))
     }
 
     pub fn latest(&self) -> anyhow::Result<&Release> {
@@ -47,7 +49,10 @@ impl Fetcher {
                 Lts::No(_) => true,
                 _ => false,
             })
-            .ok_or(anyhow::Error::msg("Unable to find release."))
+            .ok_or(pretty_error_msg!(
+                "Unable to find {} release",
+                "latest".bold()
+            ))
     }
 
     pub fn find_releases(self, version: &Version) -> Vec<Release> {

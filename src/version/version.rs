@@ -1,4 +1,6 @@
 use super::node_version::NodeVersion;
+use crate::pretty_error_msg;
+use colored::*;
 use std::str::FromStr;
 
 #[derive(Debug, PartialEq, Eq)]
@@ -10,11 +12,17 @@ pub enum Version {
 
 impl Version {
     /// Get a appropriate version from Vec<NodeVersion>
-    pub fn to_node_version<'a, T>(&self, versions: T) -> Option<&'a NodeVersion>
+    pub fn to_node_version<'a, T>(&self, versions: T) -> anyhow::Result<&'a NodeVersion>
     where
         T: IntoIterator<Item = &'a NodeVersion>,
     {
-        self.match_node_versions(versions).into_iter().max()
+        self.match_node_versions(versions)
+            .into_iter()
+            .max()
+            .ok_or(pretty_error_msg!(
+                "Version {} not found locally",
+                self.to_string().bold()
+            ))
     }
 
     pub fn match_node_versions<'a, T>(&self, versions: T) -> Vec<&'a NodeVersion>

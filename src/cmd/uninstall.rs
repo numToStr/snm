@@ -1,7 +1,9 @@
 use crate::alias::Alias;
 use crate::config::Config;
+use crate::pretty_error;
 use crate::version::{NodeVersion, Version};
 use clap::Clap;
+use colored::*;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct UnInstall {
@@ -22,14 +24,16 @@ impl super::Command for UnInstall {
         let matches = self.version.match_node_versions(&downloaded);
 
         if matches.is_empty() {
-            println!("No downloaded version found.");
-            return Ok(());
+            return pretty_error!(
+                "No downloads found with version {}",
+                &self.version.to_string().bold()
+            );
         }
 
         if matches.len() > 1 {
-            println!("Multiple versions found, expected 1. Please be a little more specific.");
+            eprintln!("Multiple versions found, expected 1. Please be a little more specific.");
             for m in matches {
-                println!("- {}", m);
+                eprintln!("- {}", m);
             }
         } else {
             let found_ver = matches.get(0).unwrap();
@@ -38,8 +42,10 @@ impl super::Command for UnInstall {
 
             for alias in found_alias {
                 if alias.name() == "default" && self.no_used {
-                    println!("{} is currently used. Aborting...", found_ver);
-                    return Ok(());
+                    return Err(anyhow::Error::msg(format!(
+                        "Unable to uninstall. Version {} is currently used",
+                        found_ver.to_string().bold()
+                    )));
                 }
 
                 alias.remove_alias()?;

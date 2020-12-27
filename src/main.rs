@@ -4,6 +4,7 @@ mod cli;
 mod cmd;
 mod config;
 mod downloader;
+mod errors;
 mod fetcher;
 mod shell;
 mod symlink;
@@ -11,8 +12,16 @@ mod sysinfo;
 mod url;
 mod version;
 
-fn main() -> anyhow::Result<()> {
+use colored::*;
+
+fn main() {
     let app = cli::parse();
 
-    app.cmd.exec(app.options)
+    if let Err(e) = app.cmd.exec(app.options) {
+        eprintln!(
+            "{} :: {}",
+            "ERROR".bright_blue(),
+            e.to_string().bright_red()
+        )
+    }
 }
