@@ -3,6 +3,7 @@ use crate::config::Config;
 use crate::fetcher::Release;
 use crate::symlink::symlink_to;
 use crate::url;
+use colored::*;
 use std::path::PathBuf;
 use ureq;
 
@@ -12,8 +13,8 @@ pub fn download(r: &Release, config: &Config) -> anyhow::Result<PathBuf> {
 
     if dest.exists() {
         return Err(anyhow::Error::msg(format!(
-            "Version {} is already exists.",
-            &r.version
+            "Version {} is already exists locally",
+            &r.version.to_string().bold()
         )));
     }
 

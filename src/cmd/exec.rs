@@ -1,6 +1,7 @@
 use crate::config::Config;
 use crate::version::{NodeVersion, Version};
 use clap::Clap;
+use colored::*;
 use std::env;
 use std::process::{self, Command, Stdio};
 
@@ -18,7 +19,7 @@ impl super::Command for Exec {
         let path = {
             let dir = config.release_dir();
             let versions = NodeVersion::list_versions(&dir)?;
-            let version = self.version.to_node_version(&versions).unwrap();
+            let version = self.version.to_node_version(&versions)?;
             let bin_path = dir.join(version.version_str()).join("bin");
             let path_env = env::var("PATH")?;
             let mut splits: Vec<_> = env::split_paths(&path_env).collect();
@@ -33,7 +34,9 @@ impl super::Command for Exec {
             .stderr(Stdio::inherit())
             .env("PATH", &path)
             .spawn()
-            .map_err(|_| anyhow::Error::msg("Can't spawn program"))?
+            .map_err(|_| {
+                anyhow::Error::msg(format!("Can't spawn program {}", &self.binary.bold()))
+            })?
             .wait()
             .map_err(|_| anyhow::Error::msg("Failed to grab exit code"))?;
 
