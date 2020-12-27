@@ -5,11 +5,26 @@ use std::path::PathBuf;
 pub struct Zsh;
 
 impl super::shell::Shell for Zsh {
-    fn path_env(&self, path: &PathBuf) -> String {
-        format!("export PATH={:?}:$PATH;", path.to_str().unwrap_or(""))
+    fn path(&self, path: &PathBuf) -> String {
+        format!("export PATH={:?}:$PATH;", path.display())
     }
 
     fn env_var(&self, name: &str, val: &str) -> String {
         format!("export {}={:?};", name, val)
+    }
+
+    fn use_on_cd(&self) -> String {
+        indoc::indoc!(
+            r#"
+                autoload -U add-zsh-hook
+                _fnm_autoload_hook () {
+                    if [[ -f .node-version || -f .nvmrc ]]; then
+                        fnm use
+                    fi
+                }
+                add-zsh-hook -Uz chpwd _fnm_autoload_hook
+            "#
+        )
+        .into()
     }
 }

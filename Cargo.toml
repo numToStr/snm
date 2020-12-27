@@ -12,6 +12,7 @@ anyhow = "1.0.36"
 clap = "3.0.0-beta.2"
 clap_generate = "3.0.0-beta.2"
 dirs-next = "2.0.0"
+indoc = "1.0.3"
 semver = "0.11.0"
 serde = { version = "1.0.118", features = ["derive"] }
 tar = "0.4.30"
