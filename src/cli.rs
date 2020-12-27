@@ -1,6 +1,6 @@
 use crate::cmd::{
-    alias, completions, env, install, latest, ls, ls_remote, lts, prune, r#use, uninstall, which,
-    Command,
+    alias, completions, env, exec, install, latest, ls, ls_remote, lts, prune, r#use, uninstall,
+    which, Command,
 };
 use crate::config::Config;
 use clap::{crate_authors, crate_description, crate_name, crate_version, Clap};
@@ -14,6 +14,12 @@ pub enum SubCommand {
     /// Sets up the shell variables for snm
     #[clap(name = "env")]
     Env(env::Env),
+
+    /// Executes a command within snm context w/ modified $PATH
+    ///
+    /// Example: snm exec 14 -- node -v
+    #[clap(name = "exec")]
+    Exec(exec::Exec),
 
     /// Prints shell's completion script for snm to the stdout
     #[clap(name = "completions")]
@@ -61,6 +67,7 @@ impl SubCommand {
         match self {
             Self::Alias(m) => m.init(config),
             Self::Env(m) => m.init(config),
+            Self::Exec(m) => m.init(config),
             Self::Completions(m) => m.init(config),
             Self::Install(m) => m.init(config),
             Self::Use(m) => m.init(config),

@@ -3,6 +3,7 @@ mod command;
 pub mod alias;
 pub mod completions;
 pub mod env;
+pub mod exec;
 pub mod install;
 pub mod latest;
 pub mod ls;
