@@ -1,5 +1,6 @@
 use crate::alias::Alias;
 use crate::config::Config;
+use crate::pretty_error;
 use crate::version::{NodeVersion, Version};
 use clap::Clap;
 use colored::*;
@@ -23,10 +24,10 @@ impl super::Command for UnInstall {
         let matches = self.version.match_node_versions(&downloaded);
 
         if matches.is_empty() {
-            return Err(anyhow::Error::msg(format!(
+            return pretty_error!(
                 "No downloads found with version {}",
                 &self.version.to_string().bold()
-            )));
+            );
         }
 
         if matches.len() > 1 {

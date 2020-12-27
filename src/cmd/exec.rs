@@ -1,4 +1,5 @@
 use crate::config::Config;
+use crate::pretty_error_msg;
 use crate::version::{NodeVersion, Version};
 use clap::Clap;
 use colored::*;
@@ -34,9 +35,7 @@ impl super::Command for Exec {
             .stderr(Stdio::inherit())
             .env("PATH", &path)
             .spawn()
-            .map_err(|_| {
-                anyhow::Error::msg(format!("Can't spawn program {}", &self.binary.bold()))
-            })?
+            .map_err(|_| pretty_error_msg!("Can't spawn program {}", &self.binary.bold()))?
             .wait()
             .map_err(|_| anyhow::Error::msg("Failed to grab exit code"))?;
 

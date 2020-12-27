@@ -1,6 +1,7 @@
 use crate::config::Config;
 use crate::downloader::download;
 use crate::fetcher::Fetcher;
+use crate::pretty_error;
 use crate::version::{NodeVersion, Version};
 use clap::Clap;
 use colored::*;
@@ -22,10 +23,10 @@ impl super::Command for Install {
         };
 
         if !can_install {
-            return Err(anyhow::Error::msg(format!(
+            return pretty_error!(
                 "Unable to install the version {}",
                 &self.version.to_string().bold()
-            )));
+            );
         }
 
         let release = Fetcher::fetch(&config.dist_mirror)?.find_release(&self.version);
@@ -35,10 +36,10 @@ impl super::Command for Install {
                 download(&r, &config)?;
                 Ok(())
             }
-            _ => Err(anyhow::Error::msg(format!(
+            _ => pretty_error!(
                 "No release found with the version {}",
                 &self.version.to_string().bold()
-            ))),
+            ),
         }
     }
 }
