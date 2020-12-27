@@ -2,6 +2,7 @@ use crate::config::Config;
 use crate::symlink::symlink_to;
 use crate::version::{NodeVersion, Version};
 use clap::Clap;
+use colored::*;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct Use {
@@ -20,7 +21,7 @@ impl super::Command for Use {
 
         symlink_to(dir.join(version.version_str()), config.alias_default())?;
 
-        println!("Using Node.js {}", version);
+        println!("Using Node.js {}", version.version_str().bold());
 
         Ok(())
     }

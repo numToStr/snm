@@ -42,18 +42,18 @@ impl super::Command for UnInstall {
 
             for alias in found_alias {
                 if alias.name() == "default" && self.no_used {
-                    return Err(anyhow::Error::msg(format!(
+                    return pretty_error!(
                         "Unable to uninstall. Version {} is currently used",
                         found_ver.to_string().bold()
-                    )));
+                    );
                 }
 
                 alias.remove_alias()?;
-                println!("Removed alias: {}", alias.name());
+                println!("Removed alias: {}", alias.name().bold());
             }
 
             std::fs::remove_dir_all(dir.join(found_ver.version_str()))?;
-            println!("Removed version: {}", found_ver);
+            println!("Removed version: {}", found_ver.to_string().bold());
         }
 
         Ok(())

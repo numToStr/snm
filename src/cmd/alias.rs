@@ -2,6 +2,7 @@ use crate::config::Config;
 use crate::symlink::symlink_to;
 use crate::version::{NodeVersion, Version};
 use clap::Clap;
+use colored::*;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct Alias {
@@ -25,7 +26,11 @@ impl super::Command for Alias {
             config.alias_dir().join(&self.alias),
         )?;
 
-        println!("Version {} is aliased to {}", version, &self.alias);
+        println!(
+            "Version {} is aliased to {}",
+            version.to_string().bold(),
+            &self.alias.bold()
+        );
 
         Ok(())
     }

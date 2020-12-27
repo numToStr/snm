@@ -2,6 +2,7 @@ use crate::alias::Alias;
 use crate::config::Config;
 use crate::version::NodeVersion;
 use clap::Clap;
+use colored::*;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct Ls;
@@ -18,7 +19,11 @@ impl super::Command for Ls {
 
             match found {
                 Some(a) => {
-                    println!("- {}\t{}", version, a.join(", "));
+                    if a.contains(&"default".to_string()) {
+                        println!("> {}\t{}", version.to_string().bold(), a.join(", ").bold());
+                    } else {
+                        println!("- {}\t{}", version, a.join(", "));
+                    }
                 }
                 _ => {
                     println!("- {}", version);
