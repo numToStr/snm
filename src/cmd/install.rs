@@ -23,8 +23,8 @@ impl super::Command for Install {
 
         if !can_install {
             return Err(anyhow::Error::msg(format!(
-                "Requested version ({}) is not installable",
-                &self.version
+                "Unable to install the version {}",
+                &self.version.to_string().bold()
             )));
         }
 
