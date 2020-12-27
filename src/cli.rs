@@ -30,7 +30,7 @@ pub enum SubCommand {
     Install(install::Install),
 
     /// Display downloaded node versions and install selection
-    #[clap(name = "use", visible_alias = "u")]
+    #[clap(name = "use", visible_alias = "as")]
     Use(r#use::Use),
 
     /// Install the latest node release (downloading if necessary)
@@ -58,7 +58,7 @@ pub enum SubCommand {
     Prune(prune::Prune),
 
     /// Remove the installed node and npm
-    #[clap(name = "uninstall", visible_alias = "un")]
+    #[clap(name = "uninstall", visible_alias = "rm")]
     UnInstall(uninstall::UnInstall),
 }
 
