@@ -49,7 +49,8 @@ impl Config {
 
     pub fn snm_home(&self) -> PathBuf {
         self.ensure_create(
-            (self.snm_dir.clone())
+            self.snm_dir
+                .clone()
                 .unwrap_or_else(|| home_dir().expect("Can't get home directory.").join(".snm")),
         )
     }

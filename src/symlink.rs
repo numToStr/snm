@@ -20,7 +20,7 @@ pub fn remove_symlink<P: AsRef<Path>>(path: P) -> io::Result<()> {
 /// Win -- Create a symlink from destination path to the given path
 #[cfg(windows)]
 pub fn symlink<P: AsRef<Path>>(from: P, to: P) -> io::Result<()> {
-    self.remove_symlink(&to)?;
+    remove_symlink(&to)?;
     std::os::windows::fs::symlink_dir(from, to)
 }
 
