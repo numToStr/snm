@@ -7,6 +7,10 @@ pub struct Env {
     #[clap(short, long)]
     use_on_cd: bool,
 
+    /// Appends the snm path to the end of $PATH
+    #[clap(short, long)]
+    append: bool,
+
     #[clap(subcommand)]
     shell: ShellKind,
 }
@@ -21,7 +25,10 @@ impl super::Command for Env {
             ShellKind::Fish => &fish::Fish,
         };
 
-        println!("{}", shell.path(&config.alias_default().join("bin")));
+        println!(
+            "{}",
+            shell.path(&config.alias_default().join("bin"), self.append)
+        );
 
         println!("{}", shell.env_var("SNM_LOGLEVEL", &config.log_level));
 

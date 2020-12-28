@@ -4,7 +4,11 @@ use std::path::PathBuf;
 pub struct Bash;
 
 impl super::shell::Shell for Bash {
-    fn path(&self, path: &PathBuf) -> String {
+    fn path(&self, path: &PathBuf, append: bool) -> String {
+        if append {
+            return format!("export PATH=$PATH:{:?};", path.display());
+        }
+
         format!("export PATH={:?}:$PATH", path.display())
     }
 

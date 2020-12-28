@@ -5,7 +5,11 @@ use std::path::PathBuf;
 pub struct Fish;
 
 impl super::shell::Shell for Fish {
-    fn path(&self, path: &PathBuf) -> String {
+    fn path(&self, path: &PathBuf, append: bool) -> String {
+        if append {
+            return format!("set -gx PATH $PATH {:?};", path.display());
+        }
+
         format!("set -gx PATH {:?} $PATH;", path.display())
     }
 
