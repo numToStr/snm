@@ -4,7 +4,7 @@ use crate::shell::ShellKind;
 use clap::{crate_name, Clap, IntoApp};
 use clap_generate::{
     generate,
-    generators::{Bash, Fish, Zsh},
+    generators::{Bash, Fish, PowerShell, Zsh},
 };
 use std::io;
 
@@ -29,6 +29,9 @@ impl super::Command for Completions {
             }
             ShellKind::Fish => {
                 generate::<Fish, _>(&mut Cli::into_app(), name, &mut io::stdout());
+            }
+            ShellKind::Pwsh => {
+                generate::<PowerShell, _>(&mut Cli::into_app(), name, &mut io::stdout());
             }
         };
 

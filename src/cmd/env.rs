@@ -1,5 +1,5 @@
 use crate::config::Config;
-use crate::shell::{bash, fish, zsh, Shell, ShellKind};
+use crate::shell::{bash, fish, pwsh, zsh, Shell, ShellKind};
 use clap::Clap;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
@@ -23,6 +23,7 @@ impl super::Command for Env {
             ShellKind::Bash => &bash::Bash,
             ShellKind::Zsh => &zsh::Zsh,
             ShellKind::Fish => &fish::Fish,
+            ShellKind::Pwsh => &pwsh::Pwsh,
         };
 
         let path = super::bin_path(config.alias_default());
