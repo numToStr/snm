@@ -42,6 +42,13 @@ impl Fetcher {
             .ok_or(pretty_error_msg!("Unable to find {} release", "lts".bold()))
     }
 
+    pub fn lts_name(self, lts: &str) -> Option<Release> {
+        self.list.into_iter().find(|x| match &x.lts {
+            Lts::Yes(raw_lts) => raw_lts.to_lowercase() == lts.to_lowercase(),
+            _ => false,
+        })
+    }
+
     pub fn latest(&self) -> anyhow::Result<&Release> {
         self.list
             .iter()

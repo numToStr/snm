@@ -17,7 +17,6 @@ impl super::Command for Install {
 
     fn init(&self, config: Config) -> anyhow::Result<Self::InitResult> {
         let can_install = match &self.version {
-            Version::Full(NodeVersion::Lts(_)) => false,
             Version::Full(NodeVersion::Alias(_)) => false,
             _ => true,
         };
@@ -29,7 +28,12 @@ impl super::Command for Install {
             );
         }
 
-        let release = Fetcher::fetch(&config.dist_mirror)?.find_release(&self.version);
+        let release = match &self.version {
+            Version::Full(NodeVersion::Lts(lts)) => {
+                Fetcher::fetch(&config.dist_mirror)?.lts_name(lts)
+            }
+            _ => Fetcher::fetch(&config.dist_mirror)?.find_release(&self.version),
+        };
 
         match release {
             Some(r) => {
