@@ -20,11 +20,11 @@ impl super::Command for Which {
         if versions.len() == 1 {
             println!(
                 "{}",
-                pretty_path(&dir.join(versions.next().unwrap().version_str()))
+                pretty_path(dir.join(versions.next().unwrap().version_str()))
             )
         } else {
             for ver in versions {
-                println!("- {}\t{}", ver, pretty_path(&dir.join(ver.version_str())))
+                println!("- {}\t{}", ver, pretty_path(dir.join(ver.version_str())))
             }
         }
 
@@ -32,6 +32,6 @@ impl super::Command for Which {
     }
 }
 
-fn pretty_path<'a>(path: &'a PathBuf) -> std::string::String {
-    path.join("bin").join("node").display().to_string()
+fn pretty_path(path: PathBuf) -> std::string::String {
+    super::bin_path(path).join("node").display().to_string()
 }

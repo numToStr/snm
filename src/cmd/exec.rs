@@ -21,7 +21,7 @@ impl super::Command for Exec {
             let dir = config.release_dir();
             let versions = NodeVersion::list_versions(&dir)?;
             let version = self.version.to_node_version(&versions)?;
-            let bin_path = dir.join(version.version_str()).join("bin");
+            let bin_path = super::bin_path(dir.join(version.version_str()));
             let path_env = env::var("PATH")?;
             let mut splits: Vec<_> = env::split_paths(&path_env).collect();
             splits.insert(0, bin_path);

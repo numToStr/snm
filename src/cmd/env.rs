@@ -25,10 +25,9 @@ impl super::Command for Env {
             ShellKind::Fish => &fish::Fish,
         };
 
-        println!(
-            "{}",
-            shell.path(&config.alias_default().join("bin"), self.append)
-        );
+        let path = super::bin_path(config.alias_default());
+
+        println!("{}", shell.path(&path, self.append));
 
         println!("{}", shell.env_var("SNM_LOGLEVEL", &config.log_level));
 
