@@ -22,9 +22,9 @@ impl Archive {
         use std::{fs, io};
 
         let mut reader = self.res.into_reader();
-        let mut temp_zip = tempfile::tempfile().unwrap();
-        std::io::copy(&mut reader, &mut temp_zip).unwrap();
-        let mut archive = zip::read::ZipArchive::new(&mut temp_zip).unwrap();
+        let mut temp_zip = tempfile::tempfile()?;
+        std::io::copy(&mut reader, &mut temp_zip)?;
+        let mut archive = zip::read::ZipArchive::new(&mut temp_zip)?;
 
         for i in 0..archive.len() {
             let mut file = archive.by_index(i)?;
