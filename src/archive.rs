@@ -1,36 +1,5 @@
-// use std::io::{copy, Read};
 use std::path::Path;
-use tar::Archive as Tar;
-// use tempfile::tempfile;
 use ureq::Response;
-use xz2::read::XzDecoder;
-// use zip::read::ZipArchive;
-
-// pub struct Zip {
-//     res: Response,
-// }
-//
-// impl Zip {
-//     pub fn new(res: Response) -> Self {
-//         Self { res }
-//     }
-//
-//     pub fn extract_into() {}
-// }
-
-// pub fn from_zip(res: Response) {
-//     let mut reader = res.into_reader();
-//     let mut t_file = tempfile().unwrap();
-//     copy(&mut reader, &mut t_file).unwrap();
-//     let mut zip = ZipArchive::new(t_file).unwrap();
-//
-//     for i in 0..zip.len() {
-//         let file = zip.by_index(i).unwrap();
-//         println!("Filename: {}", file.name());
-//         let first_byte = file.bytes().next().unwrap();
-//         println!("{:#?}", first_byte);
-//     }
-// }
 
 pub struct Archive {
     res: Response,
@@ -41,13 +10,66 @@ impl Archive {
         Archive { res }
     }
 
-    #[cfg(target_family = "unix")]
+    #[cfg(unix)]
     pub fn extract_into<P: AsRef<Path>>(self, path: P) -> anyhow::Result<()> {
-        let xz_stream = XzDecoder::new(self.res.into_reader());
-        let mut archive = Tar::new(xz_stream);
+        let xz_stream = xz2::read::XzDecoder::new(self.res.into_reader());
+        let mut archive = tar::Archive::new(xz_stream);
         archive.unpack(path).map_err(|e| anyhow::Error::new(e))
     }
 
-    #[cfg(target_family = "windows")]
-    pub fn extract_into(self, path: &str) {}
+    #[cfg(windows)]
+    pub fn extract_into<P: AsRef<Path>>(self, path: P) -> anyhow::Result<()> {
+        use std::{fs, io};
+
+        let mut reader = self.res.into_reader();
+        let mut temp_zip = tempfile::tempfile()?;
+        std::io::copy(&mut reader, &mut temp_zip)?;
+        let mut archive = zip::read::ZipArchive::new(&mut temp_zip)?;
+
+        for i in 0..archive.len() {
+            let mut file = archive.by_index(i)?;
+            let outpath = path.as_ref().join(file.enclosed_name().unwrap());
+
+            // {
+            //     let comment = file.comment();
+            //     if !comment.is_empty() {
+            //         println!("File {} comment: {}", i, comment);
+            //     }
+            // }
+
+            if (&*file.name()).ends_with('/') {
+                // println!(
+                //     "File {} extracted to \"{}\"",
+                //     i,
+                //     outpath.as_path().display()
+                // );
+                fs::create_dir_all(&outpath)?;
+            } else {
+                // println!(
+                //     "Extracting file {} to \"{}\" ({} bytes)",
+                //     i,
+                //     outpath.as_path().display(),
+                //     file.size()
+                // );
+                if let Some(p) = outpath.parent() {
+                    if !p.exists() {
+                        fs::create_dir_all(&p)?;
+                    }
+                }
+                let mut outfile = fs::File::create(&outpath)?;
+                io::copy(&mut file, &mut outfile)?;
+            }
+
+            // Get and Set permissions
+            #[cfg(unix)]
+            {
+                use std::os::unix::fs::PermissionsExt;
+
+                if let Some(mode) = file.unix_mode() {
+                    fs::set_permissions(&outpath, fs::Permissions::from_mode(mode))?;
+                }
+            }
+        }
+        Ok(())
+    }
 }

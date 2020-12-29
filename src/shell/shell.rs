@@ -17,4 +17,7 @@ pub enum ShellKind {
 
     /// Setup the fish shell environment
     Fish,
+
+    /// Setup the Windows Powershell environment
+    Pwsh,
 }

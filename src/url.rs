@@ -29,7 +29,7 @@ pub fn release(base_url: &Url, version: &NodeVersion) -> Dist {
 pub fn release(base_url: &Url, version: &NodeVersion) -> Dist {
     use crate::sysinfo::platform_arch;
 
-    let name = format!("node-{}-win-{}", v, platform_arch());
+    let name = format!("node-{}-win-{}", version, platform_arch());
 
     Dist {
         url: format!("{}/{}/{}.zip", base_url, version, &name),
