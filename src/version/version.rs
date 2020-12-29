@@ -160,7 +160,7 @@ mod tests {
         ];
         let result = Version::Major(6).to_node_version(&versions);
 
-        assert_eq!(result, Some(&expected));
+        assert_eq!(result.unwrap(), &expected);
     }
 
     #[test]
@@ -175,7 +175,7 @@ mod tests {
         ];
         let result = Version::Major(6).to_node_version(&versions);
 
-        assert_ne!(result, Some(&expected));
+        assert_ne!(result.unwrap(), &expected);
     }
 
     #[test]
@@ -189,7 +189,7 @@ mod tests {
         ];
         let result = Version::MajorMinor(6, 0).to_node_version(&versions);
 
-        assert_eq!(result, Some(&expected));
+        assert_eq!(result.unwrap(), &expected);
     }
 
     #[test]
@@ -204,6 +204,6 @@ mod tests {
         ];
         let result = Version::MajorMinor(6, 0).to_node_version(&versions);
 
-        assert_ne!(result, Some(&expected));
+        assert_ne!(result.unwrap(), &expected);
     }
 }
