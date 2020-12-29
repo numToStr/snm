@@ -22,7 +22,9 @@ impl super::Command for Exec {
             let versions = NodeVersion::list_versions(&dir)?;
             let version = self.version.to_node_version(&versions)?;
             let bin_path = super::bin_path(dir.join(version.version_str()));
-            let path_env = env::var("PATH")?;
+            let path_env = env::var_os("PATH").ok_or_else(|| {
+                pretty_error_msg!("Unable to read environment variable {}", "$PATH".bold())
+            })?;
             let mut splits: Vec<_> = env::split_paths(&path_env).collect();
             splits.insert(0, bin_path);
             env::join_paths(splits)?
