@@ -1,6 +1,6 @@
 use crate::cmd::{
-    alias, completions, env, exec, install, latest, ls, ls_remote, lts, prune, r#use, uninstall,
-    which, Command,
+    alias, completions, env, exec, install, latest, ls, ls_remote, lts, prune, r#use, unalias,
+    uninstall, which, Command,
 };
 use crate::config::Config;
 use clap::{crate_authors, crate_description, crate_name, crate_version, Clap};
@@ -57,6 +57,10 @@ pub enum SubCommand {
     #[clap(name = "prune")]
     Prune(prune::Prune),
 
+    /// Remove the aliases
+    #[clap(name = "unalias", visible_alias = "rma")]
+    UnAlias(unalias::UnAlias),
+
     /// Remove the installed node and npm
     #[clap(name = "uninstall", visible_alias = "rm")]
     UnInstall(uninstall::UnInstall),
@@ -77,6 +81,7 @@ impl SubCommand {
             Self::LsRemote(m) => m.init(config),
             Self::Which(m) => m.init(config),
             Self::Prune(m) => m.init(config),
+            Self::UnAlias(m) => m.init(config),
             Self::UnInstall(m) => m.init(config),
         }
     }
