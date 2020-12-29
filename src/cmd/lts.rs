@@ -13,7 +13,9 @@ impl super::Command for Lts {
         let releases = Fetcher::fetch(&config.dist_mirror)?;
         let release = releases.lts()?;
 
-        download(&release, &config)?;
+        let dest = download(&release, &config)?;
+
+        crate::symlink::symlink_to(&dest, &config.alias_dir().join("lts-latest"))?;
 
         Ok(())
     }

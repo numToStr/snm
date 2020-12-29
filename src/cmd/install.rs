@@ -28,16 +28,25 @@ impl super::Command for Install {
             );
         }
 
-        let release = match &self.version {
+        let (release, is_lts) = match &self.version {
             Version::Full(NodeVersion::Lts(lts)) => {
-                Fetcher::fetch(&config.dist_mirror)?.lts_name(lts)
+                (Fetcher::fetch(&config.dist_mirror)?.lts_name(lts), true)
             }
-            _ => Fetcher::fetch(&config.dist_mirror)?.find_release(&self.version),
+            _ => (
+                Fetcher::fetch(&config.dist_mirror)?.find_release(&self.version),
+                false,
+            ),
         };
 
         match release {
             Some(r) => {
-                download(&r, &config)?;
+                let dest = download(&r, &config)?;
+                if is_lts {
+                    crate::symlink::symlink_to(
+                        &dest,
+                        &config.alias_dir().join(&self.version.to_string()),
+                    )?
+                }
                 Ok(())
             }
             _ => pretty_error!(

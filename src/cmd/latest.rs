@@ -13,7 +13,9 @@ impl super::Command for Latest {
         let releases = Fetcher::fetch(&config.dist_mirror)?;
         let release = releases.latest()?;
 
-        download(&release, &config)?;
+        let dest = download(&release, &config)?;
+
+        crate::symlink::symlink_to(&dest, &config.alias_dir().join("latest"))?;
 
         Ok(())
     }
