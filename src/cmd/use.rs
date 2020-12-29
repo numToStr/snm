@@ -6,7 +6,7 @@ use colored::*;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct Use {
-    /// A version string. Can be a partial semver or a LTS version name by the format lts/NAME
+    /// Can be a partial semver or a LTS version name by the format lts/NAME
     version: Version,
 }
 

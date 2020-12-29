@@ -7,7 +7,7 @@ use colored::*;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct UnInstall {
-    /// A version string. Can be a partial semver or a LTS version name by the format lts/NAME
+    /// Version that needs to be removed. Can be a partial semver string.
     version: Version,
 
     /// Don't remove if the version is currently used.

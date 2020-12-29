@@ -7,7 +7,7 @@ use colored::*;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct LsRemote {
-    /// Version that needs to be searched
+    /// Version that needs to be searched. Can be a partial semver string.
     version: Option<Version>,
 
     /// Number of result to be shown

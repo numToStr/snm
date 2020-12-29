@@ -5,7 +5,7 @@ use std::path::PathBuf;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct Which {
-    /// A version string. Can be a partial semver or a LTS version name by the format lts/NAME
+    /// Can be a partial semver string.
     version: Version,
 }
 
