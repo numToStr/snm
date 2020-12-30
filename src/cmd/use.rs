@@ -21,13 +21,15 @@ impl super::Command for Use {
                 let alias = crate::alias::sanitize(&self.version.to_string());
                 let link = config.alias_dir().join(&alias);
 
-                if link.exists() {
-                    let dest = std::fs::read_link(link)?;
-
-                    symlink_to(&dest, &config.alias_default())?;
-
-                    println!("Using Alias {}", &alias.bold());
+                if !link.exists() {
+                    return crate::pretty_error!("Alias {} not found", &alias.bold());
                 }
+
+                let dest = std::fs::read_link(link)?;
+
+                symlink_to(&dest, &config.alias_default())?;
+
+                println!("Using Alias {}", &alias.bold());
             }
             _ => {
                 let dir = config.release_dir();

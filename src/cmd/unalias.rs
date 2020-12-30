@@ -25,9 +25,16 @@ impl super::Command for UnAlias {
             return Ok(());
         }
 
-        let name = crate::alias::sanitize(&self.alias.clone().unwrap());
-        crate::symlink::remove_symlink(dir.join(&name))?;
-        println!("Removed alias: {}", &name.bold());
+        let alias = crate::alias::sanitize(&self.alias.clone().unwrap());
+        let path = dir.join(&alias);
+
+        if !path.exists() {
+            return crate::pretty_error!("Alias {} not found", &alias.bold());
+        }
+
+        crate::symlink::remove_symlink(path)?;
+
+        println!("Removed alias: {}", &alias.bold());
 
         Ok(())
     }
