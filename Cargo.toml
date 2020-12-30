@@ -26,4 +26,5 @@ zip = "0.5.9"
 [profile.release]
 lto = true
 codegen-units = 1
-opt-level = 'z'
+opt-level = "z"
+panic = "abort"
