@@ -21,15 +21,17 @@ impl super::Command for Alias {
         let versions = NodeVersion::list_versions(&dir)?;
         let version = self.version.to_node_version(&versions)?;
 
+        let alias = crate::alias::sanitize(&self.alias);
+
         symlink_to(
             dir.join(version.version_str()),
-            config.alias_dir().join(&self.alias),
+            config.alias_dir().join(&alias),
         )?;
 
         println!(
             "Version {} is aliased to {}",
             version.to_string().bold(),
-            &self.alias.bold()
+            &alias.bold()
         );
 
         Ok(())

@@ -62,3 +62,11 @@ impl Alias {
 fn pretty_path_name<'a>(path: &'a PathBuf) -> &'a str {
     path.file_name().unwrap().to_str().unwrap()
 }
+
+pub fn sanitize(s: &str) -> String {
+    if cfg!(unix) {
+        s.replace("/", "-")
+    } else {
+        s.replace("\\", "-")
+    }
+}

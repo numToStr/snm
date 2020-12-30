@@ -6,7 +6,7 @@ use colored::*;
 pub struct UnAlias {
     /// Name of the alias
     #[clap(conflicts_with = "all")]
-    name: Option<String>,
+    alias: Option<String>,
 
     /// Remove all the aliases
     #[clap(short, long)]
@@ -22,11 +22,12 @@ impl super::Command for UnAlias {
         if self.all {
             std::fs::remove_dir_all(dir)?;
             println!("Removed all the aliases");
-        } else {
-            let name = self.name.clone().unwrap();
-            crate::symlink::remove_symlink(dir.join(&name))?;
-            println!("Removed alias: {}", &name.bold());
+            return Ok(());
         }
+
+        let name = crate::alias::sanitize(&self.alias.clone().unwrap());
+        crate::symlink::remove_symlink(dir.join(&name))?;
+        println!("Removed alias: {}", &name.bold());
 
         Ok(())
     }

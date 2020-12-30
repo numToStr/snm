@@ -18,8 +18,8 @@ impl super::Command for Use {
             // Get the link dest of the alias and symlink default to dest rather than symlinking to alias
             // both Alias(_) and Lts() are treated as symlinks
             Version::Full(NodeVersion::Lts(_)) | Version::Full(NodeVersion::Alias(_)) => {
-                let alias = &self.version.to_string();
-                let link = config.alias_dir().join(alias);
+                let alias = crate::alias::sanitize(&self.version.to_string());
+                let link = config.alias_dir().join(&alias);
 
                 if link.exists() {
                     let dest = std::fs::read_link(link)?;
