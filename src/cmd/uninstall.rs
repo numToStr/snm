@@ -20,31 +20,60 @@ impl super::Command for UnInstall {
 
     fn init(&self, config: Config) -> anyhow::Result<Self::InitResult> {
         let dir = config.release_dir();
-        let downloaded = NodeVersion::list_versions(&dir)?;
-        let matches = self.version.match_node_versions(&downloaded);
+        let found_ver = match self.version {
+            // If given version is an alias or lts/* then read the link
+            // and return the parsed NodeVersion
+            Version::Full(NodeVersion::Alias(_)) | Version::Full(NodeVersion::Lts(_)) => {
+                let alias = crate::alias::sanitize(&self.version.to_string());
+                let link = config.alias_dir().join(&alias);
 
-        if matches.is_empty() {
-            return pretty_error!(
-                "No downloads found with version {}",
-                &self.version.to_string().bold()
-            );
-        }
+                if !link.exists() {
+                    return crate::pretty_error!("Alias {} not found", &alias.bold());
+                }
 
-        if matches.len() > 1 {
-            eprintln!("Multiple versions found, expected 1. Please be a little more specific.");
-            for m in matches {
-                eprintln!("- {}", m);
+                let dest = std::fs::read_link(&link)?;
+                let ver = dest.file_name().unwrap().to_str().unwrap().to_string();
+
+                crate::symlink::remove_symlink(link)?;
+
+                println!("Removed alias: {}", alias.bold());
+
+                Some(NodeVersion::parse(&ver)?)
             }
-        } else {
-            let found_ver = matches.get(0).unwrap();
+            _ => {
+                let downloaded = NodeVersion::list_versions(&dir)?;
+                let matches = self.version.match_node_versions(&downloaded);
+
+                if matches.is_empty() {
+                    return pretty_error!(
+                        "No downloads found with version {}",
+                        &self.version.to_string().bold()
+                    );
+                }
+
+                if matches.len() > 1 {
+                    eprintln!(
+                        "Multiple versions found, expected 1. Please be a little more specific."
+                    );
+                    for m in matches {
+                        eprintln!("- {}", m);
+                    }
+                    None
+                } else {
+                    Some(matches.into_iter().next().unwrap().clone())
+                }
+            }
+        };
+
+        if let Some(ver) = found_ver {
             let aliases = Alias::list(config.alias_dir())?;
-            let found_alias = found_ver.list_aliases(&aliases);
+            let found_alias = ver.list_aliases(&aliases);
 
             for alias in found_alias {
                 if alias.name() == "default" && self.no_used {
                     return pretty_error!(
                         "Unable to uninstall. Version {} is currently used",
-                        found_ver.to_string().bold()
+                        ver.to_string().bold()
                     );
                 }
 
@@ -52,8 +81,8 @@ impl super::Command for UnInstall {
                 println!("Removed alias: {}", alias.name().bold());
             }
 
-            std::fs::remove_dir_all(dir.join(found_ver.version_str()))?;
-            println!("Removed version: {}", found_ver.to_string().bold());
+            std::fs::remove_dir_all(dir.join(ver.version_str()))?;
+            println!("Removed version: {}", ver.to_string().bold());
         }
 
         Ok(())
