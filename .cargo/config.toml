@@ -1,0 +1,9 @@
+[alias]
+b = 'build --release'
+ii = "install --path ."
+run_win = "run --target=x86_64-pc-windows-gnu"
+build_win = "build --target=x86_64-pc-windows-gnu --release"
+build_linux = "build --target=x86_64-unknown-linux-gnu --release"
+
+[target.'cfg(unix)']
+rustflags = ["-C", "link-arg=-s"]
