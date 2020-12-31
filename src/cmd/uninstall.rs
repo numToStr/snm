@@ -1,4 +1,4 @@
-use crate::alias::Alias;
+use crate::alias::{self, Alias};
 use crate::config::Config;
 use crate::pretty_error;
 use crate::version::{NodeVersion, Version};
@@ -31,14 +31,16 @@ impl super::Command for UnInstall {
                     return crate::pretty_error!("Alias {} not found", &alias.bold());
                 }
 
-                let dest = std::fs::read_link(&link)?;
-                let ver = dest.file_name().unwrap().to_str().unwrap().to_string();
+                let aliased = Alias::new(link);
+                let dest = aliased.destination()?;
 
-                crate::symlink::remove_symlink(link)?;
+                aliased.remove()?;
 
                 println!("Removed alias: {}", alias.bold());
 
-                Some(NodeVersion::parse(&ver)?)
+                let version = alias::pretty_path_name(&dest);
+
+                Some(NodeVersion::parse(version)?)
             }
             _ => {
                 let downloaded = NodeVersion::list_versions(&dir)?;

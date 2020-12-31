@@ -1,3 +1,4 @@
+use crate::alias::Alias;
 use crate::config::Config;
 use crate::symlink::symlink_to;
 use crate::version::{NodeVersion, Version};
@@ -25,7 +26,7 @@ impl super::Command for Use {
                     return crate::pretty_error!("Alias {} not found", &alias.bold());
                 }
 
-                let dest = std::fs::read_link(link)?;
+                let dest = Alias::new(link).destination()?;
 
                 symlink_to(&dest, &config.alias_default())?;
 
