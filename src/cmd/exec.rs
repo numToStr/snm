@@ -1,5 +1,4 @@
 use crate::config::Config;
-use crate::pretty_error_msg;
 use crate::version::{NodeVersion, Version};
 use clap::Clap;
 use colored::*;
@@ -23,7 +22,7 @@ impl super::Command for Exec {
             let version = self.version.to_node_version(&versions)?;
             let bin_path = super::bin_path(dir.join(version.version_str()));
             let path_env = env::var_os("PATH").ok_or_else(|| {
-                pretty_error_msg!("Unable to read environment variable {}", "$PATH".bold())
+                anyhow::anyhow!("Unable to read environment variable {}", "$PATH".bold())
             })?;
             let mut splits: Vec<_> = env::split_paths(&path_env).collect();
             splits.insert(0, bin_path);
@@ -37,9 +36,9 @@ impl super::Command for Exec {
             .stderr(Stdio::inherit())
             .env("PATH", &path)
             .spawn()
-            .map_err(|_| pretty_error_msg!("Can't spawn program {}", &self.binary.bold()))?
+            .map_err(|_| anyhow::anyhow!("Can't spawn program {}", &self.binary.bold()))?
             .wait()
-            .map_err(|_| anyhow::Error::msg("Failed to grab exit code"))?;
+            .map_err(|_| anyhow::anyhow!("Failed to grab exit code"))?;
 
         process::exit(exit_status.code().unwrap_or(1));
     }

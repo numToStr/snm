@@ -1,7 +1,6 @@
 use crate::archive::Archive;
 use crate::config::Config;
 use crate::fetcher::Release;
-use crate::pretty_error;
 use crate::symlink::symlink_to;
 use crate::url;
 use colored::*;
@@ -13,7 +12,7 @@ pub fn download(r: &Release, config: &Config) -> anyhow::Result<PathBuf> {
     let dest = release_dir.join(&r.version.to_string());
 
     if dest.exists() {
-        return pretty_error!(
+        anyhow::bail!(
             "Version {} is already exists locally",
             &r.version.to_string().bold()
         );

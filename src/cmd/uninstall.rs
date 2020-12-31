@@ -1,6 +1,5 @@
 use crate::alias::{self, Alias};
 use crate::config::Config;
-use crate::pretty_error;
 use crate::version::{NodeVersion, Version};
 use clap::Clap;
 use colored::*;
@@ -28,7 +27,7 @@ impl super::Command for UnInstall {
                 let link = config.alias_dir().join(&alias);
 
                 if !link.exists() {
-                    return crate::pretty_error!("Alias {} not found", &alias.bold());
+                    anyhow::bail!("Alias {} not found", &alias.bold());
                 }
 
                 let aliased = Alias::new(link);
@@ -47,7 +46,7 @@ impl super::Command for UnInstall {
                 let matches = self.version.match_node_versions(&downloaded);
 
                 if matches.is_empty() {
-                    return pretty_error!(
+                    anyhow::bail!(
                         "No downloads found with version {}",
                         &self.version.to_string().bold()
                     );
@@ -72,7 +71,7 @@ impl super::Command for UnInstall {
 
             for alias in aliases {
                 if alias.name() == "default" && self.no_used {
-                    return pretty_error!(
+                    anyhow::bail!(
                         "Unable to uninstall. Version {} is currently used",
                         ver.to_string().bold()
                     );

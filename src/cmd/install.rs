@@ -1,7 +1,6 @@
 use crate::config::Config;
 use crate::downloader::download;
 use crate::fetcher::Fetcher;
-use crate::pretty_error;
 use crate::version::{NodeVersion, Version};
 use clap::Clap;
 use colored::*;
@@ -22,7 +21,7 @@ impl super::Command for Install {
         };
 
         if !can_install {
-            return pretty_error!(
+            anyhow::bail!(
                 "Unable to install the version {}",
                 &self.version.to_string().bold()
             );
@@ -49,7 +48,7 @@ impl super::Command for Install {
                 }
                 Ok(())
             }
-            _ => pretty_error!(
+            _ => anyhow::bail!(
                 "No release found with the version {}",
                 &self.version.to_string().bold()
             ),

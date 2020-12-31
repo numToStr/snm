@@ -4,7 +4,6 @@ mod cli;
 mod cmd;
 mod config;
 mod downloader;
-mod errors;
 mod fetcher;
 mod shell;
 mod symlink;

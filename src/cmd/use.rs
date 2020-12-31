@@ -33,7 +33,7 @@ impl super::Command for Use {
                 let link = config.alias_dir().join(&alias);
 
                 if !link.exists() {
-                    return crate::pretty_error!("Alias {} not found", &alias.bold());
+                    anyhow::bail!("Alias {} not found", &alias.bold());
                 }
 
                 let dest = Alias::new(link).destination()?;

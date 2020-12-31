@@ -29,7 +29,7 @@ impl super::Command for UnAlias {
         let path = dir.join(&alias);
 
         if !path.exists() {
-            return crate::pretty_error!("Alias {} not found", &alias.bold());
+            anyhow::bail!("Alias {} not found", &alias.bold());
         }
 
         crate::symlink::remove_symlink(path)?;

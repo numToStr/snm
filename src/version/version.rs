@@ -1,5 +1,4 @@
 use super::node_version::NodeVersion;
-use crate::pretty_error_msg;
 use colored::*;
 use std::env::current_dir;
 use std::fs;
@@ -24,10 +23,7 @@ impl Version {
         self.match_node_versions(versions)
             .into_iter()
             .max()
-            .ok_or(pretty_error_msg!(
-                "Version {} not found locally",
-                self.to_string().bold()
-            ))
+            .ok_or_else(|| anyhow::anyhow!("Version {} not found locally", self.to_string().bold()))
     }
 
     pub fn match_node_versions<'a, T>(&self, versions: T) -> Vec<&'a NodeVersion>

@@ -1,6 +1,5 @@
 use crate::alias::{self, Alias};
 use crate::config::Config;
-use crate::pretty_error;
 use crate::version::NodeVersion;
 use clap::Clap;
 use colored::*;
@@ -16,7 +15,7 @@ impl super::Command for Prune {
         let default_alias = config.alias_default();
 
         if !default_alias.exists() {
-            return pretty_error!("Unable to prune. No {} alias found", "default".bold());
+            anyhow::bail!("Unable to prune. No {} alias found", "default".bold());
         }
 
         // Removing aliases except the `default` alias
