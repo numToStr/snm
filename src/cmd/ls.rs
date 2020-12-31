@@ -1,4 +1,4 @@
-use crate::alias::Alias;
+use crate::alias::Alias2;
 use crate::config::Config;
 use crate::version::NodeVersion;
 use clap::Clap;
@@ -11,7 +11,7 @@ impl super::Command for Ls {
     type InitResult = ();
 
     fn init(&self, config: Config) -> anyhow::Result<Self::InitResult> {
-        let aliases = Alias::hashmap(config.alias_dir())?;
+        let aliases = Alias2::hashmap(config.alias_dir())?;
         let versions = NodeVersion::list_versions(&config.release_dir())?;
 
         for version in versions.into_iter() {
