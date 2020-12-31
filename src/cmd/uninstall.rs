@@ -1,4 +1,4 @@
-use crate::alias::Alias2;
+use crate::alias::Alias;
 use crate::config::Config;
 use crate::pretty_error;
 use crate::version::{NodeVersion, Version};
@@ -66,7 +66,7 @@ impl super::Command for UnInstall {
         };
 
         if let Some(ver) = found_ver {
-            let aliases = Alias2::list_for_version(config.alias_dir(), &ver)?;
+            let aliases = Alias::list_for_version(config.alias_dir(), &ver)?;
 
             for alias in aliases {
                 if alias.name() == "default" && self.no_used {

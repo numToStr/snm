@@ -1,4 +1,4 @@
-use crate::alias::{self, Alias2};
+use crate::alias::{self, Alias};
 use crate::config::Config;
 use crate::pretty_error;
 use crate::version::NodeVersion;
@@ -20,14 +20,14 @@ impl super::Command for Prune {
         }
 
         // Removing aliases except the `default` alias
-        for alias in Alias2::list(config.alias_dir())? {
+        for alias in Alias::list(config.alias_dir())? {
             if alias.path != default_alias {
                 alias.remove()?;
             }
         }
 
         // Removing all the versions except the one which is aliased to `default`
-        let alias = Alias2::new(default_alias);
+        let alias = Alias::new(default_alias);
         let dir = config.release_dir();
         for release in NodeVersion::list_versions(&dir)? {
             let release = release.version_str();

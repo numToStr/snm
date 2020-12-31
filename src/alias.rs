@@ -15,13 +15,13 @@ pub fn sanitize(s: &str) -> String {
 }
 
 #[derive(Debug, Clone)]
-pub struct Alias2 {
+pub struct Alias {
     pub path: PathBuf,
 }
 
-impl Alias2 {
-    pub fn new(path: PathBuf) -> Alias2 {
-        Alias2 { path }
+impl Alias {
+    pub fn new(path: PathBuf) -> Alias {
+        Alias { path }
     }
 
     pub fn list<P: AsRef<Path>>(path: P) -> anyhow::Result<Vec<Self>> {
