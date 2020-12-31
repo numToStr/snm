@@ -15,14 +15,15 @@ impl super::Command for Ls {
         let versions = NodeVersion::list_versions(&config.release_dir())?;
 
         for version in versions.into_iter() {
-            let found = aliases.get(version.version_str().as_str());
+            let version = version.version_str();
+            let found = aliases.get(&version);
 
             match found {
                 Some(a) => {
                     if a.contains(&"default".to_string()) {
-                        println!("> {}\t{}", version.to_string().bold(), a.join(", ").bold());
+                        println!("> {}\t{}", version.bold(), a.join(", ").bold());
                     } else {
-                        println!("- {}\t{}", version, a.join(", "));
+                        println!("- {}\t{}", version, a.join(", ").dimmed());
                     }
                 }
                 _ => {
