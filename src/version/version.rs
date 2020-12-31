@@ -1,9 +1,14 @@
 use super::node_version::NodeVersion;
 use crate::pretty_error_msg;
 use colored::*;
+use std::env::current_dir;
+use std::fs;
+use std::io::{BufRead, BufReader};
 use std::str::FromStr;
 
-#[derive(Debug, PartialEq, Eq)]
+const NODE_FILES: [&str; 2] = [".nvmrc", ".node-version"];
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Version {
     Major(u64),
     MajorMinor(u64, u64),
@@ -47,6 +52,37 @@ impl Version {
             _ => false,
         }
     }
+
+    pub fn from_file() -> anyhow::Result<Option<Version>> {
+        let pwd = fs::read_dir(current_dir()?)?;
+
+        for dir in pwd {
+            let dir = dir?.path();
+
+            if !dir.is_file() {
+                continue;
+            }
+
+            let name = crate::alias::pretty_path_name(&dir);
+
+            if !NODE_FILES.contains(&name) {
+                continue;
+            }
+
+            let file = fs::File::open(dir)?;
+            let file = BufReader::new(file);
+            let line = file.lines().next();
+
+            if let Some(l) = line {
+                let l = l?;
+                let parsed = Version::from_str(&l)?;
+
+                return Ok(Some(parsed));
+            }
+        }
+
+        Ok(None)
+    }
 }
 
 impl FromStr for Version {
@@ -68,17 +104,6 @@ impl FromStr for Version {
         }
     }
 }
-
-// impl<'de> Deserialize<'de> for Version {
-//     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-//     where
-//         D: serde::Deserializer<'de>,
-//     {
-//         let version_str = String::deserialize(deserializer)?;
-//
-//         Version::from_str(&version_str).map_err(serde::de::Error::custom)
-//     }
-// }
 
 impl std::fmt::Display for Version {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

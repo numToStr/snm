@@ -30,6 +30,8 @@ pub enum SubCommand {
     Install(install::Install),
 
     /// Display downloaded node versions and install selection
+    ///
+    /// NOTE: If the <version> is not provided, then version will be picked from .nvmrc or .node-version
     #[clap(name = "use", visible_alias = "as")]
     Use(r#use::Use),
 

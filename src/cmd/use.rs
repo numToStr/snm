@@ -7,19 +7,26 @@ use colored::*;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct Use {
-    /// Can be a partial semver or a LTS version name by the format lts/NAME
-    version: Version,
+    /// Can be a partial semver or a LTS version name by the format lts/NAME.
+    version: Option<Version>,
 }
 
 impl super::Command for Use {
     type InitResult = ();
 
     fn init(&self, config: Config) -> anyhow::Result<Self::InitResult> {
-        match &self.version {
+        // If version is not provided then fetch version from file
+        let version = match &self.version {
+            Some(v) => v.clone(),
+            None => Version::from_file()?
+                .ok_or_else(|| anyhow::anyhow!("Unable to read version from dotfiles"))?,
+        };
+
+        match version {
             // Get the link dest of the alias and symlink default to dest rather than symlinking to alias
             // both Alias(_) and Lts() are treated as symlinks
             Version::Full(NodeVersion::Lts(_)) | Version::Full(NodeVersion::Alias(_)) => {
-                let alias = crate::alias::sanitize(&self.version.to_string());
+                let alias = crate::alias::sanitize(&version.to_string());
                 let link = config.alias_dir().join(&alias);
 
                 if !link.exists() {
@@ -36,7 +43,7 @@ impl super::Command for Use {
                 let dir = config.release_dir();
                 let versions = NodeVersion::list_versions(&dir)?;
 
-                let version = self.version.to_node_version(&versions)?;
+                let version = version.to_node_version(&versions)?;
 
                 symlink_to(dir.join(version.version_str()), config.alias_default())?;
                 println!("Using Node.js {}", version.version_str().bold());
