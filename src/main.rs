@@ -16,11 +16,17 @@ use colored::*;
 fn main() {
     let app = cli::parse();
 
-    if let Err(e) = app.cmd.exec(app.options) {
-        eprintln!(
-            "{} :: {}",
-            "ERROR".bright_blue(),
-            e.to_string().bright_red()
-        )
-    }
+    let code = match app.cmd.exec(app.options) {
+        Ok(_) => 0,
+        Err(e) => {
+            eprintln!(
+                "{} :: {}",
+                "ERROR".bright_blue(),
+                e.to_string().bright_red()
+            );
+            1
+        }
+    };
+
+    std::process::exit(code)
 }
