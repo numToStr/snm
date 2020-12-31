@@ -18,8 +18,11 @@ impl super::Command for Use {
         // If version is not provided then fetch version from file
         let version = match &self.version {
             Some(v) => v.clone(),
-            None => Version::from_file()?
-                .ok_or_else(|| anyhow::anyhow!("Unable to read version from dotfiles"))?,
+            None => Version::from_file()?.ok_or_else(|| {
+                anyhow::anyhow!(
+                    "Unable to read version from dotfiles. Please provide a version manually."
+                )
+            })?,
         };
 
         match version {
