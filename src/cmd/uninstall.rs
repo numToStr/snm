@@ -1,4 +1,4 @@
-use crate::alias::Alias;
+use crate::alias::Alias2;
 use crate::config::Config;
 use crate::pretty_error;
 use crate::version::{NodeVersion, Version};
@@ -66,10 +66,9 @@ impl super::Command for UnInstall {
         };
 
         if let Some(ver) = found_ver {
-            let aliases = Alias::list(config.alias_dir())?;
-            let found_alias = ver.list_aliases(&aliases);
+            let aliases = Alias2::list_for_version(config.alias_dir(), &ver)?;
 
-            for alias in found_alias {
+            for alias in aliases {
                 if alias.name() == "default" && self.no_used {
                     return pretty_error!(
                         "Unable to uninstall. Version {} is currently used",
@@ -77,7 +76,7 @@ impl super::Command for UnInstall {
                     );
                 }
 
-                alias.remove_alias()?;
+                alias.remove()?;
                 println!("Removed alias: {}", alias.name().bold());
             }
 
