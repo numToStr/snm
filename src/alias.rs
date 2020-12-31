@@ -7,11 +7,7 @@ pub fn pretty_path_name<'a>(path: &'a PathBuf) -> &'a str {
 }
 
 pub fn sanitize(s: &str) -> String {
-    if cfg!(unix) {
-        s.replace("/", "-")
-    } else {
-        s.replace("\\", "-")
-    }
+    s.replace("/", "-").replace("\\", "-")
 }
 
 #[derive(Debug, Clone)]
