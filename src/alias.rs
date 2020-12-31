@@ -1,3 +1,4 @@
+use crate::version::NodeVersion;
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 
@@ -50,16 +51,12 @@ impl Alias {
         Ok(())
     }
 
-    pub fn name(&self) -> &str {
-        pretty_path_name(&self.alias_path)
-    }
-
     pub fn version_str(&self) -> &str {
         pretty_path_name(&self.dest_path)
     }
 }
 
-fn pretty_path_name<'a>(path: &'a PathBuf) -> &'a str {
+pub fn pretty_path_name<'a>(path: &'a PathBuf) -> &'a str {
     path.file_name().unwrap().to_str().unwrap()
 }
 
@@ -68,5 +65,85 @@ pub fn sanitize(s: &str) -> String {
         s.replace("/", "-")
     } else {
         s.replace("\\", "-")
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct Alias2 {
+    path: PathBuf,
+}
+
+impl Alias2 {
+    pub fn new(path: PathBuf) -> Alias2 {
+        Alias2 { path }
+    }
+
+    pub fn list<P: AsRef<Path>>(path: P) -> anyhow::Result<Vec<Self>> {
+        let dirs = std::fs::read_dir(&path)?;
+        let mut aliases = Vec::<Self>::new();
+
+        for alias in dirs {
+            let alias = alias?.path();
+            if alias.exists() {
+                aliases.push(Self { path: alias })
+            }
+        }
+
+        Ok(aliases)
+    }
+
+    pub fn list_for_version<P: AsRef<Path>>(
+        path: P,
+        version: &NodeVersion,
+    ) -> anyhow::Result<Vec<Self>> {
+        let dirs = std::fs::read_dir(&path)?;
+        let mut aliases = Vec::<Self>::new();
+
+        for alias in dirs {
+            let alias = Self {
+                path: alias?.path(),
+            };
+
+            if alias.path.exists() {
+                let dest = Self::destination(&alias)?;
+
+                if pretty_path_name(&dest) == version.version_str() {
+                    aliases.push(alias)
+                }
+            }
+        }
+
+        Ok(aliases)
+    }
+
+    pub fn hashmap<'a, P: AsRef<Path>>(path: P) -> anyhow::Result<HashMap<PathBuf, Vec<Alias2>>> {
+        let list = std::fs::read_dir(&path)?;
+        let mut aliases: HashMap<PathBuf, Vec<Alias2>> = HashMap::new();
+
+        for alias in list {
+            let alias = Alias2 {
+                path: alias?.path(),
+            };
+            let dest = alias.destination()?;
+
+            aliases
+                .entry(dest)
+                .and_modify(|e| e.push(alias.clone()))
+                .or_insert(vec![alias.clone()]);
+        }
+
+        Ok(aliases)
+    }
+
+    pub fn destination(&self) -> anyhow::Result<PathBuf> {
+        std::fs::read_link(&self.path).map_err(|e| anyhow::Error::new(e))
+    }
+
+    pub fn remove(&self) -> anyhow::Result<()> {
+        crate::symlink::remove_symlink(&self.path).map_err(|e| anyhow::Error::new(e))
+    }
+
+    pub fn name(&self) -> &str {
+        pretty_path_name(&self.path)
     }
 }
