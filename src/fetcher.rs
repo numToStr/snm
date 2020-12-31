@@ -13,9 +13,9 @@ pub enum Lts {
 #[derive(Debug, Deserialize)]
 pub struct Release {
     pub version: NodeVersion,
-    pub date: String,
     pub lts: Lts,
-    pub files: Vec<String>,
+    // pub date: String,
+    // pub files: Vec<String>,
 }
 
 pub struct Fetcher {
