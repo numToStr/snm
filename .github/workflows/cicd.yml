@@ -44,13 +44,13 @@ jobs:
                   echo ::set-output name=STAGING::${STAGING}
 
                   # Determine EXE suffix
-                  EXE_suffix="";
+                  EXE_suffix="" ;
                   case ${{ matrix.job.target }} in *-pc-windows-*) EXE_suffix=".exe" ;; esac;
                   echo set-output name=EXE_suffix::${EXE_suffix}
                   echo ::set-output name=EXE_suffix::${EXE_suffix}
 
                   # package name
-                  PKG_suffix=".tar.gz";
+                  PKG_suffix=".tar.gz" ;
                   case ${{ matrix.job.target }} in *-pc-windows-*) PKG_suffix=".zip" ;; esac;
                   PKG_BASENAME=${PROJECT_NAME}-${{ matrix.job.target }}
                   PKG_NAME=${PKG_BASENAME}${PKG_suffix}
@@ -98,7 +98,7 @@ jobs:
                     *) tar czf '${{ steps.vars.outputs.PKG_NAME }}' '${{ steps.vars.outputs.PKG_BASENAME }}'/* ;;
                   esac;
                   popd >/dev/null
-            - name: Release
+            - name: Create Release
               id: create_release
               uses: actions/create-release@v1
               env:
@@ -120,5 +120,5 @@ jobs:
               with:
                   upload_url: ${{ steps.create_release.outputs.upload_url }}
                   asset_path: ./${{ steps.vars.outputs.STAGING }}/${{ steps.vars.outputs.PKG_NAME }}
-                  asset_name: ${{ steps.vars.PKG_NAME }}
+                  asset_name: ${{ steps.vars.outputs.PKG_NAME }}
                   # asset_content_type: application/zip
