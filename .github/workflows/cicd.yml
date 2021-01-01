@@ -17,12 +17,17 @@ jobs:
                 job:
                     - {
                           os: ubuntu-latest,
+                          target: aarch64-unknown-linux-gnu,
+                          use_cross: true,
+                      }
+                    - {
+                          os: ubuntu-latest,
                           target: x86_64-unknown-linux-gnu,
                           use_cross: true,
                       }
                     - {
                           os: ubuntu-latest,
-                          target: x86_64-unknown-linux-musl,
+                          target: armv7-unknown-linux-gnueabihf,
                           use_cross: true,
                       }
                     - {
@@ -39,6 +44,14 @@ jobs:
         steps:
             - name: Git Checkout
               uses: actions/checkout@v2
+
+            - name: Install prerequisites
+              shell: bash
+              run: |
+                  case ${{ matrix.job.target }} in
+                    armv7-unknown-linux-gnueabihf) sudo apt-get -y update ; sudo apt-get -y install gcc-7-arm-linux-gnueabihf ;;
+                    aarch64-unknown-linux-gnu) sudo apt-get -y update ; sudo apt-get -y install gcc-aarch64-linux-gnu ;;
+                  esac
 
             - name: Initialize workflow variables
               id: vars
