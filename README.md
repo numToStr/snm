@@ -36,9 +36,9 @@ You can find more about the powershell profile [here](https://docs.microsoft.com
 
 ## Contributing
 
-PR are always welcome. You can help me with adding more tests 🤞.
+PRs are always welcome. You can help me by adding more tests 🤞.
 
-First, You need to add rust toolchain via [rustup](https://rustup.rs/).
+First, You need to install rust toolchain via [rustup](https://rustup.rs/).
 
 -   **Setup**
 
