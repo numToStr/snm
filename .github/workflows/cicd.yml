@@ -39,8 +39,14 @@ jobs:
               shell: bash
               run: |
                   COMMIT_SHA=$(git rev-parse --short "$GITHUB_SHA")
+                  echo set-output name=COMMIT_SHA::${COMMIT_SHA}
+                  echo ::set-output name=COMMIT_SHA::${COMMIT_SHA}
                   # COMMIT_BRANCH=${GITHUB_REF##*/}
+                  # echo set-output name=COMMIT_BRANCH::${COMMIT_BRANCH}
+                  # echo ::set-output name=COMMIT_BRANCH::${COMMIT_BRANCH}
                   # RELEASE_TAG="${COMMIT_BRANCH}-${COMMIT_SHA}"
+                  # echo set-output name=RELEASE_TAG::${RELEASE_TAG}
+                  # echo ::set-output name=RELEASE_TAG::${RELEASE_TAG}
 
                   # staging directory
                   STAGING='_staging'
