@@ -32,7 +32,7 @@ Add the following line to your `~\Documents\PowerShell\Microsoft.PowerShell_prof
 snm env pwsh | Out-String | Invoke-Expression
 ```
 
-You can find more about the powershell profile [here](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about profiles)
+You can find more about the powershell profile [here](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_profiles)
 
 ## Contributing
 
