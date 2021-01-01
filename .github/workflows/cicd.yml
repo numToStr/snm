@@ -1,0 +1,63 @@
+name: CI-CD
+
+on:
+    push:
+        branches:
+            - release
+
+env:
+    CARGO_TERM_COLOR: always
+    PROJECT_NAME: snm
+
+jobs:
+    build:
+        name: Release
+        strategy:
+            matrix:
+                job:
+                    - {
+                          os: ubuntu-latest,
+                          target: x86_64-unknown-linux-gnu,
+                          use_cross: true,
+                      }
+                    - {
+                          os: windows-latest,
+                          target: x86_64-pc-windows-msvc,
+                          use_cross: false,
+                      }
+                    - {
+                          os: macos-latest,
+                          target: x86_64-apple-darwin,
+                          use_cross: false,
+                      }
+        runs-on: ${{ matrix.job.os }}
+        steps:
+            - name: Git Checkout
+              uses: actions/checkout@v2
+            - name: Initialize workflow variables
+              id: vars
+              shell: bash
+              run: |
+                  # Determine EXE suffix
+                  EXE_suffix="" ;
+                  case ${{ matrix.job.target }} in *-pc-windows-*) EXE_suffix=".exe" ;; esac;
+                  echo set-output name=EXE_suffix::${EXE_suffix}
+                  echo ::set-output name=EXE_suffix::${EXE_suffix}
+            - name: Install Rust toolchain
+              uses: actions-rs/toolchain@v1
+              with:
+                  toolchain: stable
+                  target: ${{ matrix.job.target }}
+                  override: true
+                  profile: minimal
+            - name: Build
+              uses: actions-rs/cargo@v1
+              with:
+                  use-cross: ${{ matrix.job.use_cross }}
+                  command: build
+                  args: --release --target=${{ matrix.job.target }}
+            - name: Upload build artifacts
+              uses: actions/upload-artifact@v2
+              with:
+                  name: ${{ env.PROJECT_NAME }}-${{ matrix.job.target }}
+                  path: target/${{ matrix.job.target }}/release/${{ env.PROJECT_NAME }}${{ steps.vars.outputs.EXE_suffix }}
