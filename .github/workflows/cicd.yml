@@ -21,6 +21,11 @@ jobs:
                           use_cross: true,
                       }
                     - {
+                          os: ubuntu-latest,
+                          target: x86_64-unknown-linux-musl,
+                          use_cross: true,
+                      }
+                    - {
                           os: windows-latest,
                           target: x86_64-pc-windows-msvc,
                           use_cross: false,
@@ -34,6 +39,7 @@ jobs:
         steps:
             - name: Git Checkout
               uses: actions/checkout@v2
+
             - name: Initialize workflow variables
               id: vars
               shell: bash
@@ -41,24 +47,15 @@ jobs:
                   COMMIT_SHA=$(git rev-parse --short "$GITHUB_SHA")
                   echo set-output name=COMMIT_SHA::${COMMIT_SHA}
                   echo ::set-output name=COMMIT_SHA::${COMMIT_SHA}
-                  # COMMIT_BRANCH=${GITHUB_REF##*/}
-                  # echo set-output name=COMMIT_BRANCH::${COMMIT_BRANCH}
-                  # echo ::set-output name=COMMIT_BRANCH::${COMMIT_BRANCH}
-                  # RELEASE_TAG="${COMMIT_BRANCH}-${COMMIT_SHA}"
-                  # echo set-output name=RELEASE_TAG::${RELEASE_TAG}
-                  # echo ::set-output name=RELEASE_TAG::${RELEASE_TAG}
-
                   # staging directory
                   STAGING='_staging'
                   echo set-output name=STAGING::${STAGING}
                   echo ::set-output name=STAGING::${STAGING}
-
                   # Determine EXE suffix
                   EXE_suffix="" ;
                   case ${{ matrix.job.target }} in *-pc-windows-*) EXE_suffix=".exe" ;; esac;
                   echo set-output name=EXE_suffix::${EXE_suffix}
                   echo ::set-output name=EXE_suffix::${EXE_suffix}
-
                   # package name
                   CONTENT_TYPE="x-tar"
                   PKG_suffix=".tar.gz" ;
@@ -78,10 +75,12 @@ jobs:
                   echo ::set-output name=PKG_suffix::${PKG_suffix}
                   echo ::set-output name=PKG_BASENAME::${PKG_BASENAME}
                   echo ::set-output name=PKG_NAME::${PKG_NAME}
+
             - name: Create all needed build/work directories
               shell: bash
               run: |
                   mkdir -p '${{ steps.vars.outputs.STAGING }}/${{ steps.vars.outputs.PKG_BASENAME }}'
+
             - name: Install Rust toolchain
               uses: actions-rs/toolchain@v1
               with:
@@ -89,26 +88,27 @@ jobs:
                   target: ${{ matrix.job.target }}
                   override: true
                   profile: minimal
+
             - name: Build
               uses: actions-rs/cargo@v1
               with:
                   use-cross: ${{ matrix.job.use_cross }}
                   command: build
                   args: --release --target=${{ matrix.job.target }}
+
             - name: Upload build artifacts
               uses: actions/upload-artifact@v2
               with:
                   name: ${{ env.PROJECT_NAME }}-${{ matrix.job.target }}
                   path: target/${{ matrix.job.target }}/release/${{ env.PROJECT_NAME }}${{ steps.vars.outputs.EXE_suffix }}
+
             - name: Package
               shell: bash
               id: package
               run: |
                   ARCHIVE_DIR='${{ steps.vars.outputs.STAGING }}/${{ steps.vars.outputs.PKG_BASENAME }}/'
-
                   # Binary
                   cp 'target/${{ matrix.job.target }}/release/${{ env.PROJECT_NAME }}${{ steps.vars.outputs.EXE_suffix }}' "$ARCHIVE_DIR"
-
                   # base compressed package
                   pushd '${{ steps.vars.outputs.STAGING }}/' >/dev/null
                   case ${{ matrix.job.target }} in
@@ -126,29 +126,3 @@ jobs:
                   files: ${{ steps.vars.outputs.STAGING }}/${{ steps.vars.outputs.PKG_NAME }}
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-            # Error: Validation Failed: {"resource":"Release","code":"already_exists","field":"tag_name"}
-            # - name: Create Release
-            #   id: create_release
-            #   uses: actions/create-release@v1
-            #   env:
-            #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-            #   with:
-            #       tag_name: ${{ steps.vars.outputs.COMMIT_SHA }}
-            #       release_name: ${{ env.PROJECT_NAME }}-${{ steps.vars.outputs.COMMIT_SHA }}
-            #       # body: |
-            #       #     Changes in this Release
-            #       #     - First Change
-            #       #     - Second Change
-            #       draft: false
-            #       prerelease: true
-            # - name: Upload Release Asset
-            #   id: upload-release-asset
-            #   uses: actions/upload-release-asset@v1
-            #   env:
-            #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            #   with:
-            #       upload_url: ${{ steps.create_release.outputs.upload_url }}
-            #       asset_path: ./${{ steps.vars.outputs.STAGING }}/${{ steps.vars.outputs.PKG_NAME }}
-            #       asset_name: ${{ steps.vars.outputs.PKG_NAME }}
-            #       asset_content_type: application/${{ steps.vars.outputs.CONTENT_TYPE }}
