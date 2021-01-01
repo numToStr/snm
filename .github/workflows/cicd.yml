@@ -38,6 +38,10 @@ jobs:
               id: vars
               shell: bash
               run: |
+                  COMMIT_SHA=$(git rev-parse --short "$GITHUB_SHA")
+                  # COMMIT_BRANCH=${GITHUB_REF##*/}
+                  # RELEASE_TAG="${COMMIT_BRANCH}-${COMMIT_SHA}"
+
                   # staging directory
                   STAGING='_staging'
                   echo set-output name=STAGING::${STAGING}
@@ -104,8 +108,8 @@ jobs:
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
               with:
-                  tag_name: ${{ github.ref }}
-                  release_name: Release ${{ github.ref }}
+                  tag_name: ${{ steps.vars.outputs.COMMIT_SHA }}
+                  release_name: ${{ env.PROJECT_NAME }}-${{ steps.vars.outputs.COMMIT_SHA }}
                   # body: |
                   #     Changes in this Release
                   #     - First Change
