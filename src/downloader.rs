@@ -60,6 +60,7 @@ mod tests {
 
         assert_eq!(download_path_expected, download_path_result);
 
-        std::fs::remove_dir_all(download_path_result).unwrap();
+        std::fs::remove_dir_all(dir).unwrap();
+        std::fs::remove_dir_all(config.alias_dir()).unwrap();
     }
 }
