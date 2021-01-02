@@ -37,11 +37,19 @@ pub struct Config {
     pub download_only: bool,
 }
 
-impl Config {
-    // pub fn new() -> Self {
-    //     Config { base_dir: None }
-    // }
+// Config::default() is intended to only be used within tests
+impl Default for Config {
+    fn default() -> Self {
+        Config {
+            download_only: false,
+            log_level: "info".to_string(),
+            snm_dir: home_dir().unwrap().join(".snm_test").into(),
+            dist_mirror: Url::parse("https://nodejs.org/dist").unwrap(),
+        }
+    }
+}
 
+impl Config {
     pub fn ensure_create<P: AsRef<Path>>(&self, path: P) -> P {
         create_dir_all(&path).ok();
         path

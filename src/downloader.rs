@@ -41,8 +41,26 @@ pub fn download(r: &Release, config: &Config) -> anyhow::Result<PathBuf> {
     Ok(dest)
 }
 
-// installing : node-v14.15.3
-// mkdir : /home/hello/n/n/versions/node/14.15.3
-// fetch : https://nodejs.org/dist/v14.15.3/node-v14.15.3-linux-x64.tar.xz
-// fetch : https://nodejs.org/download/release/v14.15.3/node-v14.15.3-linux-x64.tar.xz
-// installed : v14.15.3 (with npm 6.14.9)
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::fetcher::Lts;
+    use crate::version::*;
+
+    #[test]
+    fn download_test() {
+        let config = Config::default();
+        let release = Release {
+            version: NodeVersion::parse("10.20.0").unwrap(),
+            lts: Lts::Yes("Dubnium".to_string()),
+        };
+        let dir = config.release_dir();
+        let download_path_expected = dir.join(release.version.to_string());
+        let download_path_result = download(&release, &config).unwrap();
+
+        assert_eq!(download_path_expected, download_path_result);
+
+        std::fs::remove_dir_all(dir).unwrap();
+        std::fs::remove_dir_all(config.alias_dir()).unwrap();
+    }
+}
