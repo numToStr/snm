@@ -188,7 +188,7 @@ jobs:
               run: |
                   URL=$(git remote get-url origin)
                   echo URL::${URL}
-                  VERSION=$(git describe --abbrev=0 --tags)
+                  VERSION=$(git describe --abbrev=0 --tags | sed -e "e/v//g")
                   echo set-output name=VERSION::${VERSION}
                   echo ::set-output name=VERSION::"${VERSION}"
                   sed -i -e "s%{{AUTHOR}}%${AUTHOR}%g;" ./.archlinux/PKGBUILD
