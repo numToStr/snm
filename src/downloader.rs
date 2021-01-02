@@ -28,13 +28,17 @@ pub fn download(r: &Release, config: &Config) -> anyhow::Result<PathBuf> {
     println!("Installing : {}", &r.version.to_string().bold());
     println!("Dowloading : {}", &dist.url.bold());
     println!("Size       : {}", &len.to_string().bold());
+    println!("---");
 
     Archive::new(res).extract_into(&release_dir)?;
 
     std::fs::rename(&release_dir.join(dist.name), &dest)?;
 
+    println!("Installed  : {}", &dest.display().to_string().bold());
+
     // If we are only downloading then don't need to create a symlink to default
     if !config.download_only {
+        println!("Alias      : {}", "default".bold());
         symlink_to(&dest, &config.alias_default())?;
     }
 

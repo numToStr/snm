@@ -2,6 +2,7 @@ use crate::config::Config;
 use crate::downloader::download;
 use crate::fetcher::Fetcher;
 use clap::Clap;
+use colored::*;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct Lts;
@@ -15,7 +16,9 @@ impl super::Command for Lts {
 
         let dest = download(&release, &config)?;
 
-        crate::symlink::symlink_to(&dest, &config.alias_dir().join("lts-latest"))?;
+        let alias = "lts-latest";
+        crate::symlink::symlink_to(&dest, &config.alias_dir().join(&alias))?;
+        println!("Alias      : {}", alias.bold());
 
         Ok(())
     }
