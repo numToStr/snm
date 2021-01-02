@@ -194,10 +194,10 @@ jobs:
                   VERSION=$(git describe --abbrev=0 --tags)
                   echo set-output name=VERSION::${VERSION}
                   echo ::set-output name=VERSION::"${VERSION}"
-                  sed -i -e "s/{{NAME}}/${PROJECT_NAME}/g;" ./.archlinux/PKGBUILD
-                  sed -i -e "s/{{DESC}}/${PROJECT_DESC}/g;" ./.archlinux/PKGBUILD
-                  sed -i -e "s/{{VERSION}}/${VERSION}/g;" ./.archlinux/PKGBUILD
-                  sed -i -e "s/{{URL}}/${URL}/g;" ./.archlinux/PKGBUILD
+                  sed -i -e "s@{{NAME}}@${PROJECT_NAME}@g;" ./.archlinux/PKGBUILD
+                  sed -i -e "s@{{DESC}}@${PROJECT_DESC}@g;" ./.archlinux/PKGBUILD
+                  sed -i -e "s@{{VERSION}}@${VERSION}@g;" ./.archlinux/PKGBUILD
+                  sed -i -e "s@{{URL}}@${URL}@g;" ./.archlinux/PKGBUILD
                   cat ./.archlinux/PKGBUILD
 
             - name: Publish to the AUR
