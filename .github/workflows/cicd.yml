@@ -166,3 +166,42 @@ jobs:
               with:
                   command: publish
                   args: --verbose --token ${{ secrets.CARGO_TOKEN }}
+
+    publish_aur_package:
+        name: Publish AUR package
+        runs-on: ubuntu-latest
+        needs: build
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Generate PKGBUILD
+              id: gen_pkgbuild
+              shell: bash
+              run: |
+                  URL=$(git remote get-url origin)
+                  VERSION=$(git describe --abbrev=0 --tags)
+                  sed -i -e "
+                    s/{{NAME}}/${PROJECT_NAME}/g;
+                    s/{{VERSION}}/${VERSION}/g;
+                    s/{{DESC}}/${PROJECT_DESC}/g;
+                    s/{{URL}}/${URL}/g;
+                    "
+                  LAST_COMMIT_MSG=$(git log -1 --pretty='%s')
+                  echo set-output name=LAST_COMMIT_MSG::${LAST_COMMIT_MSG}
+                  echo ::set-output name=LAST_COMMIT_MSG::${LAST_COMMIT_MSG}
+                  COMMIT_USERNAME=$(git config user.name)
+                  echo set-output name=COMMIT_USERNAME::${COMMIT_USERNAME}
+                  echo ::set-output name=COMMIT_USERNAME::${COMMIT_USERNAME}
+                  COMMIT_EMAIL=$(git config user.name)
+                  echo set-output name=COMMIT_EMAIL::${COMMIT_EMAIL}
+                  echo ::set-output name=COMMIT_EMAIL::${COMMIT_EMAIL}
+
+            - name: Publish to the AUR
+              uses: KSXGitHub/github-actions-deploy-aur@v2
+              with:
+                  pkgname: ${{ env.PROJECT_NAME }}
+                  pkgbuild: ./.archlinux/PKGBUILD
+                  commit_username: ${{ steps.gen_pkgbuild.outputs.COMMIT_USERNAME }}
+                  commit_email: ${{ steps.gen_pkgbuild.outputs.COMMIT_EMAIL }}
+                  commit_message: ${{ steps.gen_pkgbuild.outputs.LAST_COMMIT_MSG }}
+                  ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
