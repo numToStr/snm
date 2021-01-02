@@ -11,6 +11,8 @@ env:
     CARGO_TERM_COLOR: always
     PROJECT_NAME: snm
     PROJECT_DESC: "Smol Node Manager written in Rust"
+    AUTHOR: numToStr
+    EMAIL: sudo@vikasraj.dev
 
 jobs:
     build:
@@ -190,16 +192,10 @@ jobs:
                   echo URL::${URL}
                   VERSION=$(git describe --abbrev=0 --tags)
                   echo set-output name=VERSION::${VERSION}
-                  echo ::set-output name=VERSION::${VERSION}
-                  COMMIT_USERNAME=$(git config user.name)
-                  echo set-output name=COMMIT_USERNAME::${COMMIT_USERNAME}
-                  echo ::set-output name=COMMIT_USERNAME::${COMMIT_USERNAME}
-                  COMMIT_EMAIL=$(git config user.name)
-                  echo set-output name=COMMIT_EMAIL::${COMMIT_EMAIL}
-                  echo ::set-output name=COMMIT_EMAIL::${COMMIT_EMAIL}
+                  echo ::set-output name=VERSION::"${VERSION}"
                   sed -i -e "s/{{NAME}}/${PROJECT_NAME}/g;" ./.archlinux/PKGBUILD
-                  sed -i -e "s/{{VERSION}}/${VERSION}/g;" ./.archlinux/PKGBUILD
                   sed -i -e "s/{{DESC}}/${PROJECT_DESC}/g;" ./.archlinux/PKGBUILD
+                  sed -i -e "s/{{VERSION}}/${VERSION}/g;" ./.archlinux/PKGBUILD
                   sed -i -e "s/{{URL}}/${URL}/g;" ./archlinux/PKGBUILD
 
             - name: Publish to the AUR
@@ -208,7 +204,7 @@ jobs:
               with:
                   pkgname: ${{ env.PROJECT_NAME }}
                   pkgbuild: ./.archlinux/PKGBUILD
-                  commit_username: ${{ steps.gen_pkgbuild.outputs.COMMIT_USERNAME }}
-                  commit_email: ${{ steps.gen_pkgbuild.outputs.COMMIT_EMAIL }}
+                  commit_username: ${{ env.AUTHOR }}
+                  commit_email: ${{ env.EMAIL }}
                   commit_message: ${{ steps.gen_pkgbuild.outputs.VERSION }}
                   ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
