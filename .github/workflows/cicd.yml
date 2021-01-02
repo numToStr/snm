@@ -180,12 +180,10 @@ jobs:
               run: |
                   URL=$(git remote get-url origin)
                   VERSION=$(git describe --abbrev=0 --tags)
-                  sed -i -e "
-                    s/{{NAME}}/${PROJECT_NAME}/g;
-                    s/{{VERSION}}/${VERSION}/g;
-                    s/{{DESC}}/${PROJECT_DESC}/g;
-                    s/{{URL}}/${URL}/g;
-                    "
+                  sed -i -e "s/{{NAME}}/${PROJECT_NAME}/g;"
+                  sed -i -e "s/{{VERSION}}/${VERSION}/g;"
+                  sed -i -e "s/{{DESC}}/${PROJECT_DESC}/g;"
+                  sed -i -e "s/{{URL}}/${URL}/g;"
                   LAST_COMMIT_MSG=$(git log -1 --pretty='%s')
                   echo set-output name=LAST_COMMIT_MSG::${LAST_COMMIT_MSG}
                   echo ::set-output name=LAST_COMMIT_MSG::${LAST_COMMIT_MSG}
