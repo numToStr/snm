@@ -2,13 +2,11 @@
     <code>🤏 Smol Node Manager</code>
 </h1>
 
----
-
 ## Installation
 
 ### From script
 
-TODO: add a bash script
+> TODO: add a bash script
 
 ### From package managers
 
@@ -30,7 +28,7 @@ cargo install snm
 <!-- scoop install fnm -->
 <!-- ``` -->
 
--   **Using `yay` or `pamac` (Arch Linux/Manjaro Linux)**
+-   **Using `yay` or `pamac` (Arch Linux)**
 
 > Why snm is available for Arch? Because I love Arch Linux
 
@@ -42,7 +40,7 @@ yay -S snm
 pamac build snm
 ```
 
-### From binaries
+#### From binaries
 
 Check out the [Release page](https://github.com/numToStr/snm/releases) for prebuild binaries for `snm`, available for different operating systems.
 
