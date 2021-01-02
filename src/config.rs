@@ -23,14 +23,14 @@ pub struct Config {
     pub dist_mirror: Url,
 
     /// Log level for the snm commands
-    #[clap(
-        long,
-        name = "level",
-        env = "SNM_LOGLEVEL",
-        default_value = "info",
-        global = true
-    )]
-    pub log_level: String,
+    // #[clap(
+    //     long,
+    //     name = "level",
+    //     env = "SNM_LOGLEVEL",
+    //     default_value = "info",
+    //     global = true
+    // )]
+    // pub log_level: String,
 
     /// Only download the matching Nodejs version
     #[clap(short, long, global = true)]
@@ -42,7 +42,7 @@ impl Default for Config {
     fn default() -> Self {
         Config {
             download_only: false,
-            log_level: "info".to_string(),
+            // log_level: "info".to_string(),
             snm_dir: home_dir().unwrap().join(".snm_test").into(),
             dist_mirror: Url::parse("https://nodejs.org/dist").unwrap(),
         }

@@ -30,7 +30,7 @@ impl super::Command for Env {
 
         println!("{}", shell.path(&path, self.append));
 
-        println!("{}", shell.env_var("SNM_LOGLEVEL", &config.log_level));
+        // println!("{}", shell.env_var("SNM_LOGLEVEL", &config.log_level));
 
         println!(
             "{}",
