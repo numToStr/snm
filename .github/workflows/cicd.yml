@@ -184,7 +184,7 @@ jobs:
                   echo VERSION::${VERSION}
                   LAST_COMMIT_MSG=$(git log -1 --pretty='%s')
                   echo set-output name=LAST_COMMIT_MSG::${LAST_COMMIT_MSG}
-                  echo ::set-output name=LAST_COMMIT_MSG::${LAST_COMMIT_MSG}
+                  echo ::set-output name=LAST_COMMIT_MSG::"${LAST_COMMIT_MSG}"
                   COMMIT_USERNAME=$(git config user.name)
                   echo set-output name=COMMIT_USERNAME::${COMMIT_USERNAME}
                   echo ::set-output name=COMMIT_USERNAME::${COMMIT_USERNAME}
