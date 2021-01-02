@@ -1,3 +1,9 @@
+<h1 align="center">
+    <code>🤏 Smol Node Manager</code>
+</h1>
+
+---
+
 ## Installation
 
 ### From script
@@ -12,17 +18,17 @@ TODO: add a bash script
 cargo install snm
 ```
 
--   **Using `brew` (MacOs)**
+<!-- -   **Using `brew` (MacOs)** -->
+<!--  -->
+<!-- ```sh -->
+<!-- brew install fnm -->
+<!-- ``` -->
 
-```sh
-brew install fnm
-```
-
--   **Using `scoop` (Windows)**
-
-```sh
-scoop install fnm
-```
+<!-- -   **Using `scoop` (Windows)** -->
+<!--  -->
+<!-- ```sh -->
+<!-- scoop install fnm -->
+<!-- ``` -->
 
 -   **Using `yay` or `pamac` (Arch Linux/Manjaro Linux)**
 
