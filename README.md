@@ -1,3 +1,45 @@
+## Installation
+
+### From script
+
+TODO: add a bash script
+
+### From package managers
+
+-   **Using `cargo` (Linux/MacOs/Windows)**
+
+```sh
+cargo install snm
+```
+
+-   **Using `brew` (MacOs)**
+
+```sh
+brew install fnm
+```
+
+-   **Using `scoop` (Windows)**
+
+```sh
+scoop install fnm
+```
+
+-   **Using `yay` or `pamac` (Arch Linux/Manjaro Linux)**
+
+> Why snm is available for Arch? Because I love Arch Linux
+
+```sh
+# Using `yay`
+yay -S snm
+
+# Using `pamac`
+pamac build snm
+```
+
+### From binaries
+
+Check out the [Release page](https://github.com/numToStr/snm/releases) for prebuild binaries for `snm`, available for different operating systems.
+
 ## Shell
 
 -   **Bash**
