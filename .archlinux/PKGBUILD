@@ -3,7 +3,7 @@
 pkgname={{NAME}}
 pkgver={{VERSION}}
 pkgrel=1
-pkgdesc={{DESC}}
+pkgdesc="{{DESC}}"
 arch=('x86_64' 'aarch64' 'armv7')
 url={{URL}}
 license=('GPL')
