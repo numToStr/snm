@@ -51,7 +51,7 @@ mod tests {
     fn download_test() {
         let config = Config::default();
         let release = Release {
-            version: NodeVersion::Semver(semver::Version::parse("10.20.0").unwrap()),
+            version: NodeVersion::parse("10.20.0").unwrap(),
             lts: Lts::Yes("Dubnium".to_string()),
         };
         let dir = config.release_dir();
