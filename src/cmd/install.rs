@@ -41,10 +41,9 @@ impl super::Command for Install {
             Some(r) => {
                 let dest = download(&r, &config)?;
                 if is_lts {
-                    crate::symlink::symlink_to(
-                        &dest,
-                        &config.alias_dir().join(&self.version.to_string()),
-                    )?
+                    let alias = self.version.to_string();
+                    crate::symlink::symlink_to(&dest, &config.alias_dir().join(&alias))?;
+                    println!("Alias      : {}", alias.bold());
                 }
                 Ok(())
             }
