@@ -165,7 +165,7 @@ jobs:
               uses: actions-rs/cargo@v1
               with:
                   command: publish
-                  args: --verbose --token ${{ secrets.CARGO_TOKEN }}
+                  args: --allow-dirty --verbose --token ${{ secrets.CARGO_TOKEN }}
 
     publish_aur_package:
         name: Publish AUR package
@@ -179,11 +179,9 @@ jobs:
               shell: bash
               run: |
                   URL=$(git remote get-url origin)
+                  echo URL::${URL}
                   VERSION=$(git describe --abbrev=0 --tags)
-                  sed -i -e "s/{{NAME}}/${PROJECT_NAME}/g;" ./archlinux/PKGBUILD
-                  sed -i -e "s/{{VERSION}}/${VERSION}/g;" ./archlinux/PKGBUILD
-                  sed -i -e "s/{{DESC}}/${PROJECT_DESC}/g;" ./archlinux/PKGBUILD
-                  sed -i -e "s/{{URL}}/${URL}/g;" ./archlinux/PKGBUILD
+                  echo VERSION::${VERSION}
                   LAST_COMMIT_MSG=$(git log -1 --pretty='%s')
                   echo set-output name=LAST_COMMIT_MSG::${LAST_COMMIT_MSG}
                   echo ::set-output name=LAST_COMMIT_MSG::${LAST_COMMIT_MSG}
@@ -193,6 +191,10 @@ jobs:
                   COMMIT_EMAIL=$(git config user.name)
                   echo set-output name=COMMIT_EMAIL::${COMMIT_EMAIL}
                   echo ::set-output name=COMMIT_EMAIL::${COMMIT_EMAIL}
+                  sed -i -e "s/{{NAME}}/${PROJECT_NAME}/g;" ./.archlinux/PKGBUILD
+                  sed -i -e "s/{{VERSION}}/${VERSION}/g;" ./.archlinux/PKGBUILD
+                  sed -i -e "s/{{DESC}}/${PROJECT_DESC}/g;" ./.archlinux/PKGBUILD
+                  sed -i -e "s/{{URL}}/${URL}/g;" ./archlinux/PKGBUILD
 
             - name: Publish to the AUR
               uses: KSXGitHub/github-actions-deploy-aur@v2
