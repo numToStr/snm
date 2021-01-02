@@ -1,8 +1,7 @@
 # Maintainer: Vikas Raj <sudo@vikasraj.dev>
 
 pkgname={{NAME}}
-pkgver=0.1.0
-# pkgver={{VERSION}}
+pkgver={{VERSION}}
 pkgrel=1
 pkgdesc={{DESC}}
 arch=('x86_64' 'aarch64' 'armv7')
