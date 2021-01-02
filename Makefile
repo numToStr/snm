@@ -7,4 +7,4 @@ release:
 	sed -i -e 's/^version.*/version = "$(VERSION)"/g' Cargo.toml
 	@echo ">> Release"
 	@# You need git-release from tj/git-extras
-	git release $(VERSION)
+	git release v$(VERSION)
