@@ -1,4 +1,4 @@
-# Maintainer: Vikas Raj <sudo@vikasraj.dev>
+# Maintainer: {{AUTHOR}} <{{EMAIL}}>
 
 pkgname={{NAME}}
 pkgver={{VERSION}}
