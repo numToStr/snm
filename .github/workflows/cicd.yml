@@ -2,6 +2,8 @@ name: CI-CD
 
 on:
     push:
+        branches:
+            - master
         tags:
             - "*"
 
@@ -129,6 +131,7 @@ jobs:
             - name: Package
               shell: bash
               id: package
+              if: startsWith(github.ref, 'refs/tags/')
               run: |
                   ARCHIVE_DIR='${{ steps.vars.outputs.STAGING }}/${{ steps.vars.outputs.PKG_BASENAME }}/'
                   # Binary
@@ -143,6 +146,7 @@ jobs:
 
             - name: Publish archives and packages
               uses: softprops/action-gh-release@v1
+              if: startsWith(github.ref, 'refs/tags/')
               with:
                   files: ${{ steps.vars.outputs.STAGING }}/${{ steps.vars.outputs.PKG_NAME }}
               env:
@@ -151,6 +155,7 @@ jobs:
     publish_rust_crate:
         name: Publish Rust Crate on crates.io
         runs-on: ubuntu-latest
+        if: startsWith(github.ref, 'refs/tags/')
         steps:
             - uses: actions/checkout@v2
 
@@ -181,10 +186,8 @@ jobs:
                   URL=$(git remote get-url origin)
                   echo URL::${URL}
                   VERSION=$(git describe --abbrev=0 --tags)
-                  echo VERSION::${VERSION}
-                  LAST_COMMIT_MSG=$(git log -1 --pretty='%s')
-                  echo set-output name=LAST_COMMIT_MSG::${LAST_COMMIT_MSG}
-                  echo ::set-output name=LAST_COMMIT_MSG::"${LAST_COMMIT_MSG}"
+                  echo set-output name=VERSION::${VERSION}
+                  echo ::set-output name=VERSION::${VERSION}
                   COMMIT_USERNAME=$(git config user.name)
                   echo set-output name=COMMIT_USERNAME::${COMMIT_USERNAME}
                   echo ::set-output name=COMMIT_USERNAME::${COMMIT_USERNAME}
@@ -198,10 +201,11 @@ jobs:
 
             - name: Publish to the AUR
               uses: KSXGitHub/github-actions-deploy-aur@v2
+              if: startsWith(github.ref, 'refs/tags/')
               with:
                   pkgname: ${{ env.PROJECT_NAME }}
                   pkgbuild: ./.archlinux/PKGBUILD
                   commit_username: ${{ steps.gen_pkgbuild.outputs.COMMIT_USERNAME }}
                   commit_email: ${{ steps.gen_pkgbuild.outputs.COMMIT_EMAIL }}
-                  commit_message: ${{ steps.gen_pkgbuild.outputs.LAST_COMMIT_MSG }}
+                  commit_message: ${{ steps.gen_pkgbuild.outputs.VERSION }}
                   ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
