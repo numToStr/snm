@@ -4,6 +4,10 @@ version = "0.1.0"
 description = "Smol and Stupid Node Manager"
 authors = ["Vikas Raj <sudo@vikasraj.dev>"]
 edition = "2018"
+homepage = "https://github.com/numToStr/snm/"
+repository = "https://github.com/numToStr/snm/"
+license-file = "LICENSE"
+readme = "README.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

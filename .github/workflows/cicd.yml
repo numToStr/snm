@@ -2,12 +2,13 @@ name: CI-CD
 
 on:
     push:
-        branches:
-            - release
+        tags:
+            - "*"
 
 env:
     CARGO_TERM_COLOR: always
     PROJECT_NAME: snm
+    PROJECT_DESC: "Smol Node Manager written in Rust"
 
 jobs:
     build:
@@ -57,9 +58,19 @@ jobs:
               id: vars
               shell: bash
               run: |
-                  COMMIT_SHA=$(git rev-parse --short "$GITHUB_SHA")
-                  echo set-output name=COMMIT_SHA::${COMMIT_SHA}
-                  echo ::set-output name=COMMIT_SHA::${COMMIT_SHA}
+                  # parse commit reference info
+                  REF_NAME=${GITHUB_REF#refs/*/}
+                  unset REF_BRANCH ; case ${GITHUB_REF} in refs/heads/*) REF_BRANCH=${GITHUB_REF#refs/heads/} ;; esac;
+                  unset REF_TAG ; case ${GITHUB_REF} in refs/tags/*) REF_TAG=${GITHUB_REF#refs/tags/} ;; esac;
+                  REF_SHAS=${GITHUB_SHA:0:8}
+                  echo set-output name=REF_NAME::${REF_NAME}
+                  echo set-output name=REF_BRANCH::${REF_BRANCH}
+                  echo set-output name=REF_TAG::${REF_TAG}
+                  echo set-output name=REF_SHAS::${REF_SHAS}
+                  echo ::set-output name=REF_NAME::${REF_NAME}
+                  echo ::set-output name=REF_BRANCH::${REF_BRANCH}
+                  echo ::set-output name=REF_TAG::${REF_TAG}
+                  echo ::set-output name=REF_SHAS::${REF_SHAS}
                   # staging directory
                   STAGING='_staging'
                   echo set-output name=STAGING::${STAGING}
@@ -132,10 +143,65 @@ jobs:
 
             - name: Publish archives and packages
               uses: softprops/action-gh-release@v1
-              # if: steps.vars.outputs.DEPLOY
               with:
-                  name: ${{ env.PROJECT_NAME }}-${{ steps.vars.outputs.COMMIT_SHA }}
-                  tag_name: ${{ steps.vars.outputs.COMMIT_SHA }}
                   files: ${{ steps.vars.outputs.STAGING }}/${{ steps.vars.outputs.PKG_NAME }}
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    publish_rust_crate:
+        name: Publish Rust Crate on crates.io
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Install Rust toolchain
+              uses: actions-rs/toolchain@v1
+              with:
+                  toolchain: stable
+                  override: true
+                  profile: minimal
+
+            - name: Publish
+              uses: actions-rs/cargo@v1
+              with:
+                  command: publish
+                  args: --verbose --token ${{ secrets.CARGO_TOKEN }}
+
+    publish_aur_package:
+        name: Publish AUR package
+        runs-on: ubuntu-latest
+        needs: build
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Generate PKGBUILD
+              id: gen_pkgbuild
+              shell: bash
+              run: |
+                  URL=$(git remote get-url origin)
+                  VERSION=$(git describe --abbrev=0 --tags)
+                  sed -i -e "
+                    s/{{NAME}}/${PROJECT_NAME}/g;
+                    s/{{VERSION}}/${VERSION}/g;
+                    s/{{DESC}}/${PROJECT_DESC}/g;
+                    s/{{URL}}/${URL}/g;
+                    "
+                  LAST_COMMIT_MSG=$(git log -1 --pretty='%s')
+                  echo set-output name=LAST_COMMIT_MSG::${LAST_COMMIT_MSG}
+                  echo ::set-output name=LAST_COMMIT_MSG::${LAST_COMMIT_MSG}
+                  COMMIT_USERNAME=$(git config user.name)
+                  echo set-output name=COMMIT_USERNAME::${COMMIT_USERNAME}
+                  echo ::set-output name=COMMIT_USERNAME::${COMMIT_USERNAME}
+                  COMMIT_EMAIL=$(git config user.name)
+                  echo set-output name=COMMIT_EMAIL::${COMMIT_EMAIL}
+                  echo ::set-output name=COMMIT_EMAIL::${COMMIT_EMAIL}
+
+            - name: Publish to the AUR
+              uses: KSXGitHub/github-actions-deploy-aur@v2
+              with:
+                  pkgname: ${{ env.PROJECT_NAME }}
+                  pkgbuild: ./.archlinux/PKGBUILD
+                  commit_username: ${{ steps.gen_pkgbuild.outputs.COMMIT_USERNAME }}
+                  commit_email: ${{ steps.gen_pkgbuild.outputs.COMMIT_EMAIL }}
+                  commit_message: ${{ steps.gen_pkgbuild.outputs.LAST_COMMIT_MSG }}
+                  ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
