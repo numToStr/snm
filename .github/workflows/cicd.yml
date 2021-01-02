@@ -179,6 +179,9 @@ jobs:
         steps:
             - uses: actions/checkout@v2
 
+            - name: Get all git tags
+              run: git fetch --prune --unshallow --tags
+
             - name: Generate PKGBUILD
               id: gen_pkgbuild
               shell: bash
