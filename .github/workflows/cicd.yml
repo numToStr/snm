@@ -191,19 +191,19 @@ jobs:
                   VERSION=$(git describe --abbrev=0 --tags | sed -e "s/v//g")
                   echo set-output name=VERSION::${VERSION}
                   echo ::set-output name=VERSION::"${VERSION}"
-                  sed -i -e "s%{{AUTHOR}}%${AUTHOR}%g;" ./.archlinux/PKGBUILD
-                  sed -i -e "s%{{EMAIL}}%${EMAIL}%g;" ./.archlinux/PKGBUILD
-                  sed -i -e "s%{{NAME}}%${PROJECT_NAME}%g;" ./.archlinux/PKGBUILD
-                  sed -i -e "s%{{DESC}}%${PROJECT_DESC}%g;" ./.archlinux/PKGBUILD
-                  sed -i -e "s%{{VERSION}}%${VERSION}%g;" ./.archlinux/PKGBUILD
-                  sed -i -e "s%{{URL}}%${URL}%g;" ./.archlinux/PKGBUILD
-                  cat ./.archlinux/PKGBUILD
+                  sed -i -e "s%{{AUTHOR}}%${AUTHOR}%g;" ./.aur/PKGBUILD
+                  sed -i -e "s%{{EMAIL}}%${EMAIL}%g;" ./.aur/PKGBUILD
+                  sed -i -e "s%{{NAME}}%${PROJECT_NAME}%g;" ./.aur/PKGBUILD
+                  sed -i -e "s%{{DESC}}%${PROJECT_DESC}%g;" ./.aur/PKGBUILD
+                  sed -i -e "s%{{VERSION}}%${VERSION}%g;" ./.aur/PKGBUILD
+                  sed -i -e "s%{{URL}}%${URL}%g;" ./.aur/PKGBUILD
+                  cat ./.aur/PKGBUILD
 
             - name: Publish to the AUR
               uses: KSXGitHub/github-actions-deploy-aur@v2
               with:
                   pkgname: ${{ env.PROJECT_NAME }}
-                  pkgbuild: ./.archlinux/PKGBUILD
+                  pkgbuild: ./.aur/PKGBUILD
                   commit_username: ${{ env.AUTHOR }}
                   commit_email: ${{ env.EMAIL }}
                   commit_message: ${{ steps.gen_pkgbuild.outputs.VERSION }}
