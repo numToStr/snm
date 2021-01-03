@@ -52,6 +52,12 @@ pamac build snm
 
 Check out the [Release page](https://github.com/numToStr/snm/releases) for prebuild binaries for `snm`, available for different operating systems.
 
+---
+
+NOTE: `snm` uses symlinks underneath to manage aliases. So, If you have using **Windows** make sure you have enabled **Developer Mode** or your user has permission to create symlinks. You can read more [here](https://blogs.windows.com/windowsdeveloper/2016/12/02/symlinks-windows-10/)
+
+---
+
 ## Shell
 
 -   **Bash**
