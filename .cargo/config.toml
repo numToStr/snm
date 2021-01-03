@@ -7,3 +7,9 @@ build_linux = "build --target=x86_64-unknown-linux-gnu --release"
 
 [target.'cfg(unix)']
 rustflags = ["-C", "link-arg=-s"]
+
+[target.x86_64-pc-windows-msvc]
+rustflags = ["-C", "target-feature=+crt-static"]
+
+[target.i686-pc-windows-msvc]
+rustflags = ["-C", "target-feature=+crt-static"]
