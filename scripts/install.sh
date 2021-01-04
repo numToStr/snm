@@ -23,10 +23,10 @@ parse_args() {
       SKIP_SHELL="true"
       shift # past argument
       ;;
-    --force-install | --force-no-brew)
-      echo "\`--force-install\`: I hope you know what you're doing." >&2
-      FORCE_INSTALL="true"
-      shift
+    # --force-install | --force-no-brew)
+    #   echo "\`--force-install\`: I hope you know what you're doing." >&2
+    #   FORCE_INSTALL="true"
+    #   shift
       ;;
     -r | --release)
       RELEASE="$2"
@@ -54,15 +54,16 @@ set_filename() {
       *)
         FILENAME="snm-x86_64-unknown-linux-gnu"
     esac
-  elif [ "$OS" == "Darwin" ] && [ "$FORCE_INSTALL" == "true" ]; then
-    FILENAME="snm-x86_64-apple-darwin"
-    USE_HOMEBREW="false"
-    echo "Downloading the latest snm binary from GitHub..."
-    echo "  Pro tip: it's eaiser to use Homebrew for managing snm in MacOS."
-    echo "           Remove the \`--force-no-brew\` so it will be easy to upgrade."
+  # elif [ "$OS" == "Darwin" ] && [ "$FORCE_INSTALL" == "true" ]; then
   elif [ "$OS" == "Darwin" ]; then
-    USE_HOMEBREW="true"
-    echo "Downloading snm using Homebrew..."
+    FILENAME="snm-x86_64-apple-darwin"
+    # USE_HOMEBREW="false"
+    echo "Downloading the latest snm binary from GitHub..."
+    # echo "  Pro tip: it's eaiser to use Homebrew for managing snm in MacOS."
+    # echo "           Remove the \`--force-no-brew\` so it will be easy to upgrade."
+  # elif [ "$OS" == "Darwin" ]; then
+  #   USE_HOMEBREW="true"
+  #   echo "Downloading snm using Homebrew..."
   else
     echo "OS $OS is not supported."
     echo "If you think that's a bug - please file an issue to https://github.com/numToStr/snm/issues"
@@ -71,9 +72,9 @@ set_filename() {
 }
 
 download_snm() {
-  if [ "$USE_HOMEBREW" == "true" ]; then
-    brew install snm
-  else
+  # if [ "$USE_HOMEBREW" == "true" ]; then
+  #   brew install snm
+  # else
     if [ "$RELEASE" == "latest" ]; then
       URL="https://github.com/numToStr/snm/releases/latest/download/$FILENAME.tar.gz"
     else
@@ -102,7 +103,7 @@ download_snm() {
     chmod u+x "$INSTALL_DIR/snm"
 
     echo "Installed at $INSTALL_DIR/snm"
-  fi
+  # fi
 }
 
 check_dependencies() {
@@ -124,15 +125,15 @@ check_dependencies() {
     SHOULD_EXIT="true"
   fi
 
-  if [ "$USE_HOMEBREW" = "true" ]; then
-    echo -n "Checking availability of Homebrew (brew)... "
-    if hash brew 2>/dev/null; then
-      echo "OK!"
-    else
-      echo "Missing!"
-      SHOULD_EXIT="true"
-    fi
-  fi
+  # if [ "$USE_HOMEBREW" = "true" ]; then
+  #   echo -n "Checking availability of Homebrew (brew)... "
+  #   if hash brew 2>/dev/null; then
+  #     echo "OK!"
+  #   else
+  #     echo "Missing!"
+  #     SHOULD_EXIT="true"
+  #   fi
+  # fi
 
   if [ "$SHOULD_EXIT" = "true" ]; then
     exit 1
