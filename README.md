@@ -279,4 +279,4 @@ cargo run -- lsr 14
 This project would not be possible without these awesome projects.
 
 -   [n](https://github.com/tj/n) for cli design
--   [fnm](https://github/Schniz/fnm) for giving me a base project and some code :)
+-   [fnm](https://github.com/Schniz/fnm) for giving me a base project and some code :)
