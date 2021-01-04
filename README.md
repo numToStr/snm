@@ -12,13 +12,20 @@
 
 ## Installation
 
-### From script
+### From script (Linux/macOS/Windows)
 
-> TODO: add a bash script
+```sh
+curl -fsSL https://git.io/JLFnA | bash
+```
+
+#### Available Params
+
+-   `--install-dir` : Set a custom directory for binary installation. Defaults to `$HOME/.snm`
+-   `--skip-shell` : Skip appending shell specific loader to the `$SHELL` config file.
 
 ### From package managers
 
--   **Using `cargo` (Linux/MacOs/Windows)**
+-   **Using `cargo` (Linux/macOS/Windows)**
 
 ```sh
 cargo install snm
