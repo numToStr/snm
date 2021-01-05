@@ -1,5 +1,20 @@
 # Changelog
 
+## [v0.2.0](https://github.com/numtostr/snm/tree/v0.2.0) (2021-01-05)
+
+[Full Changelog](https://github.com/numtostr/snm/compare/v0.1.9...v0.2.0)
+
+**Closed issues:**
+
+- Add `tj/n` style version help in `snm --help` [\#37](https://github.com/numToStr/snm/issues/37)
+- Add `a` as an alias to `alias` command [\#36](https://github.com/numToStr/snm/issues/36)
+
+**Merged pull requests:**
+
+- improved help and added missing doc comments [\#35](https://github.com/numToStr/snm/pull/35) ([numToStr](https://github.com/numToStr))
+- Upgrade ureq to v2 [\#34](https://github.com/numToStr/snm/pull/34) ([numToStr](https://github.com/numToStr))
+- Added bash install script for Linux and macOS [\#33](https://github.com/numToStr/snm/pull/33) ([numToStr](https://github.com/numToStr))
+
 ## [v0.1.9](https://github.com/numtostr/snm/tree/v0.1.9) (2021-01-03)
 
 [Full Changelog](https://github.com/numtostr/snm/compare/v0.1.8...v0.1.9)
