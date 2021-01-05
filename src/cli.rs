@@ -8,7 +8,7 @@ use clap::{crate_authors, crate_description, crate_name, crate_version, Clap};
 #[derive(Clap, Debug, PartialEq, Eq)]
 pub enum SubCommand {
     /// Alias a version to a common name
-    #[clap(name = "alias")]
+    #[clap(name = "alias", visible_alias = "a")]
     Alias(alias::Alias),
 
     /// Sets up the shell variables for snm
