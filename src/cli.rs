@@ -25,7 +25,7 @@ pub enum SubCommand {
     #[clap(name = "completions")]
     Completions(completions::Completions),
 
-    /// Install Nodejs with the provided version or lts codename
+    /// Install Nodejs with the given version or lts codename
     ///
     /// Example: snm install 14 | snm install lts/fermium
     #[clap(name = "install", visible_alias = "i")]
@@ -33,7 +33,7 @@ pub enum SubCommand {
 
     /// Changes Nodejs version
     ///
-    /// NOTE: If the <version> is not provided, then version will be picked from .nvmrc or .node-version
+    /// NOTE: If the <version> is not given, then version will be picked from .nvmrc or .node-version
     #[clap(name = "use", visible_alias = "as")]
     Use(r#use::Use),
 
@@ -65,7 +65,7 @@ pub enum SubCommand {
     #[clap(name = "unalias", visible_alias = "rma")]
     UnAlias(unalias::UnAlias),
 
-    /// Remove the installed Nodejs with the provided version or an alias
+    /// Remove the installed Nodejs with the given version or alias
     ///
     /// Example: snm uninstall 14 | snm uninstall lts-fermium
     ///
