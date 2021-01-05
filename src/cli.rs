@@ -17,7 +17,7 @@ pub enum SubCommand {
 
     /// Executes a command within snm context with the modified PATH
     ///
-    /// Example: snm exec 14 -- node -v
+    /// Example: snm exec 14 -- node -v | snm exec 14 -- yarn start
     #[clap(name = "exec")]
     Exec(exec::Exec),
 
@@ -25,21 +25,23 @@ pub enum SubCommand {
     #[clap(name = "completions")]
     Completions(completions::Completions),
 
-    /// Install node <version> (downloading if necessary)
+    /// Install Nodejs with the given version or lts codename
+    ///
+    /// Example: snm install 14 | snm install lts/fermium
     #[clap(name = "install", visible_alias = "i")]
     Install(install::Install),
 
-    /// Display downloaded node versions and install selection
+    /// Changes Nodejs version
     ///
-    /// NOTE: If the <version> is not provided, then version will be picked from .nvmrc or .node-version
+    /// NOTE: If the <version> is not given, then version will be picked from .nvmrc or .node-version
     #[clap(name = "use", visible_alias = "as")]
     Use(r#use::Use),
 
-    /// Install the latest node release (downloading if necessary)
+    /// Install the latest CURRENT release
     #[clap(name = "latest")]
     Latest(latest::Latest),
 
-    /// Install the latest LTS node release (downloading if necessary)
+    /// Install the latest LTS release
     #[clap(name = "lts")]
     Lts(lts::Lts),
 
@@ -47,7 +49,7 @@ pub enum SubCommand {
     #[clap(name = "ls")]
     Ls(ls::Ls),
 
-    /// List remote Node.js versions
+    /// List remote Nodejs versions
     #[clap(name = "ls-remote", visible_alias = "lsr")]
     LsRemote(ls_remote::LsRemote),
 
@@ -63,7 +65,12 @@ pub enum SubCommand {
     #[clap(name = "unalias", visible_alias = "rma")]
     UnAlias(unalias::UnAlias),
 
-    /// Remove the installed node and npm
+    /// Remove the installed Nodejs with the given version or alias
+    ///
+    /// Example: snm uninstall 14 | snm uninstall lts-fermium
+    ///
+    /// NOTE: If given an alias like ten or lts-fermium then it will remove the version which the alias is pointing at and all the aliases which are pointing to the same version.
+    /// Also, uninstalling a version will throw an error, if multiple installation is found in the same semver range
     #[clap(name = "uninstall", visible_alias = "rm")]
     UnInstall(uninstall::UnInstall),
 }
