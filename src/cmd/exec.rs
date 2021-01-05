@@ -7,13 +7,13 @@ use std::process::{self, Command, Stdio};
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct Exec {
-    // Nodejs version needed for executing the following command
+    /// Nodejs version needed for executing the following command
     version: Version,
 
-    // Command that needs to be executed
+    /// Command that needs to be executed
     binary: String,
 
-    // Arguments for the command
+    /// Arguments for the command
     args: Option<String>,
 }
 
