@@ -50,22 +50,17 @@ impl Version {
     }
 
     pub fn from_file() -> anyhow::Result<Option<Version>> {
-        let pwd = fs::read_dir(current_dir()?)?;
+        let pwd = current_dir()?;
 
-        for dir in pwd {
-            let dir = dir?.path();
+        for file_name in NODE_FILES.iter() {
+            let path = pwd.join(file_name);
+            let exists = path.exists();
 
-            if !dir.is_file() {
+            if !exists {
                 continue;
             }
 
-            let name = crate::alias::pretty_path_name(&dir);
-
-            if !NODE_FILES.contains(&name) {
-                continue;
-            }
-
-            let file = fs::File::open(dir)?;
+            let file = fs::File::open(path)?;
             let file = BufReader::new(file);
             let line = file.lines().next();
 
