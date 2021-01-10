@@ -7,7 +7,7 @@ use std::io::{BufRead, BufReader, Read};
 use std::str::FromStr;
 
 const PACKAGE_JSON: &'static str = "package.json";
-const NODE_FILES: [&str; 3] = [".nvmrc", ".node-version", PACKAGE_JSON];
+const NODE_FILES: [&str; 3] = [PACKAGE_JSON, ".nvmrc", ".node-version"];
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Version {
@@ -41,6 +41,10 @@ impl Version {
     pub fn match_node_version(&self, version: &NodeVersion) -> bool {
         match (self, version) {
             (Self::Full(a), b) if a == b => true,
+            // This case matches wildcards, like >10.0.0 or ^14.15.0
+            (Self::Full(NodeVersion::SemverReq(semver_req)), NodeVersion::Semver(version)) => {
+                semver_req.matches(version)
+            }
             (Self::Major(major), NodeVersion::Semver(other)) => major == &other.major,
             (Self::MajorMinor(major, minor), NodeVersion::Semver(other)) => {
                 *major == other.major && *minor == other.minor
