@@ -6,7 +6,7 @@
 
 -   It's fast as it is written in Rust.
 -   Cross Platfrom (Linux/macOS/Windows)
--   Supports `.nvmrc` and `.node-version`
+-   Supports `.nvmrc`, `.node-version` and `package.json`
 -   Supports multiple shells
 -   Tons of commands and options
 
