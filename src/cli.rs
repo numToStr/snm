@@ -103,7 +103,17 @@ Versions:
     Versions can also be specified by their codename, prefixed with lts- or lts/.
 
     4.9.1, 8, v6.1              Numeric versions
+    >14, <10, ~15.0.0                Semver ranges
     lts/boron, lts/carbon       Codenames for release streams
+
+Dotfiles:
+
+    Version can also be defined in these files and can used with 'use' command in order.
+    Only the version pattern which are defined above are supported.
+
+    - .nvmrc
+    - .node-version
+    - package.json ('engines.node' field)
 "#;
 
 #[derive(Clap, Debug)]

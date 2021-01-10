@@ -3,6 +3,7 @@ use std::path::Path;
 
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone)]
 pub enum NodeVersion {
+    SemverReq(semver::VersionReq),
     Semver(semver::Version),
     Lts(String),
     Alias(String),
@@ -23,7 +24,12 @@ impl NodeVersion {
             let ver = semver::Version::parse(&trimmed)?;
             Ok(Self::Semver(ver))
         } else {
-            Ok(Self::Alias(trimmed.to_string()))
+            let semver = match semver::VersionReq::parse(&trimmed) {
+                Ok(ver) => Self::SemverReq(ver),
+                Err(_) => Self::Alias(trimmed.to_string()),
+            };
+
+            Ok(semver)
         }
     }
 
@@ -55,6 +61,7 @@ impl std::fmt::Display for NodeVersion {
             Self::Lts(lts) => write!(f, "lts-{}", lts),
             Self::Semver(semver) => write!(f, "v{}", semver),
             Self::Alias(alias) => write!(f, "{}", alias),
+            Self::SemverReq(semver) => write!(f, "{}", semver),
         }
     }
 }

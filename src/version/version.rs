@@ -1,11 +1,13 @@
 use super::node_version::NodeVersion;
 use colored::*;
+use serde::Deserialize;
 use std::env::current_dir;
 use std::fs;
-use std::io::{BufRead, BufReader};
+use std::io::{BufRead, BufReader, Read};
 use std::str::FromStr;
 
-const NODE_FILES: [&str; 2] = [".nvmrc", ".node-version"];
+const PACKAGE_JSON: &'static str = "package.json";
+const NODE_FILES: [&str; 3] = [".nvmrc", ".node-version", PACKAGE_JSON];
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Version {
@@ -39,6 +41,10 @@ impl Version {
     pub fn match_node_version(&self, version: &NodeVersion) -> bool {
         match (self, version) {
             (Self::Full(a), b) if a == b => true,
+            // This case matches wildcards, like >10.0.0 or ^14.15.0
+            (Self::Full(NodeVersion::SemverReq(semver_req)), NodeVersion::Semver(version)) => {
+                semver_req.matches(version)
+            }
             (Self::Major(major), NodeVersion::Semver(other)) => major == &other.major,
             (Self::MajorMinor(major, minor), NodeVersion::Semver(other)) => {
                 *major == other.major && *minor == other.minor
@@ -48,7 +54,19 @@ impl Version {
             _ => false,
         }
     }
+}
 
+#[derive(Debug, Deserialize)]
+pub struct Engines {
+    node: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct PackageJson {
+    engines: Option<Engines>,
+}
+
+impl Version {
     pub fn from_file() -> anyhow::Result<Option<Version>> {
         let pwd = current_dir()?;
 
@@ -60,16 +78,32 @@ impl Version {
                 continue;
             }
 
-            let file = fs::File::open(path)?;
-            let file = BufReader::new(file);
-            let line = file.lines().next();
+            let mut file = fs::File::open(path)?;
 
-            if let Some(l) = line {
-                let l = l?;
-                let parsed = Version::from_str(&l)?;
+            if file_name == &PACKAGE_JSON {
+                let mut contents = String::new();
+                file.read_to_string(&mut contents)?;
 
-                return Ok(Some(parsed));
+                let parsed: PackageJson = serde_json::from_str(&contents)?;
+
+                if let Some(Engines { node: Some(v) }) = parsed.engines {
+                    let parsed = Version::from_str(&v)?;
+
+                    return Ok(Some(parsed));
+                }
+            } else {
+                let file = BufReader::new(file);
+                let lines = file.lines().next();
+
+                if let Some(line) = lines {
+                    let line = line?;
+                    let parsed = Version::from_str(&line)?;
+
+                    return Ok(Some(parsed));
+                }
             }
+
+            return Ok(None);
         }
 
         Ok(None)
