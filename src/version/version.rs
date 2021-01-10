@@ -7,7 +7,7 @@ use std::io::{BufRead, BufReader, Read};
 use std::str::FromStr;
 
 const PACKAGE_JSON: &'static str = "package.json";
-const NODE_FILES: [&str; 3] = [PACKAGE_JSON, ".nvmrc", ".node-version"];
+const NODE_FILES: [&str; 3] = [".nvmrc", ".node-version", PACKAGE_JSON];
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Version {
