@@ -102,9 +102,9 @@ Versions:
     Numeric version numbers can be complete or partial semver, with an optional leading 'v'.
     Versions can also be specified by their codename, prefixed with lts- or lts/.
 
-    4.9.1, 8, v6.1              Numeric versions
-    >14, <10, ~15.0.0                Semver ranges
-    lts/boron, lts/carbon       Codenames for release streams
+    4.9.1, 8, v6.1                  Numeric versions
+    >14, <10, ~15.0.0               Semver ranges
+    lts/boron, lts/carbon           Codenames for release streams
 
 Dotfiles:
 
