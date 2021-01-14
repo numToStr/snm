@@ -1,5 +1,18 @@
 # Changelog
 
+## [v0.3.0](https://github.com/numtostr/snm/tree/v0.3.0) (2021-01-13)
+
+[Full Changelog](https://github.com/numtostr/snm/compare/v0.2.0...v0.3.0)
+
+**Closed issues:**
+
+- Support `engines` key from `package.json` [\#38](https://github.com/numToStr/snm/issues/38)
+
+**Merged pull requests:**
+
+- Support `package.json` in `snm use` [\#40](https://github.com/numToStr/snm/pull/40) ([numToStr](https://github.com/numToStr))
+- Improved perf of `snm use` when reading `.nvmrc` or `.node-version` [\#39](https://github.com/numToStr/snm/pull/39) ([numToStr](https://github.com/numToStr))
+
 ## [v0.2.0](https://github.com/numtostr/snm/tree/v0.2.0) (2021-01-05)
 
 [Full Changelog](https://github.com/numtostr/snm/compare/v0.1.9...v0.2.0)
@@ -25,6 +38,7 @@
 - Revert "Added workflow on pull request" [\#29](https://github.com/numToStr/snm/pull/29) ([numToStr](https://github.com/numToStr))
 - fixed windows binary not working [\#28](https://github.com/numToStr/snm/pull/28) ([numToStr](https://github.com/numToStr))
 - Added workflow on pull request [\#27](https://github.com/numToStr/snm/pull/27) ([numToStr](https://github.com/numToStr))
+- Added mod tests [\#26](https://github.com/numToStr/snm/pull/26) ([numToStr](https://github.com/numToStr))
 
 ## [v0.1.8](https://github.com/numtostr/snm/tree/v0.1.8) (2021-01-02)
 
@@ -49,7 +63,6 @@
 
 **Merged pull requests:**
 
-- Added mod tests [\#26](https://github.com/numToStr/snm/pull/26) ([numToStr](https://github.com/numToStr))
 - Towards 0.1.0 release [\#24](https://github.com/numToStr/snm/pull/24) ([numToStr](https://github.com/numToStr))
 - Windows support [\#11](https://github.com/numToStr/snm/pull/11) ([numToStr](https://github.com/numToStr))
 - Error bubbles [\#7](https://github.com/numToStr/snm/pull/7) ([numToStr](https://github.com/numToStr))
