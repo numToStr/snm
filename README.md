@@ -72,7 +72,7 @@ NOTE: `snm` uses symlinks underneath to manage aliases. So, If you are using **W
 Add the following line to your `~/.bashrc`
 
 ```bash
-eval "$(snm eval bash)"
+eval "$(snm env bash)"
 ```
 
 -   **Zsh**
@@ -80,7 +80,7 @@ eval "$(snm eval bash)"
 Add the following line to your `~/.zshrc`
 
 ```zsh
-eval "$(snm eval zsh)"
+eval "$(snm env zsh)"
 ```
 
 -   **Fish**
