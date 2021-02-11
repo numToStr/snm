@@ -14,7 +14,7 @@ pub struct Exec {
     binary: String,
 
     /// Arguments for the command
-    args: Option<String>,
+    args: Vec<String>,
 }
 
 impl super::Command for Exec {
