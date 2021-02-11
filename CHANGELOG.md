@@ -1,5 +1,18 @@
 # Changelog
 
+## [v0.4.1](https://github.com/numtostr/snm/tree/v0.4.1) (2021-02-11)
+
+[Full Changelog](https://github.com/numtostr/snm/compare/v0.3.0...v0.4.1)
+
+**Closed issues:**
+
+- snm exec refuse more than 1 argument [\#43](https://github.com/numToStr/snm/issues/43)
+
+**Merged pull requests:**
+
+- chore: package updates [\#44](https://github.com/numToStr/snm/pull/44) ([numToStr](https://github.com/numToStr))
+- fix shell examples in readme [\#42](https://github.com/numToStr/snm/pull/42) ([ScottLNorvell](https://github.com/ScottLNorvell))
+
 ## [v0.3.0](https://github.com/numtostr/snm/tree/v0.3.0) (2021-01-13)
 
 [Full Changelog](https://github.com/numtostr/snm/compare/v0.2.0...v0.3.0)
@@ -38,7 +51,6 @@
 - Revert "Added workflow on pull request" [\#29](https://github.com/numToStr/snm/pull/29) ([numToStr](https://github.com/numToStr))
 - fixed windows binary not working [\#28](https://github.com/numToStr/snm/pull/28) ([numToStr](https://github.com/numToStr))
 - Added workflow on pull request [\#27](https://github.com/numToStr/snm/pull/27) ([numToStr](https://github.com/numToStr))
-- Added mod tests [\#26](https://github.com/numToStr/snm/pull/26) ([numToStr](https://github.com/numToStr))
 
 ## [v0.1.8](https://github.com/numtostr/snm/tree/v0.1.8) (2021-01-02)
 
@@ -63,6 +75,7 @@
 
 **Merged pull requests:**
 
+- Added mod tests [\#26](https://github.com/numToStr/snm/pull/26) ([numToStr](https://github.com/numToStr))
 - Towards 0.1.0 release [\#24](https://github.com/numToStr/snm/pull/24) ([numToStr](https://github.com/numToStr))
 - Windows support [\#11](https://github.com/numToStr/snm/pull/11) ([numToStr](https://github.com/numToStr))
 - Error bubbles [\#7](https://github.com/numToStr/snm/pull/7) ([numToStr](https://github.com/numToStr))
