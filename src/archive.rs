@@ -1,3 +1,4 @@
+use crate::progress_bar::Bar;
 use std::path::Path;
 use ureq::Response;
 
@@ -11,8 +12,14 @@ impl Archive {
     }
 
     #[cfg(unix)]
-    pub fn extract_into<P: AsRef<Path>>(self, path: P) -> anyhow::Result<()> {
-        let xz_stream = xz2::read::XzDecoder::new(self.res.into_reader());
+    pub fn extract_into<P: AsRef<Path>>(self, path: P, ct_len: Option<u64>) -> anyhow::Result<()> {
+        let bar = Bar::new(ct_len);
+
+        let reader = self.res.into_reader();
+
+        let buf = bar.read_start(reader)?;
+
+        let xz_stream = xz2::read::XzDecoder::new(std::io::Cursor::new(buf));
         let mut archive = tar::Archive::new(xz_stream);
         archive.unpack(path).map_err(|e| anyhow::Error::new(e))
     }
