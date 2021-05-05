@@ -25,9 +25,9 @@ pub fn download(r: &Release, config: &Config) -> anyhow::Result<PathBuf> {
         .and_then(|x| x.parse::<usize>().ok())
         .ok_or(anyhow::Error::msg("Unable to get content length."))?;
 
-    println!("Installing : {}", &r.version.to_string().bold());
-    println!("Dowloading : {}", &dist.url.bold());
-    println!("Size       : {}", &len.to_string().bold());
+    println!("Installing  : {}", &r.version.to_string().bold());
+    println!("Downloading : {}", &dist.url.bold());
+    println!("Size        : {}", &len.to_string().bold());
     println!("---");
 
     Archive::new(res).extract_into(&release_dir)?;
