@@ -1,8 +1,8 @@
-use crate::archive::Archive;
 use crate::config::Config;
 use crate::fetcher::Release;
 use crate::symlink::symlink_to;
 use crate::url;
+use crate::{archive::Archive, progress_bar::Bar};
 use colored::*;
 use indicatif::HumanBytes;
 use std::path::PathBuf;
@@ -30,7 +30,9 @@ pub fn download(r: &Release, config: &Config) -> anyhow::Result<PathBuf> {
     println!("Downloading : {}", &dist.url.bold());
     println!("Size        : {}", HumanBytes(len).to_string().bold());
 
-    Archive::new(res).extract_into(&release_dir, Some(len))?;
+    let buf = Bar::new(Some(len)).read_start(res.into_reader())?;
+
+    Archive::new(buf).extract_into(&release_dir)?;
 
     std::fs::rename(&release_dir.join(dist.name), &dest)?;
 

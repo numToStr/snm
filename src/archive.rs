@@ -1,29 +1,27 @@
-use crate::progress_bar::Bar;
-use std::path::Path;
-use ureq::Response;
+use std::{
+    io::{Cursor, Read},
+    path::Path,
+};
 
 pub struct Archive {
-    res: Response,
+    reader: Box<dyn Read>,
 }
 
 impl Archive {
-    pub fn new(res: Response) -> Self {
-        Archive { res }
+    pub fn new(buf: Vec<u8>) -> Self {
+        Self {
+            reader: Box::new(Cursor::new(buf)),
+        }
     }
 
     #[cfg(unix)]
-    pub fn extract_into<P: AsRef<Path>>(self, path: P, ct_len: Option<u64>) -> anyhow::Result<()> {
-        let bar = Bar::new(ct_len);
-
-        let reader = self.res.into_reader();
-
-        let buf = bar.read_start(reader)?;
-
-        let xz_stream = xz2::read::XzDecoder::new(std::io::Cursor::new(buf));
+    pub fn extract_into<P: AsRef<Path>>(self, path: P) -> anyhow::Result<()> {
+        let xz_stream = xz2::read::XzDecoder::new(self.reader);
         let mut archive = tar::Archive::new(xz_stream);
         archive.unpack(path).map_err(|e| anyhow::Error::new(e))
     }
 
+    // FIXME: Fix windows zip extraction
     #[cfg(windows)]
     pub fn extract_into<P: AsRef<Path>>(self, path: P) -> anyhow::Result<()> {
         use std::{fs, io};

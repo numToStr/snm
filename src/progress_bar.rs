@@ -36,10 +36,7 @@ impl Bar {
         Self { bar, chunk_size }
     }
 
-    pub fn read_start<T>(&self, mut reader: T) -> anyhow::Result<Vec<u8>>
-    where
-        T: Read + Send,
-    {
+    pub fn read_start(&self, mut reader: impl Read) -> anyhow::Result<Vec<u8>> {
         let mut buf: Vec<u8> = Vec::new();
 
         loop {
