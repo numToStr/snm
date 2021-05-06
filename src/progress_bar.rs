@@ -6,8 +6,8 @@ const TEMPLATE: &'static str =
     "{spinner:.green} [{elapsed_precise}] [{wide_bar:.cyan/blue}] {bytes}/{total_bytes} ({eta})";
 
 pub struct Bar {
-    pub bar: ProgressBar,
-    pub chunk_size: usize,
+    bar: ProgressBar,
+    chunk_size: usize,
 }
 
 impl Bar {
