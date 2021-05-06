@@ -1,16 +1,13 @@
-use std::{
-    io::{Cursor, Read},
-    path::Path,
-};
+use std::{io::Cursor, path::Path};
 
 pub struct Archive {
-    reader: Box<dyn Read>,
+    reader: Cursor<Vec<u8>>,
 }
 
 impl Archive {
     pub fn new(buf: Vec<u8>) -> Self {
         Self {
-            reader: Box::new(Cursor::new(buf)),
+            reader: Cursor::new(buf),
         }
     }
 
@@ -21,15 +18,11 @@ impl Archive {
         archive.unpack(path).map_err(|e| anyhow::Error::new(e))
     }
 
-    // FIXME: Fix windows zip extraction
     #[cfg(windows)]
     pub fn extract_into<P: AsRef<Path>>(self, path: P) -> anyhow::Result<()> {
         use std::{fs, io};
 
-        let mut reader = self.res.into_reader();
-        let mut temp_zip = tempfile::tempfile()?;
-        std::io::copy(&mut reader, &mut temp_zip)?;
-        let mut archive = zip::read::ZipArchive::new(&mut temp_zip)?;
+        let mut archive = zip::read::ZipArchive::new(self.reader)?;
 
         for i in 0..archive.len() {
             let mut file = archive.by_index(i)?;
