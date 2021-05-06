@@ -22,13 +22,13 @@ jobs:
                       }
                     - {
                           os: ubuntu-latest,
-                          target: x86_64-unknown-linux-gnu,
+                          target: arm-unknown-linux-gnueabihf,
                           use_cross: true,
                       }
                     - {
                           os: ubuntu-latest,
-                          target: armv7-unknown-linux-gnueabihf,
-                          use_cross: true,
+                          target: x86_64-unknown-linux-gnu,
+                          use_cross: false,
                       }
                     - {
                           os: windows-latest,
@@ -49,7 +49,7 @@ jobs:
               shell: bash
               run: |
                   case ${{ matrix.job.target }} in
-                    armv7-unknown-linux-gnueabihf) sudo apt-get -y update ; sudo apt-get -y install gcc-7-arm-linux-gnueabihf ;;
+                    arm-unknown-linux-gnueabihf) sudo apt-get -y update ; sudo apt-get -y install gcc-arm-linux-gnueabihf ;;
                     aarch64-unknown-linux-gnu) sudo apt-get -y update ; sudo apt-get -y install gcc-aarch64-linux-gnu ;;
                   esac
 
