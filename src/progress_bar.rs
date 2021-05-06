@@ -6,6 +6,7 @@ const TEMPLATE: &'static str =
     "{spinner:.green} [{elapsed_precise}] [{wide_bar:.cyan/blue}] {bytes}/{total_bytes} ({eta})";
 
 pub struct Bar {
+    len: Option<u64>,
     bar: ProgressBar,
     chunk_size: usize,
 }
@@ -33,11 +34,18 @@ impl Bar {
             }
         };
 
-        Self { bar, chunk_size }
+        Self {
+            len,
+            bar,
+            chunk_size,
+        }
     }
 
     pub fn read_start(&self, mut reader: impl Read) -> anyhow::Result<Vec<u8>> {
-        let mut buf: Vec<u8> = Vec::new();
+        let mut buf: Vec<u8> = match self.len {
+            Some(x) => Vec::with_capacity(x as usize),
+            None => Vec::new(),
+        };
 
         loop {
             let mut buffer = vec![0; self.chunk_size];
@@ -46,7 +54,7 @@ impl Bar {
             buffer.truncate(bcount);
 
             if !buffer.is_empty() {
-                buf.extend(buffer.into_boxed_slice().into_vec().iter().cloned());
+                buf.extend(buffer.iter());
 
                 self.bar.inc(bcount as u64);
             } else {
