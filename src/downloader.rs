@@ -34,7 +34,11 @@ pub fn download(r: &Release, config: &Config) -> anyhow::Result<PathBuf> {
     println!("Downloading : {}", dist.url.bold());
     println!("Size        : {}", size.bold());
 
+    println!("");
+
     let buf = Bar::new(len).read_start(res.into_reader())?;
+
+    println!("");
 
     Archive::new(buf).extract_into(&release_dir)?;
 
