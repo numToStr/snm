@@ -4,6 +4,7 @@ SHELL=/bin/bash
 
 .DEFAULT_GOAL := patch
 
+PKG = snm
 RE=[^0-9]*\([0-9]*\)[.]\([0-9]*\)[.]\([0-9]*\)\([0-9A-Za-z-]*\)
 version = $(subst v,,$(shell git describe --tags --abbrev=0))
 major_ver = $(shell (echo $(version) | sed -e 's#$(RE)#\1#'))
@@ -14,10 +15,10 @@ define release
 	echo "-- Old Tag: $(version)"
 	echo "-- New Tag: $(1)"
 	echo ""
- 	echo ">> Updating Cargo.toml"
+	echo ">> Updating Cargo.toml"
 	sed -i -e 's/^version = .*/version = $(1)/g' Cargo.toml
 	echo ">> Updating Cago.lock"
-	cargo update
+	cargo update -p $(PKG)
 	echo ">> Release: $(1)"
 	git commit -a -m "Release $(1)"
 	git tag v$(1) -m "Release $(1)"
