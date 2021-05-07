@@ -1,9 +1,10 @@
-use crate::archive::Archive;
 use crate::config::Config;
 use crate::fetcher::Release;
 use crate::symlink::symlink_to;
 use crate::url;
+use crate::{archive::Archive, progress_bar::Bar};
 use colored::*;
+use indicatif::HumanBytes;
 use std::path::PathBuf;
 use ureq;
 
@@ -22,15 +23,24 @@ pub fn download(r: &Release, config: &Config) -> anyhow::Result<PathBuf> {
     let res = ureq::get(&dist.url).call()?;
     let len = res
         .header("Content-Length")
-        .and_then(|x| x.parse::<usize>().ok())
-        .ok_or(anyhow::Error::msg("Unable to get content length."))?;
+        .and_then(|x| x.parse::<u64>().ok());
 
-    println!("Installing  : {}", &r.version.to_string().bold());
-    println!("Downloading : {}", &dist.url.bold());
-    println!("Size        : {}", &len.to_string().bold());
-    println!("---");
+    let size = match len {
+        Some(l) => HumanBytes(l).to_string(),
+        None => "unknown".into(),
+    };
 
-    Archive::new(res).extract_into(&release_dir)?;
+    println!("Installing  : {}", r.version.to_string().bold());
+    println!("Downloading : {}", dist.url.bold());
+    println!("Size        : {}", size.bold());
+
+    println!();
+
+    let buf = Bar::new(len).read_start(res.into_reader())?;
+
+    println!();
+
+    Archive::new(buf).extract_into(&release_dir)?;
 
     std::fs::rename(&release_dir.join(dist.name), &dest)?;
 

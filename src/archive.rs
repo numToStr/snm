@@ -1,18 +1,19 @@
-use std::path::Path;
-use ureq::Response;
+use std::{io::Cursor, path::Path};
 
 pub struct Archive {
-    res: Response,
+    reader: Cursor<Vec<u8>>,
 }
 
 impl Archive {
-    pub fn new(res: Response) -> Self {
-        Archive { res }
+    pub fn new(buf: Vec<u8>) -> Self {
+        Self {
+            reader: Cursor::new(buf),
+        }
     }
 
     #[cfg(unix)]
     pub fn extract_into<P: AsRef<Path>>(self, path: P) -> anyhow::Result<()> {
-        let xz_stream = xz2::read::XzDecoder::new(self.res.into_reader());
+        let xz_stream = xz2::read::XzDecoder::new(self.reader);
         let mut archive = tar::Archive::new(xz_stream);
         archive.unpack(path).map_err(|e| anyhow::Error::new(e))
     }
@@ -21,10 +22,7 @@ impl Archive {
     pub fn extract_into<P: AsRef<Path>>(self, path: P) -> anyhow::Result<()> {
         use std::{fs, io};
 
-        let mut reader = self.res.into_reader();
-        let mut temp_zip = tempfile::tempfile()?;
-        std::io::copy(&mut reader, &mut temp_zip)?;
-        let mut archive = zip::read::ZipArchive::new(&mut temp_zip)?;
+        let mut archive = zip::read::ZipArchive::new(self.reader)?;
 
         for i in 0..archive.len() {
             let mut file = archive.by_index(i)?;
