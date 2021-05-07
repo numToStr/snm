@@ -1,6 +1,6 @@
 [package]
 name = "snm"
-version = "0.5.0"
+version = "0.5.1"
 description = "Smol and Stupid Node Manager"
 authors = ["Vikas Raj <sudo@vikasraj.dev>"]
 edition = "2018"
