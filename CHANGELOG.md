@@ -1,5 +1,14 @@
 # Changelog
 
+## [v0.5.0](https://github.com/numtostr/snm/tree/v0.5.0) (2021-05-07)
+
+[Full Changelog](https://github.com/numtostr/snm/compare/v0.4.1...v0.5.0)
+
+**Merged pull requests:**
+
+- feat: download progress bar [\#46](https://github.com/numToStr/snm/pull/46) ([numToStr](https://github.com/numToStr))
+- fix typo in downloader [\#45](https://github.com/numToStr/snm/pull/45) ([numToStr](https://github.com/numToStr))
+
 ## [v0.4.1](https://github.com/numtostr/snm/tree/v0.4.1) (2021-02-11)
 
 [Full Changelog](https://github.com/numtostr/snm/compare/v0.3.0...v0.4.1)
