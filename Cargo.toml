@@ -26,7 +26,7 @@ tar = "0.4.32"
 ureq = { version = "2.0.1", features = ["json"] }
 url = "2.2.2"
 xz2 = "0.1.6"
-zip = "0.5.9"
+zip = "0.5.12"
 
 [profile.release]
 lto = true
