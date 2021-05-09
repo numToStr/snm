@@ -1,5 +1,31 @@
 # Changelog
 
+## [v0.5.2](https://github.com/numtostr/snm/tree/v0.5.2) (2021-05-09)
+
+[Full Changelog](https://github.com/numtostr/snm/compare/v0.5.1...v0.5.2)
+
+**Merged pull requests:**
+
+- fix: `--download-only` doc string [\#59](https://github.com/numToStr/snm/pull/59) ([numToStr](https://github.com/numToStr))
+- chore: fix clippy lint errors [\#58](https://github.com/numToStr/snm/pull/58) ([numToStr](https://github.com/numToStr))
+- chore: improved install message [\#57](https://github.com/numToStr/snm/pull/57) ([numToStr](https://github.com/numToStr))
+
+## [v0.5.1](https://github.com/numtostr/snm/tree/v0.5.1) (2021-05-07)
+
+[Full Changelog](https://github.com/numtostr/snm/compare/v0.5.0...v0.5.1)
+
+**Merged pull requests:**
+
+- fix: revert `armv7` to `arm` target [\#56](https://github.com/numToStr/snm/pull/56) ([numToStr](https://github.com/numToStr))
+- chore: separate crates by targets [\#55](https://github.com/numToStr/snm/pull/55) ([numToStr](https://github.com/numToStr))
+- build\(deps\): bump url from 2.2.0 to 2.2.2 [\#54](https://github.com/numToStr/snm/pull/54) ([dependabot[bot]](https://github.com/apps/dependabot))
+- build\(deps\): bump anyhow from 1.0.38 to 1.0.40 [\#53](https://github.com/numToStr/snm/pull/53) ([dependabot[bot]](https://github.com/apps/dependabot))
+- build\(deps\): bump serde\_json from 1.0.62 to 1.0.64 [\#52](https://github.com/numToStr/snm/pull/52) ([dependabot[bot]](https://github.com/apps/dependabot))
+- build\(deps\): bump zip from 0.5.9 to 0.5.12 [\#51](https://github.com/numToStr/snm/pull/51) ([dependabot[bot]](https://github.com/apps/dependabot))
+- build\(deps\): bump tar from 0.4.32 to 0.4.33 [\#50](https://github.com/numToStr/snm/pull/50) ([dependabot[bot]](https://github.com/apps/dependabot))
+- build\(deps\): bump ureq from 2.0.1 to 2.1.1 [\#48](https://github.com/numToStr/snm/pull/48) ([dependabot[bot]](https://github.com/apps/dependabot))
+- build\(deps\): bump serde from 1.0.123 to 1.0.125 [\#47](https://github.com/numToStr/snm/pull/47) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [v0.5.0](https://github.com/numtostr/snm/tree/v0.5.0) (2021-05-07)
 
 [Full Changelog](https://github.com/numtostr/snm/compare/v0.4.1...v0.5.0)
