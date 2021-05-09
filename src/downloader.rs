@@ -30,9 +30,9 @@ pub fn download(r: &Release, config: &Config) -> anyhow::Result<PathBuf> {
         None => "unknown".into(),
     };
 
-    println!("Installing  : {}", r.version.to_string().bold());
-    println!("Downloading : {}", dist.url.bold());
-    println!("Size        : {}", size.bold());
+    println!("Version   : {}", r.version.to_string().bold());
+    println!("Download  : {}", dist.url.bold());
+    println!("Size      : {}", size.bold());
 
     println!();
 
@@ -44,11 +44,11 @@ pub fn download(r: &Release, config: &Config) -> anyhow::Result<PathBuf> {
 
     std::fs::rename(&release_dir.join(dist.name), &dest)?;
 
-    println!("Installed  : {}", &dest.display().to_string().bold());
+    println!("Installed : {}", &dest.display().to_string().bold());
 
     // If we are only downloading then don't need to create a symlink to default
     if !config.download_only {
-        println!("Alias      : {}", "default".bold());
+        println!("Alias     : {}", "default".bold());
         symlink_to(&dest, &config.alias_default())?;
     }
 
