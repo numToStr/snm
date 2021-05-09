@@ -1,10 +1,10 @@
-use clap::Clap;
+use super::Shell;
 use std::path::Path;
 
-#[derive(Debug, Clap, PartialEq, Eq)]
+#[derive(Debug)]
 pub struct Pwsh;
 
-impl super::shell::Shell for Pwsh {
+impl Shell for Pwsh {
     fn path(&self, path: &Path, append: bool) -> String {
         let path_env = std::env::var_os("PATH").unwrap_or_default();
         let mut split_paths: Vec<_> = std::env::split_paths(&path_env).collect();

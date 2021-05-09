@@ -1,9 +1,10 @@
+use super::Shell;
 use std::path::Path;
 
 #[derive(Debug)]
 pub struct Bash;
 
-impl super::shell::Shell for Bash {
+impl Shell for Bash {
     fn path(&self, path: &Path, append: bool) -> String {
         if append {
             return format!("export PATH=$PATH:{:?};", path.display());

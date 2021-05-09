@@ -1,7 +1,7 @@
-mod shell;
+mod common;
 
 pub mod bash;
 pub mod fish;
 pub mod pwsh;
 pub mod zsh;
-pub use shell::*;
+pub use common::*;
