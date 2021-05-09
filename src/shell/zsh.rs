@@ -1,11 +1,11 @@
 use clap::Clap;
-use std::path::PathBuf;
+use std::path::Path;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct Zsh;
 
 impl super::shell::Shell for Zsh {
-    fn path(&self, path: &PathBuf, append: bool) -> String {
+    fn path(&self, path: &Path, append: bool) -> String {
         if append {
             return format!("export PATH=$PATH:{:?};", path.display());
         }

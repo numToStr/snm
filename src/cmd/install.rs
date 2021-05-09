@@ -15,12 +15,9 @@ impl super::Command for Install {
     type InitResult = ();
 
     fn init(&self, config: Config) -> anyhow::Result<Self::InitResult> {
-        let can_install = match &self.version {
-            Version::Full(NodeVersion::Alias(_)) => false,
-            _ => true,
-        };
+        let is_alias = matches!(&self.version, Version::Full(NodeVersion::Alias(_)));
 
-        if !can_install {
+        if is_alias {
             anyhow::bail!(
                 "Unable to install the version {}",
                 &self.version.to_string().bold()

@@ -1,13 +1,12 @@
 use clap::Clap;
-use std::ffi::OsString;
-use std::path::PathBuf;
+use std::path::Path;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct Pwsh;
 
 impl super::shell::Shell for Pwsh {
-    fn path(&self, path: &PathBuf, append: bool) -> String {
-        let path_env = std::env::var_os("PATH").unwrap_or(OsString::new());
+    fn path(&self, path: &Path, append: bool) -> String {
+        let path_env = std::env::var_os("PATH").unwrap_or_default();
         let mut split_paths: Vec<_> = std::env::split_paths(&path_env).collect();
 
         if append {

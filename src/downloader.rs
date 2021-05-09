@@ -6,7 +6,6 @@ use crate::{archive::Archive, progress_bar::Bar};
 use colored::*;
 use indicatif::HumanBytes;
 use std::path::PathBuf;
-use ureq;
 
 pub fn download(r: &Release, config: &Config) -> anyhow::Result<PathBuf> {
     let release_dir = &config.release_dir();

@@ -96,7 +96,7 @@ impl SubCommand {
     }
 }
 
-const VERSION_HELP: &'static str = r#"
+const VERSION_HELP: &str = r#"
 Versions:
 
     Numeric version numbers can be complete or partial semver, with an optional leading 'v'.
@@ -133,5 +133,5 @@ pub struct Cli {
 }
 
 pub fn parse() -> Cli {
-    return Cli::parse();
+    Cli::parse()
 }

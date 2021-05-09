@@ -34,10 +34,7 @@ impl Fetcher {
     pub fn lts(&self) -> anyhow::Result<&Release> {
         self.list
             .iter()
-            .find(|x| match x.lts {
-                Lts::Yes(_) => true,
-                _ => false,
-            })
+            .find(|x| matches!(x.lts, Lts::Yes(_)))
             .ok_or_else(|| anyhow::anyhow!("Unable to find {} release", "lts".bold()))
     }
 
@@ -51,10 +48,7 @@ impl Fetcher {
     pub fn latest(&self) -> anyhow::Result<&Release> {
         self.list
             .iter()
-            .find(|x| match x.lts {
-                Lts::No(_) => true,
-                _ => false,
-            })
+            .find(|x| matches!(x.lts, Lts::No(_)))
             .ok_or_else(|| anyhow::anyhow!("Unable to find {} release", "latest".bold()))
     }
 

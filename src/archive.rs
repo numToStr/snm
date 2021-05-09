@@ -15,7 +15,7 @@ impl Archive {
     pub fn extract_into<P: AsRef<Path>>(self, path: P) -> anyhow::Result<()> {
         let xz_stream = xz2::read::XzDecoder::new(self.reader);
         let mut archive = tar::Archive::new(xz_stream);
-        archive.unpack(path).map_err(|e| anyhow::Error::new(e))
+        archive.unpack(path).map_err(anyhow::Error::new)
     }
 
     #[cfg(windows)]

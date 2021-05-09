@@ -6,7 +6,7 @@ use std::fs;
 use std::io::{BufRead, BufReader, Read};
 use std::str::FromStr;
 
-const PACKAGE_JSON: &'static str = "package.json";
+const PACKAGE_JSON: &str = "package.json";
 const NODE_FILES: [&str; 3] = [".nvmrc", ".node-version", PACKAGE_JSON];
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -116,7 +116,7 @@ impl FromStr for Version {
         match NodeVersion::parse(s) {
             Ok(v) => Ok(Self::Full(v)),
             Err(e) => {
-                let mut parts = s.trim_start_matches("v").split(".");
+                let mut parts = s.trim_start_matches('v').split('.');
                 match (parts.next(), parts.next()) {
                     (Some(major), None) => Ok(Self::Major(major.parse::<u64>()?)),
                     (Some(major), Some(minor)) => Ok(Self::MajorMinor(

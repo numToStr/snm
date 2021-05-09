@@ -16,7 +16,7 @@ fn is_numeric(version: &str) -> bool {
 impl NodeVersion {
     pub fn parse(version: &str) -> anyhow::Result<Self> {
         let lower_case = version.to_lowercase();
-        let trimmed = lower_case.trim_start_matches("v");
+        let trimmed = lower_case.trim_start_matches('v');
 
         if trimmed.starts_with("lts-") || trimmed.starts_with("lts/") {
             Ok(Self::Lts(trimmed[4..].to_string()))
