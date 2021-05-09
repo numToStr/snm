@@ -2,7 +2,7 @@
 use indicatif::{ProgressBar, ProgressStyle};
 use std::io::Read;
 
-const TEMPLATE: &'static str =
+const TEMPLATE: &str =
     "{spinner:.green} [{elapsed_precise}] [{wide_bar:.cyan/blue}] {bytes}/{total_bytes} ({eta})";
 
 pub struct Bar {

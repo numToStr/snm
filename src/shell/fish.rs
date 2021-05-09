@@ -1,11 +1,11 @@
-use clap::Clap;
-use std::path::PathBuf;
+use super::Shell;
+use std::path::Path;
 
-#[derive(Debug, Clap, PartialEq, Eq)]
+#[derive(Debug)]
 pub struct Fish;
 
-impl super::shell::Shell for Fish {
-    fn path(&self, path: &PathBuf, append: bool) -> String {
+impl Shell for Fish {
+    fn path(&self, path: &Path, append: bool) -> String {
         if append {
             return format!("set -gx PATH $PATH {:?};", path.display());
         }

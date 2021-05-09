@@ -1,8 +1,8 @@
 use clap::Clap;
-use std::path::PathBuf;
+use std::path::Path;
 
 pub trait Shell {
-    fn path(&self, path: &PathBuf, append: bool) -> String;
+    fn path(&self, path: &Path, append: bool) -> String;
     fn env_var(&self, name: &str, val: &str) -> String;
     fn use_on_cd(&self) -> String;
 }
