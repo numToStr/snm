@@ -22,7 +22,7 @@ pub struct Config {
     )]
     pub dist_mirror: Url,
 
-    /// Log level for the snm commands
+    // Log level for the snm commands
     // #[clap(
     //     long,
     //     name = "level",
@@ -31,7 +31,7 @@ pub struct Config {
     //     global = true
     // )]
     // pub log_level: String,
-
+    //
     /// Only download the matching Nodejs version
     #[clap(short, long, global = true)]
     pub download_only: bool,
