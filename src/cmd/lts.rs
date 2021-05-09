@@ -18,7 +18,7 @@ impl super::Command for Lts {
 
         let alias = "lts-latest";
         crate::symlink::symlink_to(&dest, &config.alias_dir().join(&alias))?;
-        println!("Alias      : {}", alias.bold());
+        println!("Alias     : {}", alias.bold());
 
         Ok(())
     }
