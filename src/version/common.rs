@@ -1,4 +1,4 @@
-use super::node_version::NodeVersion;
+use super::NodeVersion;
 use colored::*;
 use serde::Deserialize;
 use std::env::current_dir;
