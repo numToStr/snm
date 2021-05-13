@@ -67,3 +67,30 @@ impl Bar {
         Ok(buf)
     }
 }
+
+pub struct Spinner {
+    pub spinner: ProgressBar,
+}
+
+impl Spinner {
+    pub fn new(msg: String) -> Self {
+        let bar = ProgressBar::new_spinner();
+
+        bar.enable_steady_tick(100);
+        bar.set_message(msg);
+
+        Self { spinner: bar }
+    }
+
+    pub fn fetch() -> Self {
+        Self::new("Fetching details...".to_string())
+    }
+
+    pub fn stop(&self) {
+        self.spinner.finish_and_clear();
+    }
+
+    // pub fn update_msg(&self, msg: String) {
+    //     self.spinner.set_message(msg);
+    // }
+}
