@@ -73,20 +73,17 @@ pub struct Spinner {
 }
 
 impl Spinner {
-    pub fn new(msg: Option<String>) -> Self {
+    pub fn new(msg: String) -> Self {
         let bar = ProgressBar::new_spinner();
 
         bar.enable_steady_tick(100);
-
-        if let Some(m) = msg {
-            bar.set_message(m);
-        }
+        bar.set_message(msg);
 
         Self { spinner: bar }
     }
 
     pub fn fetch() -> Self {
-        Self::new(Some("Fetching details...".to_string()))
+        Self::new("Fetching details...".to_string())
     }
 
     pub fn stop(&self) {
