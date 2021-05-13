@@ -1,7 +1,6 @@
-use crate::config::Config;
-use crate::downloader::download;
 use crate::fetcher::Fetcher;
 use crate::version::{NodeVersion, Version};
+use crate::{config::Config, downloader::Downloader};
 use clap::Clap;
 use colored::*;
 
@@ -36,12 +35,22 @@ impl super::Command for Install {
 
         match release {
             Some(r) => {
-                let dest = download(&r, &config)?;
+                let dwnld = Downloader::new(&r, &config);
+
+                let buf = dwnld.download()?;
+
+                let dest = dwnld.install(buf)?;
+
                 if is_lts {
                     let alias = self.version.to_string();
                     crate::symlink::symlink_to(&dest, &config.alias_dir().join(&alias))?;
                     println!("Alias     : {}", alias.bold());
                 }
+
+                if !config.download_only {
+                    dwnld.alias_to_default(&dest)?;
+                }
+
                 Ok(())
             }
             _ => anyhow::bail!(
