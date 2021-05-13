@@ -1,6 +1,6 @@
-use crate::config::Config;
 use crate::fetcher::Fetcher;
 use crate::version::Version;
+use crate::{config::Config, progress_bar::Spinner};
 use clap::Clap;
 use colored::*;
 
@@ -22,9 +22,7 @@ impl super::Command for LsRemote {
     type InitResult = ();
 
     fn init(&self, config: Config) -> anyhow::Result<Self::InitResult> {
-        if !self.all {
-            println!("-- Displaying {} results --", self.count)
-        }
+        let spnr = Spinner::fetch();
 
         let releases = Fetcher::fetch(&config.dist_mirror)?;
 
@@ -32,6 +30,12 @@ impl super::Command for LsRemote {
             Some(v) => (releases.find_releases(v), Some(v)),
             _ => (releases.list, None),
         };
+
+        spnr.stop();
+
+        if !self.all {
+            println!("-- Displaying {} results --", self.count)
+        }
 
         if releases.is_empty() {
             anyhow::bail!(
