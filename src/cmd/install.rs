@@ -37,9 +37,7 @@ impl super::Command for Install {
             Some(r) => {
                 let dwnld = Downloader::new(&r, &config);
 
-                let buf = dwnld.download()?;
-
-                let dest = dwnld.install(buf)?;
+                let dest = dwnld.download()?;
 
                 if is_lts {
                     let alias = self.version.to_string();
