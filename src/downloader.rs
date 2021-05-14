@@ -1,7 +1,8 @@
 use crate::fetcher::Release;
 use crate::symlink::symlink_to;
+use crate::url;
 use crate::{archive::Archive, progress_bar::Bar};
-use crate::{config::Config, url};
+use crate::{config::Config, url::Dist};
 use colored::*;
 use indicatif::HumanBytes;
 use std::path::{Path, PathBuf};
@@ -9,30 +10,23 @@ use std::path::{Path, PathBuf};
 pub struct Downloader<'a> {
     release: &'a Release,
     config: &'a Config,
-    release_dir: PathBuf,
+    dist: Dist,
 }
 
 impl<'a> Downloader<'a> {
     pub fn new(release: &'a Release, config: &'a Config) -> Self {
+        let dist = url::release(&config.dist_mirror, &release.version);
+
         Self {
             release,
             config,
-            release_dir: config.release_dir(),
+            dist,
         }
     }
 
-    pub fn download(&self) -> anyhow::Result<PathBuf> {
-        let v = &self.release.version;
-        let v_str = v.to_string();
-
-        let dest = &self.release_dir.join(&v_str);
-
-        if dest.exists() {
-            anyhow::bail!("Version {} is already exists locally", &v_str.bold());
-        }
-
-        let dist = url::release(&self.config.dist_mirror, &v);
-        let res = ureq::get(&dist.url).call()?;
+    pub fn download(&self) -> anyhow::Result<Vec<u8>> {
+        let r = &self.release;
+        let res = ureq::get(&self.dist.url).call()?;
         let len = res
             .header("Content-Length")
             .and_then(|x| x.parse::<u64>().ok());
@@ -42,8 +36,8 @@ impl<'a> Downloader<'a> {
             None => "unknown".into(),
         };
 
-        println!("Version   : {}", v_str.bold());
-        println!("Download  : {}", dist.url.bold());
+        println!("Version   : {}", r.version.to_string().bold());
+        println!("Download  : {}", self.dist.url.bold());
         println!("Size      : {}", size.bold());
 
         println!();
@@ -52,21 +46,16 @@ impl<'a> Downloader<'a> {
 
         println!();
 
-        let dest = self.install(buf, dist.name)?;
-
-        Ok(dest)
+        Ok(buf)
     }
 
-    fn install(&self, buf: Vec<u8>, dist: String) -> anyhow::Result<PathBuf> {
-        let release_dir = &self.release_dir;
+    pub fn install(&self, buf: Vec<u8>) -> anyhow::Result<PathBuf> {
+        let release_dir = self.config.release_dir();
         let dest = release_dir.join(&self.release.version.to_string());
 
-        println!("{:#?}", release_dir);
-        println!("{:#?}", dest);
+        Archive::new(buf).extract_into(&release_dir)?;
 
-        Archive::new(buf).extract_into(&dest)?;
-
-        std::fs::rename(&release_dir.join(&dist), &dest)?;
+        std::fs::rename(&release_dir.join(&self.dist.name), &dest)?;
 
         println!("Installed : {}", &dest.display().to_string().bold());
 
@@ -104,7 +93,8 @@ impl<'a> Downloader<'a> {
 //         let download_path_expected = dir.join(release.version.to_string());
 //         let download_path_result = {
 //             let dwnld = Downloader::new(&release, &config);
-//             dwnld.download()?
+//             let buf = dwnld.download()?;
+//             dwnld.install(buf)?
 //         };
 //
 //         assert_eq!(download_path_expected, download_path_result);
