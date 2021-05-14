@@ -23,7 +23,7 @@ impl super::Command for Latest {
 
         println!("Alias     : {}", ALIAS.bold());
 
-        if !config.download_only {
+        if !config.no_use {
             dwnld.alias_to_default(&dest)?;
         }
 
