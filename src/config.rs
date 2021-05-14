@@ -32,16 +32,16 @@ pub struct Config {
     // )]
     // pub log_level: String,
     //
-    /// Only download the matching Nodejs version
+    /// Only download the matching Nodejs version, don't use it
     #[clap(short, long, global = true)]
-    pub download_only: bool,
+    pub no_use: bool,
 }
 
 // Config::default() is intended to only be used within tests
 impl Default for Config {
     fn default() -> Self {
         Config {
-            download_only: false,
+            no_use: false,
             // log_level: "info".to_string(),
             snm_dir: home_dir().unwrap().join(".snm_test").into(),
             dist_mirror: Url::parse("https://nodejs.org/dist").unwrap(),

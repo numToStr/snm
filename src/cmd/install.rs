@@ -47,7 +47,7 @@ impl super::Command for Install {
                     println!("Alias     : {}", alias.bold());
                 }
 
-                if !config.download_only {
+                if !config.no_use {
                     dwnld.alias_to_default(&dest)?;
                 }
 
