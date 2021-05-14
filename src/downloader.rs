@@ -1,7 +1,7 @@
-use crate::fetcher::Release;
 use crate::symlink::symlink_to;
 use crate::{archive::Archive, progress_bar::Bar};
 use crate::{config::Config, url};
+use crate::{fetcher::Release, progress_bar::Spinner};
 use colored::*;
 use indicatif::HumanBytes;
 use std::path::{Path, PathBuf};
@@ -21,7 +21,7 @@ impl<'a> Downloader<'a> {
         }
     }
 
-    pub fn download(&self) -> anyhow::Result<PathBuf> {
+    pub fn download(&self, spnr: &Spinner) -> anyhow::Result<PathBuf> {
         let v = &self.release.version;
         let v_str = v.to_string();
 
@@ -32,7 +32,13 @@ impl<'a> Downloader<'a> {
         }
 
         let dist = url::release(&self.config.dist_mirror, &v);
+
+        spnr.update_msg("Checking version...".to_string());
+
         let res = ureq::get(&dist.url).call()?;
+
+        spnr.stop();
+
         let len = res
             .header("Content-Length")
             .and_then(|x| x.parse::<u64>().ok());

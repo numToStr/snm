@@ -1,6 +1,6 @@
-use crate::fetcher::Fetcher;
 use crate::version::{NodeVersion, Version};
 use crate::{config::Config, downloader::Downloader};
+use crate::{fetcher::Fetcher, progress_bar::Spinner};
 use clap::Clap;
 use colored::*;
 
@@ -23,6 +23,8 @@ impl super::Command for Install {
             );
         }
 
+        let spnr = Spinner::fetch();
+
         let (release, is_lts) = match &self.version {
             Version::Full(NodeVersion::Lts(lts)) => {
                 (Fetcher::fetch(&config.dist_mirror)?.lts_name(lts), true)
@@ -37,7 +39,7 @@ impl super::Command for Install {
             Some(r) => {
                 let dwnld = Downloader::new(&r, &config);
 
-                let dest = dwnld.download()?;
+                let dest = dwnld.download(&spnr)?;
 
                 if is_lts {
                     let alias = self.version.to_string();
