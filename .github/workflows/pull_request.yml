@@ -41,6 +41,7 @@ jobs:
                           use_cross: false,
                       }
         runs-on: ${{ matrix.job.os }}
+        timeout-minutes: 20
         steps:
             - name: Git Checkout
               uses: actions/checkout@v2

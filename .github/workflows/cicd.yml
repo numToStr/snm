@@ -46,6 +46,7 @@ jobs:
                           use_cross: false,
                       }
         runs-on: ${{ matrix.job.os }}
+        timeout-minutes: 20
         steps:
             - name: Git Checkout
               uses: actions/checkout@v2
@@ -157,6 +158,7 @@ jobs:
     publish_rust_crate:
         name: Publish Rust Crate on crates.io
         runs-on: ubuntu-latest
+        timeout-minutes: 20
         # if: startsWith(github.ref, 'refs/tags/')
         steps:
             - uses: actions/checkout@v2
@@ -177,6 +179,7 @@ jobs:
     publish_aur_package:
         name: Publish AUR package
         runs-on: ubuntu-latest
+        timeout-minutes: 20
         # if: startsWith(github.ref, 'refs/tags/')
         needs: build
         steps:
