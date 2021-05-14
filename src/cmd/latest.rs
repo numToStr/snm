@@ -1,8 +1,9 @@
-use crate::config::Config;
-use crate::downloader::download;
 use crate::fetcher::Fetcher;
+use crate::{config::Config, downloader::Downloader};
 use clap::Clap;
 use colored::*;
+
+const ALIAS: &str = "latest";
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct Latest;
@@ -14,11 +15,17 @@ impl super::Command for Latest {
         let releases = Fetcher::fetch(&config.dist_mirror)?;
         let release = releases.latest()?;
 
-        let dest = download(&release, &config)?;
+        let dwnld = Downloader::new(release, &config);
+        let buf = dwnld.download()?;
+        let dest = dwnld.install(buf)?;
 
-        let alias = "latest";
-        crate::symlink::symlink_to(&dest, &config.alias_dir().join(&alias))?;
-        println!("Alias     : {}", alias.bold());
+        crate::symlink::symlink_to(&dest, &config.alias_dir().join(&ALIAS))?;
+
+        println!("Alias     : {}", ALIAS.bold());
+
+        if !config.download_only {
+            dwnld.alias_to_default(&dest)?;
+        }
 
         Ok(())
     }

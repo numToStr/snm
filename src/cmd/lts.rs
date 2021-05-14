@@ -1,8 +1,9 @@
-use crate::config::Config;
-use crate::downloader::download;
 use crate::fetcher::Fetcher;
+use crate::{config::Config, downloader::Downloader};
 use clap::Clap;
 use colored::*;
+
+const ALIAS: &str = "lts-latest";
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct Lts;
@@ -14,11 +15,17 @@ impl super::Command for Lts {
         let releases = Fetcher::fetch(&config.dist_mirror)?;
         let release = releases.lts()?;
 
-        let dest = download(&release, &config)?;
+        let dwnld = Downloader::new(release, &config);
+        let buf = dwnld.download()?;
+        let dest = dwnld.install(buf)?;
 
-        let alias = "lts-latest";
-        crate::symlink::symlink_to(&dest, &config.alias_dir().join(&alias))?;
-        println!("Alias     : {}", alias.bold());
+        crate::symlink::symlink_to(&dest, &config.alias_dir().join(&ALIAS))?;
+
+        println!("Alias     : {}", ALIAS.bold());
+
+        if !config.download_only {
+            dwnld.alias_to_default(&dest)?;
+        }
 
         Ok(())
     }
