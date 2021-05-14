@@ -16,8 +16,7 @@ impl super::Command for Lts {
         let release = releases.lts()?;
 
         let dwnld = Downloader::new(release, &config);
-        let buf = dwnld.download()?;
-        let dest = dwnld.install(buf)?;
+        let dest = dwnld.download()?;
 
         crate::symlink::symlink_to(&dest, &config.alias_dir().join(&ALIAS))?;
 
