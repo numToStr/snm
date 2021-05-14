@@ -61,10 +61,7 @@ impl<'a> Downloader<'a> {
         let release_dir = &self.release_dir;
         let dest = release_dir.join(&self.release.version.to_string());
 
-        println!("{:#?}", release_dir);
-        println!("{:#?}", dest);
-
-        Archive::new(buf).extract_into(&dest)?;
+        Archive::new(buf).extract_into(&release_dir)?;
 
         std::fs::rename(&release_dir.join(&dist), &dest)?;
 
