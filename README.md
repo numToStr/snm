@@ -116,11 +116,11 @@ Example:
 snm [--snm-dir="~/.something/else"] [--node-dist-mirror="https://myrelease.com"]
 ```
 
-| Flags             | Description                |
-| ----------------- | -------------------------- |
-| `--download-only` | Only downloads the release |
-| `--version`       | Prints the version         |
-| `--help`          | Prints the help doc        |
+| Flags       | Description               |
+| ----------- | ------------------------- |
+| `--no-use`  | Only download the release |
+| `--version` | Prints the version        |
+| `--help`    | Prints the help doc       |
 
 ### Commands
 
