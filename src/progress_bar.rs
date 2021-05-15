@@ -90,7 +90,7 @@ impl Spinner {
         self.spinner.finish_and_clear();
     }
 
-    // pub fn update_msg(&self, msg: String) {
-    //     self.spinner.set_message(msg);
-    // }
+    pub fn update_msg(&self, msg: String) {
+        self.spinner.set_message(msg);
+    }
 }
