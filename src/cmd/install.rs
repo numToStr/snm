@@ -53,10 +53,14 @@ impl super::Command for Install {
 
                 Ok(())
             }
-            _ => anyhow::bail!(
-                "No release found with the version {}",
-                &self.version.to_string().bold()
-            ),
+            _ => {
+                spnr.stop();
+
+                anyhow::bail!(
+                    "No release found with the version {}",
+                    &self.version.to_string().bold()
+                );
+            }
         }
     }
 }
