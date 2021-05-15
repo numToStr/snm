@@ -1,5 +1,17 @@
 # Changelog
 
+## [v0.6.0](https://github.com/numtostr/snm/tree/v0.6.0) (2021-05-15)
+
+[Full Changelog](https://github.com/numtostr/snm/compare/v0.5.2...v0.6.0)
+
+**Merged pull requests:**
+
+- feat: added spinner in snm {install,lts,latest} [\#66](https://github.com/numToStr/snm/pull/66) ([numToStr](https://github.com/numToStr))
+- fix: prevent downloading of same version again [\#64](https://github.com/numToStr/snm/pull/64) ([numToStr](https://github.com/numToStr))
+- breaking: rename flag `--download-only` to `--no-use` [\#63](https://github.com/numToStr/snm/pull/63) ([numToStr](https://github.com/numToStr))
+- chore: refactor downloader [\#62](https://github.com/numToStr/snm/pull/62) ([numToStr](https://github.com/numToStr))
+- feat: added spinner in `snm ls-remote` [\#61](https://github.com/numToStr/snm/pull/61) ([numToStr](https://github.com/numToStr))
+
 ## [v0.5.2](https://github.com/numtostr/snm/tree/v0.5.2) (2021-05-09)
 
 [Full Changelog](https://github.com/numtostr/snm/compare/v0.5.1...v0.5.2)
