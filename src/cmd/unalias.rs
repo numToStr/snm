@@ -1,4 +1,4 @@
-use crate::config::Config;
+use crate::{config::Config, echo::Echo};
 use clap::Clap;
 use colored::*;
 
@@ -29,7 +29,7 @@ impl super::Command for UnAlias {
         let path = dir.join(&alias);
 
         if !path.exists() {
-            anyhow::bail!("Alias {} not found", &alias.bold());
+            anyhow::bail!("{}", Echo::AliasNotFound(&alias));
         }
 
         crate::symlink::remove_symlink(path)?;

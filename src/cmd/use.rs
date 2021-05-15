@@ -1,9 +1,8 @@
-use crate::alias::Alias;
 use crate::config::Config;
 use crate::symlink::symlink_to;
 use crate::version::{NodeVersion, Version};
+use crate::{alias::Alias, echo::Echo};
 use clap::Clap;
-use colored::*;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct Use {
@@ -33,14 +32,14 @@ impl super::Command for Use {
                 let link = config.alias_dir().join(&alias);
 
                 if !link.exists() {
-                    anyhow::bail!("Alias {} not found", &alias.bold());
+                    anyhow::bail!("{}", Echo::AliasNotFound(&alias));
                 }
 
                 let dest = Alias::new(link).destination()?;
 
                 symlink_to(&dest, &config.alias_default())?;
 
-                println!("Using Alias {}", &alias.bold());
+                println!("{}", Echo::AliasUse(&alias));
             }
             _ => {
                 let dir = config.release_dir();
@@ -49,7 +48,8 @@ impl super::Command for Use {
                 let version = version.to_node_version(&versions)?;
 
                 symlink_to(dir.join(version.version_str()), config.alias_default())?;
-                println!("Using Node.js {}", version.version_str().bold());
+
+                println!("{}", Echo::VersionUse(&version.to_string()))
             }
         };
 

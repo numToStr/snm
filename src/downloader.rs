@@ -1,6 +1,6 @@
-use crate::symlink::symlink_to;
 use crate::{archive::Archive, progress_bar::Bar};
 use crate::{config::Config, url};
+use crate::{echo::Echo, symlink::symlink_to};
 use crate::{fetcher::Release, progress_bar::Spinner};
 use colored::*;
 use indicatif::HumanBytes;
@@ -81,8 +81,8 @@ impl<'a> Downloader<'a> {
 
         println!();
         println!(
-            "-- Using version {} --",
-            self.release.version.to_string().bold()
+            "-- {} --",
+            Echo::VersionUse(&self.release.version.to_string())
         );
 
         Ok(())

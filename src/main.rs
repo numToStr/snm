@@ -4,6 +4,7 @@ mod cli;
 mod cmd;
 mod config;
 mod downloader;
+mod echo;
 mod fetcher;
 mod progress_bar;
 mod shell;

@@ -1,5 +1,5 @@
 use super::NodeVersion;
-use colored::*;
+use crate::echo::Echo;
 use serde::Deserialize;
 use std::env::current_dir;
 use std::fs;
@@ -25,7 +25,7 @@ impl Version {
         self.match_node_versions(versions)
             .into_iter()
             .max()
-            .ok_or_else(|| anyhow::anyhow!("Version {} not found locally", self.to_string().bold()))
+            .ok_or_else(|| anyhow::anyhow!("{}", Echo::VersionNotFound(&self.to_string())))
     }
 
     pub fn match_node_versions<'a, T>(&self, versions: T) -> Vec<&'a NodeVersion>
