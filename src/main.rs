@@ -5,6 +5,7 @@ mod cmd;
 mod config;
 mod downloader;
 mod fetcher;
+mod lib;
 mod progress_bar;
 mod shell;
 mod symlink;
