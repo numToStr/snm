@@ -16,8 +16,6 @@ impl Dist {
     fn new(mirror: &Url, version: &DistVersion) -> Self {
         use crate::sysinfo::{platform_arch, platform_name};
 
-        let version: String = version.into();
-
         Dist(format!(
             "{}/v{ver}/node-v{ver}-{}-{}.tar.xz",
             mirror,
@@ -63,7 +61,7 @@ impl<'a> Downloader2<'a> {
     }
 
     pub fn download(&self, release_dir: &Path) -> SnmRes<PathBuf> {
-        let version: String = self.version.into();
+        let version: String = self.version.to_string();
 
         let dest = release_dir.join(&version);
 

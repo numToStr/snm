@@ -51,4 +51,15 @@ impl Fetcher2 {
             .into_iter()
             .find(|release| version.match_release(release))
     }
+
+    pub fn find_releases(self, version: &UserVersion) -> Vec<Release> {
+        self.releases
+            .into_iter()
+            .filter(|v| version.match_release(v))
+            .collect()
+    }
+
+    pub fn get_all(self) -> Vec<Release> {
+        self.releases
+    }
 }

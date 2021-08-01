@@ -1,9 +1,9 @@
-use url::Url;
-
-pub fn index(base_url: &Url) -> String {
-    format!("{}/index.json", base_url)
-}
-
+// use url::Url;
+//
+// pub fn index(base_url: &Url) -> String {
+//     format!("{}/index.json", base_url)
+// }
+//
 // pub struct Dist {
 //     /// URL of the binary to be downloaded
 //     pub url: String,

@@ -1,15 +1,15 @@
-// https://mattgathu.github.io/2017/08/29/writing-cli-app-rust.html
-use indicatif::ProgressBar;
-
+// // https://mattgathu.github.io/2017/08/29/writing-cli-app-rust.html
+// use indicatif::ProgressBar;
+//
 // const TEMPLATE: &str =
 //     "{spinner:.green} [{elapsed_precise}] [{wide_bar:.cyan/blue}] {bytes}/{total_bytes} ({eta})";
-
+//
 // pub struct Bar {
 //     len: Option<u64>,
 //     bar: ProgressBar,
 //     chunk_size: usize,
 // }
-
+//
 // impl Bar {
 //     pub fn new(len: Option<u64>) -> Self {
 //         let (bar, chunk_size) = match len {
@@ -66,30 +66,30 @@ use indicatif::ProgressBar;
 //         Ok(buf)
 //     }
 // }
-
-pub struct Spinner {
-    pub spinner: ProgressBar,
-}
-
-impl Spinner {
-    pub fn new(msg: String) -> Self {
-        let bar = ProgressBar::new_spinner();
-
-        bar.enable_steady_tick(100);
-        bar.set_message(msg);
-
-        Self { spinner: bar }
-    }
-
-    pub fn fetch() -> Self {
-        Self::new("Fetching details...".to_string())
-    }
-
-    pub fn stop(&self) {
-        self.spinner.finish_and_clear();
-    }
-
-    // pub fn update_msg(&self, msg: String) {
-    //     self.spinner.set_message(msg);
-    // }
-}
+//
+// pub struct Spinner {
+//     pub spinner: ProgressBar,
+// }
+//
+// impl Spinner {
+//     pub fn new(msg: String) -> Self {
+//         let bar = ProgressBar::new_spinner();
+//
+//         bar.enable_steady_tick(100);
+//         bar.set_message(msg);
+//
+//         Self { spinner: bar }
+//     }
+//
+//     pub fn fetch() -> Self {
+//         Self::new("Fetching details...".to_string())
+//     }
+//
+//     pub fn stop(&self) {
+//         self.spinner.finish_and_clear();
+//     }
+//
+//     // pub fn update_msg(&self, msg: String) {
+//     //     self.spinner.set_message(msg);
+//     // }
+// }

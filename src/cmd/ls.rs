@@ -1,5 +1,6 @@
 use crate::alias::Alias;
 use crate::config::Config;
+use crate::lib::SnmRes;
 use crate::version::NodeVersion;
 use clap::Clap;
 use colored::*;
@@ -10,7 +11,7 @@ pub struct Ls;
 impl super::Command for Ls {
     type InitResult = ();
 
-    fn init(&self, config: Config) -> anyhow::Result<Self::InitResult> {
+    fn init(&self, config: Config) -> SnmRes<Self::InitResult> {
         let aliases = Alias::hashmap(config.alias_dir())?;
         let versions = NodeVersion::list_versions(&config.release_dir())?;
 
