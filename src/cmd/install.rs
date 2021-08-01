@@ -1,66 +1,52 @@
-use crate::version::{NodeVersion, Version};
-use crate::{config::Config, downloader::Downloader};
-use crate::{fetcher::Fetcher, progress_bar::Spinner};
+use crate::config::Config;
+use crate::lib::{
+    alias2::Alias2,
+    downloader2::Downloader2,
+    fetcher2::{Fetcher2, Lts},
+    version::user_version::UserVersion,
+    SnmRes,
+};
+
 use clap::Clap;
-use colored::*;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct Install {
     /// A version string. Can be a partial semver or a LTS version name by the format lts/NAME
-    version: Version,
+    version: UserVersion,
 }
 
 impl super::Command for Install {
     type InitResult = ();
 
-    fn init(&self, config: Config) -> anyhow::Result<Self::InitResult> {
-        let is_alias = matches!(&self.version, Version::Full(NodeVersion::Alias(_)));
-
-        if is_alias {
-            anyhow::bail!(
-                "Unable to install the version {}",
-                &self.version.to_string().bold()
-            );
+    fn init(&self, config: Config) -> SnmRes<Self::InitResult> {
+        if let UserVersion::Alias(_) = self.version {
+            anyhow::bail!("Unable to install version: {:?}", self.version)
         }
 
-        let spnr = Spinner::fetch();
+        let fetcher = Fetcher2::fetch(&config.dist_mirror)?;
 
-        let (release, is_lts) = match &self.version {
-            Version::Full(NodeVersion::Lts(lts)) => {
-                (Fetcher::fetch(&config.dist_mirror)?.lts_name(lts), true)
-            }
-            _ => (
-                Fetcher::fetch(&config.dist_mirror)?.find_release(&self.version),
-                false,
-            ),
-        };
+        let release = fetcher.find_release(&self.version).ok_or_else(|| {
+            anyhow::anyhow!("No release found with the version {:?}", self.version)
+        })?;
 
-        match release {
-            Some(r) => {
-                let dwnld = Downloader::new(&r, &config);
+        let dwnldr = Downloader2::new(&config.dist_mirror, &release.version);
 
-                let dest = dwnld.download(&spnr)?;
+        let dwnld_dir = dwnldr.download(&config.release_dir())?;
 
-                if is_lts {
-                    let alias = self.version.to_string();
-                    crate::symlink::symlink_to(&dest, &config.alias_dir().join(&alias))?;
-                    println!("Alias     : {}", alias.bold());
-                }
+        let linker = Alias2::new(&dwnld_dir);
 
-                if !config.no_use {
-                    dwnld.alias_to_default(&dest)?;
-                }
+        if let Lts::Yes(lts) = release.lts {
+            let lts = format!("lts-{}", lts);
 
-                Ok(())
-            }
-            _ => {
-                spnr.stop();
+            linker.create_link(&config.alias_dir().join(&lts))?;
 
-                anyhow::bail!(
-                    "No release found with the version {}",
-                    &self.version.to_string().bold()
-                );
-            }
+            println!("Alias     : {}", &lts);
         }
+
+        if !config.no_use {
+            linker.create_link(&config.alias_default())?;
+        }
+
+        Ok(())
     }
 }

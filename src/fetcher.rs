@@ -28,12 +28,12 @@ impl Fetcher {
         Ok(Self { list })
     }
 
-    pub fn lts_name(self, lts: &str) -> Option<Release> {
-        self.list.into_iter().find(|x| match &x.lts {
-            Lts::Yes(raw_lts) => raw_lts.to_lowercase() == lts.to_lowercase(),
-            _ => false,
-        })
-    }
+    // pub fn lts_name(self, lts: &str) -> Option<Release> {
+    //     self.list.into_iter().find(|x| match &x.lts {
+    //         Lts::Yes(raw_lts) => raw_lts.to_lowercase() == lts.to_lowercase(),
+    //         _ => false,
+    //     })
+    // }
 
     pub fn find_releases(self, version: &Version) -> Vec<Release> {
         self.list
@@ -42,11 +42,11 @@ impl Fetcher {
             .collect()
     }
 
-    pub fn find_release(self, version: &Version) -> Option<Release> {
-        self.list
-            .into_iter()
-            .find(|v| version.match_node_version(&v.version))
-    }
+    // pub fn find_release(self, version: &Version) -> Option<Release> {
+    //     self.list
+    //         .into_iter()
+    //         .find(|v| version.match_node_version(&v.version))
+    // }
 }
 
 // #[cfg(test)]

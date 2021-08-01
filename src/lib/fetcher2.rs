@@ -1,7 +1,23 @@
-use crate::fetcher::{Lts, Release};
+use serde::Deserialize;
 use url::Url;
 
-use super::SnmRes;
+use super::{
+    version::{dist_version::DistVersion, user_version::UserVersion},
+    SnmRes,
+};
+
+#[derive(Debug, Deserialize)]
+#[serde(untagged)]
+pub enum Lts {
+    No(bool),
+    Yes(String),
+}
+
+#[derive(Debug, Deserialize)]
+pub struct Release {
+    pub version: DistVersion,
+    pub lts: Lts,
+}
 
 pub struct Fetcher2 {
     releases: Vec<Release>,
@@ -28,5 +44,11 @@ impl Fetcher2 {
             .iter()
             .find(|x| matches!(x.lts, Lts::No(_)))
             .ok_or_else(|| anyhow::anyhow!("Unable to find {} release", "latest"))
+    }
+
+    pub fn find_release(self, version: &UserVersion) -> Option<Release> {
+        self.releases
+            .into_iter()
+            .find(|release| version.match_release(release))
     }
 }

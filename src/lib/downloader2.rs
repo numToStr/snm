@@ -7,43 +7,43 @@ use indicatif::HumanBytes;
 use tempfile::Builder;
 use url::Url;
 
-use crate::version::NodeVersion;
-
-use super::SnmRes;
+use super::{version::dist_version::DistVersion, SnmRes};
 
 #[derive(Debug)]
-struct Release(pub String);
+struct Dist(pub String);
 
-impl Release {
-    fn new(mirror: &Url, version: &NodeVersion) -> Self {
+impl Dist {
+    fn new(mirror: &Url, version: &DistVersion) -> Self {
         use crate::sysinfo::{platform_arch, platform_name};
 
-        Release(format!(
-            "{}/{v}/node-{v}-{}-{}.tar.xz",
+        let version: String = version.into();
+
+        Dist(format!(
+            "{}/v{ver}/node-v{ver}-{}-{}.tar.xz",
             mirror,
             platform_name(),
             platform_arch(),
-            v = version,
+            ver = version
         ))
     }
 }
 
-impl AsRef<str> for Release {
+impl AsRef<str> for Dist {
     fn as_ref(&self) -> &str {
         &self.0
     }
 }
 
 pub struct Downloader2<'a> {
-    version: &'a NodeVersion,
-    release: Release,
+    version: &'a DistVersion,
+    dist: Dist,
 }
 
 impl<'a> Downloader2<'a> {
-    pub fn new(mirror: &'a Url, version: &'a NodeVersion) -> Self {
-        let release = Release::new(mirror, version);
+    pub fn new(mirror: &'a Url, version: &'a DistVersion) -> Self {
+        let dist = Dist::new(mirror, version);
 
-        Self { version, release }
+        Self { version, dist }
     }
 
     fn extract_to(&self, source: impl Read + Send, dest: &Path) -> SnmRes<()> {
@@ -63,15 +63,17 @@ impl<'a> Downloader2<'a> {
     }
 
     pub fn download(&self, release_dir: &Path) -> SnmRes<PathBuf> {
-        let dest = release_dir.join(self.version.to_string());
+        let version: String = self.version.into();
+
+        let dest = release_dir.join(&version);
 
         if dest.exists() {
-            anyhow::bail!("Version {} is already exists locally", self.version);
+            anyhow::bail!("Version {} is already exists locally", version);
         }
 
         let tmp_dir = Builder::new().tempdir_in(release_dir)?;
 
-        let resp = ureq::get(&self.release.0).call()?;
+        let resp = ureq::get(&self.dist.0).call()?;
 
         let len = resp
             .header("Content-Length")
@@ -82,8 +84,8 @@ impl<'a> Downloader2<'a> {
             None => "unknown".into(),
         };
 
-        println!("Version   : {}", self.version.to_string());
-        println!("Release   : {}", self.release.as_ref());
+        println!("Version   : {}", version);
+        println!("Release   : {}", self.dist.as_ref());
         println!("Size      : {}", size);
 
         self.extract_to(resp.into_reader(), tmp_dir.as_ref())?;
