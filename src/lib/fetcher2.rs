@@ -22,4 +22,11 @@ impl Fetcher2 {
             .find(|x| matches!(x.lts, Lts::Yes(_)))
             .ok_or_else(|| anyhow::anyhow!("Unable to find {} release", "lts"))
     }
+
+    pub fn latest(&self) -> SnmRes<&Release> {
+        self.releases
+            .iter()
+            .find(|x| matches!(x.lts, Lts::No(_)))
+            .ok_or_else(|| anyhow::anyhow!("Unable to find {} release", "latest"))
+    }
 }
