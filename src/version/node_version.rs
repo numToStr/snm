@@ -20,11 +20,11 @@ impl NodeVersion {
 
         if trimmed.starts_with("lts-") || trimmed.starts_with("lts/") {
             Ok(Self::Lts(trimmed[4..].to_string()))
-        } else if is_numeric(&trimmed) {
-            let ver = semver::Version::parse(&trimmed)?;
+        } else if is_numeric(trimmed) {
+            let ver = semver::Version::parse(trimmed)?;
             Ok(Self::Semver(ver))
         } else {
-            let semver = match semver::VersionReq::parse(&trimmed) {
+            let semver = match semver::VersionReq::parse(trimmed) {
                 Ok(ver) => Self::SemverReq(ver),
                 Err(_) => Self::Alias(trimmed.to_string()),
             };

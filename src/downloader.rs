@@ -31,7 +31,7 @@ impl<'a> Downloader<'a> {
             anyhow::bail!("Version {} is already exists locally", &v_str.bold());
         }
 
-        let dist = url::release(&self.config.dist_mirror, &v);
+        let dist = url::release(&self.config.dist_mirror, v);
 
         spnr.update_msg("Checking version...".to_string());
 
