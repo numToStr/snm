@@ -1,5 +1,3 @@
-mod command;
-
 pub mod alias;
 pub mod completions;
 pub mod env;
@@ -14,4 +12,21 @@ pub mod unalias;
 pub mod uninstall;
 pub mod r#use;
 pub mod which;
-pub use command::*;
+
+use crate::config::Config;
+use anyhow::Result;
+use std::path::PathBuf;
+
+pub trait Command {
+    type InitResult;
+
+    fn init(&self, config: Config) -> Result<Self::InitResult>;
+}
+
+pub fn bin_path(path: PathBuf) -> PathBuf {
+    if cfg!(unix) {
+        path.join("bin")
+    } else {
+        path
+    }
+}
