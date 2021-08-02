@@ -23,15 +23,14 @@ impl Shell for Pwsh {
         format!(r#"$env:{} = "{}""#, name, val)
     }
 
-    fn use_on_cd(&self) -> String {
+    fn use_on_cd(&self) -> &'static str {
         indoc::indoc!(
             r#"
-                function Set-LocationWithFnm { param($path); Set-Location $path; If ((Test-Path .nvmrc) -Or (Test-Path .node-version)) { & fnm use } }
-                Set-Alias cd_with_fnm Set-LocationWithFnm -Force
+                function Set-LocationWithsnm { param($path); Set-Location $path; If ((Test-Path .nvmrc) -Or (Test-Path .node-version)) { & snm use } }
+                Set-Alias cd_with_snm Set-LocationWithsnm -Force
                 Remove-Item alias:\cd
-                New-Alias cd Set-LocationWithFnm
+                New-Alias cd Set-LocationWithsnm
             "#
         )
-        .into()
     }
 }

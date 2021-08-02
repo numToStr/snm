@@ -17,22 +17,21 @@ impl Shell for Bash {
         format!("export {}={:?}", name, value)
     }
 
-    fn use_on_cd(&self) -> String {
+    fn use_on_cd(&self) -> &'static str {
         indoc::indoc!(
             r#"
-                __fnm_use_if_file_found() {
+                __snm_use_if_file_found() {
                     if [[ -f .node-version || -f .nvmrc ]]; then
-                        fnm use
+                        snm use
                     fi
                 }
-                __fnmcd() {
+                __snmcd() {
                     \cd "$@" || return $?
-                    __fnm_use_if_file_found
+                    __snm_use_if_file_found
                 }
-                alias cd=__fnmcd
-                __fnm_use_if_file_found
+                alias cd=__snmcd
+                __snm_use_if_file_found
             "#
         )
-        .into()
     }
 }

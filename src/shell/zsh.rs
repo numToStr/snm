@@ -17,18 +17,17 @@ impl Shell for Zsh {
         format!("export {}={:?};", name, val)
     }
 
-    fn use_on_cd(&self) -> String {
+    fn use_on_cd(&self) -> &'static str {
         indoc::indoc!(
             r#"
                 autoload -U add-zsh-hook
-                _fnm_autoload_hook () {
+                _snm_autoload_hook () {
                     if [[ -f .node-version || -f .nvmrc ]]; then
-                        fnm use
+                        snm use
                     fi
                 }
-                add-zsh-hook -Uz chpwd _fnm_autoload_hook
+                add-zsh-hook -Uz chpwd _snm_autoload_hook
             "#
         )
-        .into()
     }
 }

@@ -4,6 +4,7 @@ use clap::Clap;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct Env {
+    /// Add the shell script to run `snm use` on directory change
     #[clap(short, long)]
     use_on_cd: bool,
 
@@ -11,6 +12,7 @@ pub struct Env {
     #[clap(short, long)]
     append: bool,
 
+    /// Type of shell you want to configure
     #[clap(subcommand)]
     shell: ShellKind,
 }

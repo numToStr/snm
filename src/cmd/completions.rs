@@ -9,6 +9,7 @@ use clap_generate::{
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct Completions {
+    /// Type of shell you want to configure
     #[clap(subcommand)]
     shell: ShellKind,
 }
