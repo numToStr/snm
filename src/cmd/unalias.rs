@@ -1,6 +1,8 @@
-use crate::config::Config;
+use crate::{
+    config::Config,
+    lib::{linker::Linker, SnmRes},
+};
 use clap::Clap;
-use colored::*;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct UnAlias {
@@ -16,25 +18,27 @@ pub struct UnAlias {
 impl super::Command for UnAlias {
     type InitResult = ();
 
-    fn init(&self, config: Config) -> anyhow::Result<Self::InitResult> {
-        let dir = config.alias_dir();
+    fn init(&self, config: Config) -> SnmRes<Self::InitResult> {
+        let alias_dir = config.alias_dir();
 
         if self.all {
-            std::fs::remove_dir_all(dir)?;
+            std::fs::remove_dir_all(alias_dir)?;
             println!("Removed all the aliases");
             return Ok(());
         }
 
-        let alias = crate::alias::sanitize(&self.alias.clone().unwrap());
-        let path = dir.join(&alias);
+        // FIXME: throw error if no alias provided
+        if let Some(alias) = &self.alias {
+            let alias_path = alias_dir.join(&alias);
 
-        if !path.exists() {
-            anyhow::bail!("Alias {} not found", &alias.bold());
-        }
+            if !alias_path.exists() {
+                anyhow::bail!("Alias {} not found", &alias);
+            }
 
-        crate::symlink::remove_symlink(path)?;
+            Linker::remove_link(&alias_path)?;
 
-        println!("Removed alias: {}", &alias.bold());
+            println!("Removed alias: {}", &alias);
+        };
 
         Ok(())
     }
