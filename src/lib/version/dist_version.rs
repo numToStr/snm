@@ -11,7 +11,7 @@ use crate::lib::{
 use super::{user_version::UserVersion, ParseVersion};
 
 /// `DistVersion` represents full semver range according to the node release
-#[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct DistVersion(pub Version);
 
 impl ParseVersion<'_> for DistVersion {
@@ -40,6 +40,26 @@ impl Display for DistVersion {
 
 impl DistVersion {
     /// To list all the installed versions
+    pub fn list_versions(release_dir: &Path) -> SnmRes<Vec<Self>> {
+        let mut versions: Vec<Self> = vec![];
+
+        let entries = read_dir(release_dir)?;
+
+        for entry in entries {
+            let entry = entry?.path();
+            let entry = entry.strip_prefix(release_dir)?;
+
+            if let Some(e) = entry.to_str() {
+                let dist_ver = Self::parse(e)?;
+
+                versions.push(dist_ver);
+            }
+        }
+
+        Ok(versions)
+    }
+
+    /// To match a install version with the user provided version
     pub fn match_user_version(release_dir: &Path, version: &UserVersion) -> SnmRes<Self> {
         let mut versions: Vec<Self> = vec![];
 

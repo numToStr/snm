@@ -1,5 +1,5 @@
 use crate::version::NodeVersion;
-use std::collections::HashMap;
+
 use std::path::{Path, PathBuf};
 
 pub fn pretty_path_name(path: &'_ Path) -> &'_ str {
@@ -57,26 +57,26 @@ impl Alias {
         Ok(aliases)
     }
 
-    pub fn hashmap<P: AsRef<Path>>(path: P) -> anyhow::Result<HashMap<String, Vec<String>>> {
-        let list = std::fs::read_dir(&path)?;
-        let mut aliases: HashMap<String, Vec<String>> = HashMap::new();
-
-        for alias in list {
-            let alias = alias?.path();
-
-            if alias.exists() {
-                let alias = Self::new(alias);
-                let dest = alias.destination()?;
-
-                aliases
-                    .entry(pretty_path_name(&dest).to_string())
-                    .and_modify(|e| e.push(alias.name().to_string()))
-                    .or_insert_with(|| vec![alias.name().to_string()]);
-            }
-        }
-
-        Ok(aliases)
-    }
+    // pub fn hashmap<P: AsRef<Path>>(path: P) -> anyhow::Result<HashMap<String, Vec<String>>> {
+    //     let list = std::fs::read_dir(&path)?;
+    //     let mut aliases: HashMap<String, Vec<String>> = HashMap::new();
+    //
+    //     for alias in list {
+    //         let alias = alias?.path();
+    //
+    //         if alias.exists() {
+    //             let alias = Self::new(alias);
+    //             let dest = alias.destination()?;
+    //
+    //             aliases
+    //                 .entry(pretty_path_name(&dest).to_string())
+    //                 .and_modify(|e| e.push(alias.name().to_string()))
+    //                 .or_insert_with(|| vec![alias.name().to_string()]);
+    //         }
+    //     }
+    //
+    //     Ok(aliases)
+    // }
 
     pub fn destination(&self) -> anyhow::Result<PathBuf> {
         std::fs::read_link(&self.path).map_err(anyhow::Error::new)

@@ -1,9 +1,6 @@
-use crate::alias::Alias;
 use crate::config::Config;
-use crate::lib::SnmRes;
-use crate::version::NodeVersion;
+use crate::lib::{linker::Linker, version::dist_version::DistVersion, SnmRes};
 use clap::Clap;
-use colored::*;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct Ls;
@@ -12,19 +9,19 @@ impl super::Command for Ls {
     type InitResult = ();
 
     fn init(&self, config: Config) -> SnmRes<Self::InitResult> {
-        let aliases = Alias::hashmap(config.alias_dir())?;
-        let versions = NodeVersion::list_versions(&config.release_dir())?;
+        let release_dir = config.release_dir();
+
+        let versions = DistVersion::list_versions(&release_dir)?;
+
+        let aliases = Linker::list_aliases(&config.alias_dir(), &release_dir)?;
 
         for version in versions.into_iter() {
-            let version = version.version_str();
-            let found = aliases.get(&version);
-
-            match found {
+            match aliases.get(&version) {
                 Some(a) => {
                     if a.contains(&"default".to_string()) {
-                        println!("> {}\t{}", version.bold(), a.join(", ").bold());
+                        println!("> {}\t{}", version, a.join(", "));
                     } else {
-                        println!("- {}\t{}", version, a.join(", ").dimmed());
+                        println!("- {}\t{}", version, a.join(", "));
                     }
                 }
                 _ => {
