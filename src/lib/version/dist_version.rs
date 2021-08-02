@@ -59,8 +59,8 @@ impl DistVersion {
         Ok(versions)
     }
 
-    /// To match a install version with the user provided version
-    pub fn match_user_version(release_dir: &Path, version: &UserVersion) -> SnmRes<Self> {
+    /// To match multiple installed versions with a provided user version
+    pub fn match_versions(release_dir: &Path, version: &UserVersion) -> SnmRes<Vec<Self>> {
         let mut versions: Vec<Self> = vec![];
 
         let entries = read_dir(release_dir)?;
@@ -85,9 +85,20 @@ impl DistVersion {
             }
         }
 
+        // Sorting the list descending order
+        versions.sort_by(|a, b| b.cmp(a));
+
+        Ok(versions)
+    }
+
+    /// To match a installed version with the user provided version
+    pub fn match_version(release_dir: &Path, version: &UserVersion) -> SnmRes<Self> {
+        let versions = Self::match_versions(release_dir, version)?;
+
+        // NOTE: version list is already sorted, so I am returning the first element
         let max = versions
             .into_iter()
-            .max()
+            .next()
             .ok_or_else(|| anyhow::anyhow!("Version {:?} not found locally", version))?;
 
         Ok(max)

@@ -20,7 +20,7 @@ impl super::Command for Alias {
     fn init(&self, config: Config) -> SnmRes<Self::InitResult> {
         let release_dir = config.release_dir();
 
-        let dist_version = DistVersion::match_user_version(&release_dir, &self.version)?;
+        let dist_version = DistVersion::match_version(&release_dir, &self.version)?;
 
         let link_ver = dist_version.to_string();
 
