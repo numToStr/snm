@@ -6,7 +6,6 @@ use clap_generate::{
     generate,
     generators::{Bash, Fish, PowerShell, Zsh},
 };
-use std::io;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct Completions {
@@ -19,19 +18,21 @@ impl super::Command for Completions {
 
     fn init(&self, _: Config) -> anyhow::Result<Self::InitResult> {
         let name = crate_name!();
+        let mut app = Cli::into_app();
+        let mut stdout = std::io::stdout();
 
         match &self.shell {
             ShellKind::Bash => {
-                generate::<Bash, _>(&mut Cli::into_app(), name, &mut io::stdout());
+                generate::<Bash, _>(&mut app, name, &mut stdout);
             }
             ShellKind::Zsh => {
-                generate::<Zsh, _>(&mut Cli::into_app(), name, &mut io::stdout());
+                generate::<Zsh, _>(&mut app, name, &mut stdout);
             }
             ShellKind::Fish => {
-                generate::<Fish, _>(&mut Cli::into_app(), name, &mut io::stdout());
+                generate::<Fish, _>(&mut app, name, &mut stdout);
             }
             ShellKind::Pwsh => {
-                generate::<PowerShell, _>(&mut Cli::into_app(), name, &mut io::stdout());
+                generate::<PowerShell, _>(&mut app, name, &mut stdout);
             }
         };
 
