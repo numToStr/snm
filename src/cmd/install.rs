@@ -1,8 +1,8 @@
 use crate::config::Config;
 use crate::lib::{
-    alias2::Alias2,
     downloader2::Downloader2,
     fetcher2::{Fetcher2, Lts},
+    linker::Linker,
     version::user_version::UserVersion,
     SnmRes,
 };
@@ -33,7 +33,7 @@ impl super::Command for Install {
 
         let dwnld_dir = dwnldr.download(&config.release_dir())?;
 
-        let linker = Alias2::new(&dwnld_dir);
+        let linker = Linker::new(&dwnld_dir);
 
         if let Lts::Yes(lts) = release.lts {
             let lts = format!("lts-{}", lts);

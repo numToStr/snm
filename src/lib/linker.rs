@@ -2,11 +2,11 @@ use std::path::Path;
 
 use super::SnmRes;
 
-pub struct Alias2<'a> {
+pub struct Linker<'a> {
     src: &'a Path,
 }
 
-impl<'a> Alias2<'a> {
+impl<'a> Linker<'a> {
     pub fn new(src: &'a Path) -> Self {
         Self { src }
     }

@@ -1,13 +1,14 @@
 use crate::config::Config;
-use crate::symlink::symlink_to;
-use crate::version::{NodeVersion, Version};
+use crate::lib::{
+    linker::Linker, version::dist_version::DistVersion, version::user_version::UserVersion, SnmRes,
+};
+
 use clap::Clap;
-use colored::*;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct Alias {
     /// Partial semver string
-    version: Version,
+    version: UserVersion,
 
     /// A string consist of alphanumeric digits
     alias: String,
@@ -16,23 +17,18 @@ pub struct Alias {
 impl super::Command for Alias {
     type InitResult = ();
 
-    fn init(&self, config: Config) -> anyhow::Result<Self::InitResult> {
-        let dir = config.release_dir();
-        let versions = NodeVersion::list_versions(&dir)?;
-        let version = self.version.to_node_version(&versions)?;
+    fn init(&self, config: Config) -> SnmRes<Self::InitResult> {
+        let release_dir = config.release_dir();
 
-        let alias = crate::alias::sanitize(&self.alias);
+        let dist_version = DistVersion::match_user_version(&release_dir, &self.version)?;
 
-        symlink_to(
-            dir.join(version.version_str()),
-            config.alias_dir().join(&alias),
-        )?;
+        let link_ver = dist_version.to_string();
 
-        println!(
-            "Version {} is aliased to {}",
-            version.to_string().bold(),
-            &alias.bold()
-        );
+        let link_src = release_dir.join(&link_ver);
+
+        Linker::new(&link_src).create_link(&config.alias_dir().join(&self.alias))?;
+
+        println!("Version {} is aliased to {}", link_ver, self.alias);
 
         Ok(())
     }

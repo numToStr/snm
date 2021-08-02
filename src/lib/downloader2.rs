@@ -16,6 +16,7 @@ impl Dist {
     fn new(mirror: &Url, version: &DistVersion) -> Self {
         use crate::sysinfo::{platform_arch, platform_name};
 
+        // FIXME: windows support
         Dist(format!(
             "{}/v{ver}/node-v{ver}-{}-{}.tar.xz",
             mirror,
@@ -44,6 +45,7 @@ impl<'a> Downloader2<'a> {
         Self { version, dist }
     }
 
+    // FIXME: windows support
     fn extract_to(&self, source: impl Read + Send, dest: &Path) -> SnmRes<()> {
         let xz_stream = xz2::read::XzDecoder::new(source);
         let mut tar_stream = tar::Archive::new(xz_stream);

@@ -1,5 +1,5 @@
 use crate::config::Config;
-use crate::lib::{alias2::Alias2, downloader2::Downloader2, fetcher2::Fetcher2, SnmRes};
+use crate::lib::{downloader2::Downloader2, fetcher2::Fetcher2, linker::Linker, SnmRes};
 
 use clap::Clap;
 
@@ -18,7 +18,7 @@ impl super::Command for Latest {
         let dwnld = Downloader2::new(&config.dist_mirror, &release.version);
         let dest = dwnld.download(&config.release_dir())?;
 
-        let linker = Alias2::new(&dest);
+        let linker = Linker::new(&dest);
 
         linker.create_link(&config.alias_dir().join(&ALIAS))?;
 
