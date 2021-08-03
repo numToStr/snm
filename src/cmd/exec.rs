@@ -1,15 +1,16 @@
 use crate::config::Config;
-use crate::lib::SnmRes;
-use crate::version::{NodeVersion, Version};
+use crate::lib::{
+    version::{dist_version::DistVersion, user_version::UserVersion},
+    SnmRes,
+};
 use clap::Clap;
-use colored::*;
 use std::env;
 use std::process::{self, Command, Stdio};
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct Exec {
     /// Nodejs version needed for executing the following command
-    version: Version,
+    version: UserVersion,
 
     /// Command that needs to be executed
     binary: String,
@@ -21,13 +22,12 @@ pub struct Exec {
 impl super::Command for Exec {
     fn init(self, config: Config) -> SnmRes<()> {
         let path = {
-            let dir = config.release_dir();
-            let versions = NodeVersion::list_versions(&dir)?;
-            let version = self.version.to_node_version(&versions)?;
-            let bin_path = config.bin_path(dir.join(version.version_str()));
-            let path_env = env::var_os("PATH").ok_or_else(|| {
-                anyhow::anyhow!("Unable to read environment variable {}", "$PATH".bold())
-            })?;
+            let release_dir = config.release_dir();
+            let version = DistVersion::match_version(&release_dir, &self.version)?;
+            let bin_path = config.bin_path(release_dir.join(version.to_string()));
+            let path_env = env::var_os("PATH")
+                .ok_or_else(|| anyhow::anyhow!("Unable to read environment variable $PATH"))?;
+
             let mut splits: Vec<_> = env::split_paths(&path_env).collect();
             splits.insert(0, bin_path);
             env::join_paths(splits)?
@@ -40,7 +40,7 @@ impl super::Command for Exec {
             .stderr(Stdio::inherit())
             .env("PATH", &path)
             .spawn()
-            .map_err(|_| anyhow::anyhow!("Can't spawn program {}", &self.binary.bold()))?
+            .map_err(|_| anyhow::anyhow!("Can't spawn program {}", &self.binary))?
             .wait()
             .map_err(|_| anyhow::anyhow!("Failed to grab exit code"))?;
 
