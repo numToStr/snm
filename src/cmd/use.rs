@@ -5,6 +5,7 @@ use crate::lib::{
     SnmRes,
 };
 use clap::Clap;
+use console::style;
 
 #[derive(Debug, Clap)]
 pub struct Use {
@@ -26,7 +27,7 @@ impl super::Command for Use {
                 let alias_dir = config.alias_dir().join(&alias);
 
                 if !alias_dir.exists() {
-                    anyhow::bail!("Alias {} not found", alias);
+                    anyhow::bail!("Alias {} not found", style(alias).bold());
                 }
 
                 let dist_ver = Linker::read_convert_to_dist(&alias_dir, &release_dir)?;
@@ -35,7 +36,7 @@ impl super::Command for Use {
 
                 Linker::create_link(&dist_path, &config.alias_default())?;
 
-                println!("Using Alias {}", &alias);
+                println!("Using Alias {}", style(alias).bold());
             }
             version => {
                 let dist_ver = DistVersion::match_version(&release_dir, &version)?;
@@ -44,7 +45,7 @@ impl super::Command for Use {
 
                 Linker::create_link(&dist_path, &config.alias_default())?;
 
-                println!("Using Node.js {}", dist_ver);
+                println!("Using version {}", style(dist_ver).bold());
             }
         }
 

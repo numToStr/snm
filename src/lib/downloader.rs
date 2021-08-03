@@ -3,6 +3,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
+use console::style;
 use indicatif::HumanBytes;
 use tempfile::Builder;
 use url::Url;
@@ -68,7 +69,7 @@ impl<'a> Downloader<'a> {
         let dest = release_dir.join(&version);
 
         if dest.exists() {
-            anyhow::bail!("Version {} is already exists locally", version);
+            anyhow::bail!("Version {} already exists locally", style(version).bold());
         }
 
         let tmp_dir = Builder::new().tempdir_in(release_dir)?;
@@ -84,16 +85,16 @@ impl<'a> Downloader<'a> {
             None => "unknown".into(),
         };
 
-        println!("Version   : {}", version);
-        println!("Release   : {}", self.dist.as_ref());
-        println!("Size      : {}", size);
+        println!("Version   : {}", style(version).bold());
+        println!("Release   : {}", style(self.dist.as_ref()).bold());
+        println!("Size      : {}", style(size).bold());
 
         self.extract_to(resp.into_reader(), tmp_dir.as_ref())?;
 
         std::fs::rename(tmp_dir.as_ref(), &dest)?;
 
         println!();
-        println!("Installed : {}", dest.display());
+        println!("Installed : {}", style(dest.display()).bold());
 
         Ok(dest)
     }

@@ -1,6 +1,7 @@
 use crate::config::Config;
 use crate::lib::{fetcher::Fetcher, version::user_version::UserVersion, SnmRes};
 use clap::Clap;
+use console::style;
 
 #[derive(Debug, Clap)]
 pub struct LsRemote {
@@ -19,7 +20,7 @@ pub struct LsRemote {
 impl super::Command for LsRemote {
     fn init(self, config: Config) -> SnmRes<()> {
         if !self.all {
-            println!("-- Displaying {} results --", self.count)
+            eprintln!("-: Displaying {} results :-", self.count);
         }
 
         let fetcher = Fetcher::fetch(&config.dist_mirror)?;
@@ -29,8 +30,8 @@ impl super::Command for LsRemote {
             _ => fetcher.get_all(),
         };
 
-        if let (true, Some(v)) = (releases.is_empty(), &self.version) {
-            anyhow::bail!("No releases found with the version {:?}", v);
+        if let (true, Some(ver)) = (releases.is_empty(), &self.version) {
+            anyhow::bail!("No releases found with version {}", style(ver).bold());
         }
 
         let releases = releases.into_iter();

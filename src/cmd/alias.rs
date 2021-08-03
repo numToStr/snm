@@ -4,6 +4,7 @@ use crate::lib::{
 };
 
 use clap::Clap;
+use console::style;
 
 #[derive(Debug, Clap)]
 pub struct Alias {
@@ -26,7 +27,11 @@ impl super::Command for Alias {
 
         Linker::create_link(&link_src, &config.alias_dir().join(&self.alias))?;
 
-        println!("Version {} is aliased to {}", link_ver, self.alias);
+        println!(
+            "Version {} is aliased to {}",
+            style(link_ver).bold(),
+            style(self.alias).bold()
+        );
 
         Ok(())
     }

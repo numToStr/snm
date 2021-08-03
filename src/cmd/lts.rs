@@ -1,6 +1,7 @@
 use crate::config::Config;
 use crate::lib::{downloader::Downloader, fetcher::Fetcher, linker::Linker, SnmRes};
 use clap::Clap;
+use console::style;
 
 const ALIAS: &str = "lts-latest";
 
@@ -17,10 +18,12 @@ impl super::Command for Lts {
 
         Linker::create_link(&dest, &config.alias_dir().join(&ALIAS))?;
 
-        println!("Alias     : {}", ALIAS);
+        println!("Alias     : {}", style(ALIAS).bold());
 
         if !config.no_use {
             Linker::create_link(&dest, &config.alias_default())?;
+            println!();
+            println!("Using version {}", style(&release.version).bold());
         }
 
         Ok(())

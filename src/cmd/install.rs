@@ -8,6 +8,7 @@ use crate::lib::{
 };
 
 use clap::Clap;
+use console::style;
 
 #[derive(Debug, Clap)]
 pub struct Install {
@@ -17,14 +18,17 @@ pub struct Install {
 
 impl super::Command for Install {
     fn init(self, config: Config) -> SnmRes<()> {
-        if let UserVersion::Alias(_) = self.version {
-            anyhow::bail!("Unable to install version: {:?}", self.version)
+        if let UserVersion::Alias(x) = self.version {
+            anyhow::bail!("Unable to install version: {}", style(x).bold())
         }
 
         let fetcher = Fetcher::fetch(&config.dist_mirror)?;
 
         let release = fetcher.find_release(&self.version).ok_or_else(|| {
-            anyhow::anyhow!("No release found with the version {:?}", self.version)
+            anyhow::anyhow!(
+                "No release found with version {}",
+                style(self.version).bold()
+            )
         })?;
 
         let dwnldr = Downloader::new(&config.dist_mirror, &release.version);
@@ -36,11 +40,13 @@ impl super::Command for Install {
 
             Linker::create_link(&dwnld_dir, &config.alias_dir().join(&lts))?;
 
-            println!("Alias     : {}", &lts);
+            println!("Alias     : {}", style(lts).bold());
         }
 
         if !config.no_use {
             Linker::create_link(&dwnld_dir, &config.alias_default())?;
+            println!();
+            println!("Using version {}", style(&release.version).bold());
         }
 
         Ok(())

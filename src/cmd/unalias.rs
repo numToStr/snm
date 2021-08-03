@@ -3,6 +3,7 @@ use crate::{
     lib::{linker::Linker, SnmRes},
 };
 use clap::Clap;
+use console::style;
 
 #[derive(Debug, Clap)]
 pub struct UnAlias {
@@ -30,12 +31,12 @@ impl super::Command for UnAlias {
             let alias_path = alias_dir.join(&alias);
 
             if !alias_path.exists() {
-                anyhow::bail!("Alias {} not found", &alias);
+                anyhow::bail!("Alias {} not found", style(alias).bold());
             }
 
             Linker::remove_link(&alias_path)?;
 
-            println!("Removed alias: {}", &alias);
+            println!("Removed alias: {}", style(alias).bold());
         };
 
         Ok(())

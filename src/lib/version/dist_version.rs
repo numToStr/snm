@@ -1,5 +1,6 @@
 use std::{fmt::Display, fs::read_dir, path::Path};
 
+use console::style;
 use semver::Version;
 use serde::Deserialize;
 
@@ -96,10 +97,9 @@ impl DistVersion {
         let versions = Self::match_versions(release_dir, version)?;
 
         // NOTE: version list is already sorted, so I am returning the first element
-        let max = versions
-            .into_iter()
-            .next()
-            .ok_or_else(|| anyhow::anyhow!("Version {:?} not found locally", version))?;
+        let max = versions.into_iter().next().ok_or_else(|| {
+            anyhow::anyhow!("Version {} not found locally", style(version).bold())
+        })?;
 
         Ok(max)
     }

@@ -1,5 +1,5 @@
 use serde::Deserialize;
-use std::{env::current_dir, fs::read_to_string, str::FromStr};
+use std::{env::current_dir, fmt::Display, fs::read_to_string, str::FromStr};
 
 use crate::lib::{
     fetcher::{Lts, Release},
@@ -64,10 +64,23 @@ impl ParseVersion<'_> for UserVersion {
     }
 }
 
+// NOTE: this is used by `clap`
 impl FromStr for UserVersion {
     type Err = anyhow::Error;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         Self::parse(s)
+    }
+}
+
+impl Display for UserVersion {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Major(x) => write!(f, "{}.x.x", x),
+            Self::MajorMinor(x, y) => write!(f, "{}.{}.x", x, y),
+            Self::Full(x) => write!(f, "{}", x.to_string()),
+            Self::Lts(x) => write!(f, "lts-{}", x),
+            Self::Alias(x) => f.write_str(x.as_str()),
+        }
     }
 }
 

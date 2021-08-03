@@ -5,7 +5,7 @@ mod lib;
 mod shell;
 mod sysinfo;
 
-use colored::*;
+use console::style;
 
 fn main() {
     let app = cli::parse();
@@ -13,7 +13,7 @@ fn main() {
     let code = match app.cmd.exec(app.options) {
         Ok(_) => 0,
         Err(e) => {
-            eprintln!("{} :: {}", "ERROR".bright_red(), e.to_string());
+            eprintln!("{} :: {}", style("ERROR").red(), e.to_string());
             1
         }
     };

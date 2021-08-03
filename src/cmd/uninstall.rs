@@ -5,6 +5,7 @@ use crate::lib::{
     SnmRes,
 };
 use clap::Clap;
+use console::style;
 
 #[derive(Debug, Clap)]
 pub struct UnInstall {
@@ -28,7 +29,7 @@ impl super::Command for UnInstall {
                 let alias_ver = alias_dir.join(l);
 
                 if !alias_ver.exists() {
-                    anyhow::bail!("Alias {} not found", l);
+                    anyhow::bail!("Alias {} not found", style(l).bold());
                 }
 
                 Linker::read_convert_to_dist(&alias_dir, &release_dir)?
@@ -43,7 +44,10 @@ impl super::Command for UnInstall {
         let is_default = aliases.iter().any(|x| x.as_str() == "default");
 
         if is_default && self.no_used {
-            anyhow::bail!("Unable to uninstall. Version {} is currently used", version);
+            anyhow::bail!(
+                "Unable to uninstall. Version {} is currently used!",
+                style(version).bold()
+            );
         }
 
         let is_aliases_empty = aliases.is_empty();
@@ -59,7 +63,7 @@ impl super::Command for UnInstall {
         // Then removing the actual installed version
         std::fs::remove_dir_all(release_dir.join(version.to_string()))?;
 
-        println!("Removed version: {}", version);
+        println!("Removed version: {}", style(version).bold());
 
         if !is_aliases_empty {
             println!("Removed aliases: {}", aliases.join(", "));

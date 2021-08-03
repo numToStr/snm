@@ -1,6 +1,7 @@
 use crate::config::Config;
 use crate::lib::{linker::Linker, version::dist_version::DistVersion, SnmRes};
 use clap::Clap;
+use console::style;
 
 #[derive(Debug, Clap)]
 pub struct Ls;
@@ -17,7 +18,7 @@ impl super::Command for Ls {
             match aliases.get(&version) {
                 Some(a) => {
                     if a.contains(&"default".to_string()) {
-                        println!("> {} \t{}", version, a.join(", "));
+                        println!("> {} \t{}", style(version).bold(), a.join(", "));
                     } else {
                         println!("- {} \t{}", version, a.join(", "));
                     }

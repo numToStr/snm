@@ -1,6 +1,7 @@
 use crate::config::Config;
 use crate::lib::{linker::Linker, version::dist_version::DistVersion, SnmRes};
 use clap::Clap;
+use console::style;
 use std::fs::remove_dir_all;
 
 #[derive(Debug, Clap)]
@@ -11,7 +12,10 @@ impl super::Command for Prune {
         let default_alias = config.alias_default();
 
         if !default_alias.exists() {
-            anyhow::bail!("Unable to prune. No {} alias found", "default");
+            anyhow::bail!(
+                "Unable to prune. No {} alias found",
+                style("default").bold()
+            );
         }
 
         let release_dir = config.release_dir();
