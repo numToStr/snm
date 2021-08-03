@@ -70,4 +70,29 @@ impl<'a> Linker<'a> {
 
         Ok(aliases)
     }
+
+    pub fn list_for_version(
+        version: &DistVersion,
+        alias_dir: &Path,
+        release_dir: &Path,
+    ) -> SnmRes<Vec<String>> {
+        let mut aliases: Vec<String> = vec![];
+        let entries = read_dir(&alias_dir)?;
+
+        for entry in entries {
+            let entry = entry?.path();
+            let link = Self::read_link(&entry)?;
+
+            let link_ver = link.strip_prefix(release_dir)?;
+            let alias = entry.strip_prefix(alias_dir)?;
+
+            if let (Some(v), Some(a)) = (link_ver.to_str(), alias.to_str()) {
+                if DistVersion::parse(v)?.eq(version) {
+                    aliases.push(a.to_string());
+                }
+            }
+        }
+
+        Ok(aliases)
+    }
 }

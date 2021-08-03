@@ -69,7 +69,7 @@ pub enum SubCommand {
     ///
     /// Example: snm uninstall 14 | snm uninstall lts-fermium
     ///
-    /// NOTE: If given an alias like ten or lts-fermium then it will remove the version which the alias is pointing at and all the aliases which are pointing to the same version.
+    /// NOTE: If given an alias like ten or lts-fermium then it will remove the version that the alias is pointing to and all the aliases which are pointing to the same version.
     /// Also, uninstalling a version will throw an error, if multiple installation is found in the same semver range
     #[clap(name = "uninstall", visible_alias = "rm")]
     UnInstall(uninstall::UnInstall),

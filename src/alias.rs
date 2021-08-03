@@ -1,5 +1,3 @@
-use crate::version::NodeVersion;
-
 use std::path::{Path, PathBuf};
 
 pub fn pretty_path_name(path: &'_ Path) -> &'_ str {
@@ -34,28 +32,28 @@ impl Alias {
         Ok(aliases)
     }
 
-    pub fn list_for_version<P: AsRef<Path>>(
-        path: P,
-        version: &NodeVersion,
-    ) -> anyhow::Result<Vec<Self>> {
-        let dirs = std::fs::read_dir(&path)?;
-        let mut aliases = Vec::<Self>::new();
-
-        for alias in dirs {
-            let alias = alias?.path();
-
-            if alias.exists() {
-                let alias = Self::new(alias);
-                let dest = alias.destination()?;
-
-                if pretty_path_name(&dest) == version.version_str() {
-                    aliases.push(alias)
-                }
-            }
-        }
-
-        Ok(aliases)
-    }
+    // pub fn list_for_version<P: AsRef<Path>>(
+    //     path: P,
+    //     version: &NodeVersion,
+    // ) -> anyhow::Result<Vec<Self>> {
+    //     let dirs = std::fs::read_dir(&path)?;
+    //     let mut aliases = Vec::<Self>::new();
+    //
+    //     for alias in dirs {
+    //         let alias = alias?.path();
+    //
+    //         if alias.exists() {
+    //             let alias = Self::new(alias);
+    //             let dest = alias.destination()?;
+    //
+    //             if pretty_path_name(&dest) == version.version_str() {
+    //                 aliases.push(alias)
+    //             }
+    //         }
+    //     }
+    //
+    //     Ok(aliases)
+    // }
 
     // pub fn hashmap<P: AsRef<Path>>(path: P) -> anyhow::Result<HashMap<String, Vec<String>>> {
     //     let list = std::fs::read_dir(&path)?;
@@ -86,9 +84,9 @@ impl Alias {
         crate::symlink::remove_symlink(&self.path).map_err(anyhow::Error::new)
     }
 
-    pub fn name(&self) -> &str {
-        pretty_path_name(&self.path)
-    }
+    // pub fn name(&self) -> &str {
+    //     pretty_path_name(&self.path)
+    // }
 }
 
 // Conflicting with cross in CI

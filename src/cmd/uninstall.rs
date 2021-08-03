@@ -1,88 +1,86 @@
-use crate::alias::{self, Alias};
 use crate::config::Config;
-use crate::version::{NodeVersion, Version};
+use crate::lib::{
+    linker::Linker,
+    version::{dist_version::DistVersion, user_version::UserVersion, ParseVersion},
+    SnmRes,
+};
 use clap::Clap;
-use colored::*;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
 pub struct UnInstall {
-    /// Version that needs to be removed. Can be a partial semver string.
-    version: Version,
+    /// Version or Alias that needs to be removed
+    version_or_alias: UserVersion,
 
     /// Don't remove if the version is currently used.
-    #[clap(short, long)]
+    #[clap(short = 'N', long)]
     no_used: bool,
 }
 
 impl super::Command for UnInstall {
     type InitResult = ();
 
-    fn init(&self, config: Config) -> anyhow::Result<Self::InitResult> {
-        let dir = config.release_dir();
-        let found_ver = match self.version {
-            // If given version is an alias or lts/* then read the link
-            // and return the parsed NodeVersion
-            Version::Full(NodeVersion::Alias(_)) | Version::Full(NodeVersion::Lts(_)) => {
-                let alias = crate::alias::sanitize(&self.version.to_string());
-                let link = config.alias_dir().join(&alias);
+    fn init(&self, config: Config) -> SnmRes<Self::InitResult> {
+        let release_dir = config.release_dir();
+        let alias_dir = config.alias_dir();
 
-                if !link.exists() {
-                    anyhow::bail!("Alias {} not found", &alias.bold());
+        // first we need to find out the whether the provided version is an alias, lts codename or partial semver
+        // If the version is alias or codename, then we need to find the linked/installed version
+        let found_version = match &self.version_or_alias {
+            UserVersion::Lts(l) | UserVersion::Alias(l) => {
+                let alias_ver = alias_dir.join(l);
+
+                if !alias_ver.exists() {
+                    anyhow::bail!("Alias {} not found", l);
                 }
 
-                let aliased = Alias::new(link);
-                let dest = aliased.destination()?;
+                let linked = Linker::read_link(&alias_ver)?;
 
-                aliased.remove()?;
+                let link_ver = linked.strip_prefix(&release_dir)?;
 
-                println!("Removed alias: {}", alias.bold());
-
-                let version = alias::pretty_path_name(&dest);
-
-                Some(NodeVersion::parse(version)?)
-            }
-            _ => {
-                let downloaded = NodeVersion::list_versions(&dir)?;
-                let matches = self.version.match_node_versions(&downloaded);
-
-                if matches.is_empty() {
-                    anyhow::bail!(
-                        "No downloads found with version {}",
-                        &self.version.to_string().bold()
-                    );
-                }
-
-                if matches.len() > 1 {
-                    eprintln!(
-                        "Multiple versions found, expected 1. Please be a little more specific."
-                    );
-                    for m in matches {
-                        eprintln!("- {}", m);
+                match link_ver.to_str() {
+                    Some(p) => {
+                        let parsed = DistVersion::parse(p)?;
+                        Some(parsed)
                     }
-                    None
-                } else {
-                    Some(matches.into_iter().next().unwrap().clone())
+                    _ => None,
                 }
+            }
+            x => {
+                let dist_version = DistVersion::match_version(&release_dir, x)?;
+
+                Some(dist_version)
             }
         };
 
-        if let Some(ver) = found_ver {
-            let aliases = Alias::list_for_version(config.alias_dir(), &ver)?;
+        // So, when the linked version is found then we need to find the other linked aliases,
+        // then remove them all the aliases before removing the actuall installed version
+        if let Some(version) = found_version {
+            let aliases = Linker::list_for_version(&version, &alias_dir, &release_dir)?;
 
-            for alias in aliases {
-                if alias.name() == "default" && self.no_used {
-                    anyhow::bail!(
-                        "Unable to uninstall. Version {} is currently used",
-                        ver.to_string().bold()
-                    );
-                }
+            let is_default = aliases.iter().any(|x| x.as_str() == "default");
 
-                alias.remove()?;
-                println!("Removed alias: {}", alias.name().bold());
+            if is_default && self.no_used {
+                anyhow::bail!("Unable to uninstall. Version {} is currently used", version);
             }
 
-            std::fs::remove_dir_all(dir.join(ver.version_str()))?;
-            println!("Removed version: {}", ver.to_string().bold());
+            let is_aliases_empty = aliases.is_empty();
+
+            // Removing symlink first
+            if !is_aliases_empty {
+                for alias in &aliases {
+                    let alias = alias_dir.join(&alias);
+                    Linker::remove_link(&alias)?;
+                }
+            }
+
+            // Then removing the actual installed version
+            std::fs::remove_dir_all(release_dir.join(version.to_string()))?;
+
+            println!("Removed version: {}", version);
+
+            if !is_aliases_empty {
+                println!("Removed aliases: {}", aliases.join(", "));
+            }
         }
 
         Ok(())
