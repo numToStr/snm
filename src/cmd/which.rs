@@ -22,7 +22,9 @@ impl super::Command for Which {
             }
         } else {
             for ver in versions {
-                let bin_path = super::bin_path(release_dir.join(ver.to_string())).join("node");
+                let bin_path = config
+                    .bin_path(release_dir.join(ver.to_string()))
+                    .join("node");
 
                 println!("- {}\t{}", ver, bin_path.display())
             }

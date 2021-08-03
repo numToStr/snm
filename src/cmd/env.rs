@@ -28,7 +28,7 @@ impl super::Command for Env {
             ShellKind::Pwsh => &pwsh::Pwsh,
         };
 
-        let path = super::bin_path(config.alias_default());
+        let path = config.bin_path(config.alias_default());
 
         println!("{}", shell.path(&path, self.append));
 

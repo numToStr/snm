@@ -25,7 +25,7 @@ impl super::Command for Exec {
             let dir = config.release_dir();
             let versions = NodeVersion::list_versions(&dir)?;
             let version = self.version.to_node_version(&versions)?;
-            let bin_path = super::bin_path(dir.join(version.version_str()));
+            let bin_path = config.bin_path(dir.join(version.version_str()));
             let path_env = env::var_os("PATH").ok_or_else(|| {
                 anyhow::anyhow!("Unable to read environment variable {}", "$PATH".bold())
             })?;

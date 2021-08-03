@@ -74,4 +74,12 @@ impl Config {
     pub fn alias_default(&self) -> PathBuf {
         self.alias_dir().join("default")
     }
+
+    pub fn bin_path(&self, path: PathBuf) -> PathBuf {
+        if cfg!(unix) {
+            path.join("bin")
+        } else {
+            path
+        }
+    }
 }
