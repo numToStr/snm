@@ -33,12 +33,12 @@ impl AsRef<str> for Dist {
     }
 }
 
-pub struct Downloader2<'a> {
+pub struct Downloader<'a> {
     version: &'a DistVersion,
     dist: Dist,
 }
 
-impl<'a> Downloader2<'a> {
+impl<'a> Downloader<'a> {
     pub fn new(mirror: &'a Url, version: &'a DistVersion) -> Self {
         let dist = Dist::new(mirror, version);
 

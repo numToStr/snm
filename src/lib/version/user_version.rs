@@ -2,7 +2,7 @@ use serde::Deserialize;
 use std::{env::current_dir, fs::read_to_string, str::FromStr};
 
 use crate::lib::{
-    fetcher2::{Lts, Release},
+    fetcher::{Lts, Release},
     SnmRes,
 };
 

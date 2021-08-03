@@ -1,5 +1,5 @@
-pub mod downloader2;
-pub mod fetcher2;
+pub mod downloader;
+pub mod fetcher;
 pub mod linker;
 pub mod version;
 

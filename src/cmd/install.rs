@@ -1,7 +1,7 @@
 use crate::config::Config;
 use crate::lib::{
-    downloader2::Downloader2,
-    fetcher2::{Fetcher2, Lts},
+    downloader::Downloader,
+    fetcher::{Fetcher, Lts},
     linker::Linker,
     version::user_version::UserVersion,
     SnmRes,
@@ -21,13 +21,13 @@ impl super::Command for Install {
             anyhow::bail!("Unable to install version: {:?}", self.version)
         }
 
-        let fetcher = Fetcher2::fetch(&config.dist_mirror)?;
+        let fetcher = Fetcher::fetch(&config.dist_mirror)?;
 
         let release = fetcher.find_release(&self.version).ok_or_else(|| {
             anyhow::anyhow!("No release found with the version {:?}", self.version)
         })?;
 
-        let dwnldr = Downloader2::new(&config.dist_mirror, &release.version);
+        let dwnldr = Downloader::new(&config.dist_mirror, &release.version);
 
         let dwnld_dir = dwnldr.download(&config.release_dir())?;
 

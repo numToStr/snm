@@ -1,5 +1,5 @@
 use crate::config::Config;
-use crate::lib::{downloader2::Downloader2, fetcher2::Fetcher2, linker::Linker, SnmRes};
+use crate::lib::{downloader::Downloader, fetcher::Fetcher, linker::Linker, SnmRes};
 
 use clap::Clap;
 
@@ -10,10 +10,10 @@ pub struct Latest;
 
 impl super::Command for Latest {
     fn init(self, config: Config) -> SnmRes<()> {
-        let releases = Fetcher2::fetch(&config.dist_mirror)?;
+        let releases = Fetcher::fetch(&config.dist_mirror)?;
         let release = releases.latest()?;
 
-        let dwnld = Downloader2::new(&config.dist_mirror, &release.version);
+        let dwnld = Downloader::new(&config.dist_mirror, &release.version);
         let dest = dwnld.download(&config.release_dir())?;
 
         Linker::create_link(&dest, &config.alias_dir().join(&ALIAS))?;

@@ -4,7 +4,7 @@ use semver::Version;
 use serde::Deserialize;
 
 use crate::lib::{
-    fetcher2::{Lts, Release},
+    fetcher::{Lts, Release},
     SnmRes,
 };
 

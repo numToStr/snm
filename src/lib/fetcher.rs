@@ -19,11 +19,11 @@ pub struct Release {
     pub lts: Lts,
 }
 
-pub struct Fetcher2 {
+pub struct Fetcher {
     releases: Vec<Release>,
 }
 
-impl Fetcher2 {
+impl Fetcher {
     pub fn fetch(mirror: &Url) -> SnmRes<Self> {
         let releases: Vec<Release> = ureq::get(&format!("{}/index.json", mirror))
             .call()?
