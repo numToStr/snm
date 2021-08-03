@@ -4,9 +4,9 @@ pub fn pretty_path_name(path: &'_ Path) -> &'_ str {
     path.file_name().unwrap().to_str().unwrap()
 }
 
-pub fn sanitize(s: &str) -> String {
-    s.replace("/", "-").replace("\\", "-")
-}
+// pub fn sanitize(s: &str) -> String {
+//     s.replace("/", "-").replace("\\", "-")
+// }
 
 #[derive(Debug, Clone)]
 pub struct Alias {

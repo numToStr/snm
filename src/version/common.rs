@@ -1,13 +1,10 @@
 use super::NodeVersion;
 use colored::*;
 use serde::Deserialize;
-use std::env::current_dir;
-use std::fs;
-use std::io::{BufRead, BufReader, Read};
 use std::str::FromStr;
 
-const PACKAGE_JSON: &str = "package.json";
-const NODE_FILES: [&str; 3] = [".nvmrc", ".node-version", PACKAGE_JSON];
+// const PACKAGE_JSON: &str = "package.json";
+// const NODE_FILES: [&str; 3] = [".nvmrc", ".node-version", PACKAGE_JSON];
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Version {
@@ -67,47 +64,47 @@ pub struct PackageJson {
 }
 
 impl Version {
-    pub fn from_file() -> anyhow::Result<Option<Version>> {
-        let pwd = current_dir()?;
-
-        for file_name in NODE_FILES.iter() {
-            let path = pwd.join(file_name);
-            let exists = path.exists();
-
-            if !exists {
-                continue;
-            }
-
-            let mut file = fs::File::open(path)?;
-
-            if file_name == &PACKAGE_JSON {
-                let mut contents = String::new();
-                file.read_to_string(&mut contents)?;
-
-                let parsed: PackageJson = serde_json::from_str(&contents)?;
-
-                if let Some(Engines { node: Some(v) }) = parsed.engines {
-                    let parsed = Version::from_str(&v)?;
-
-                    return Ok(Some(parsed));
-                }
-            } else {
-                let file = BufReader::new(file);
-                let lines = file.lines().next();
-
-                if let Some(line) = lines {
-                    let line = line?;
-                    let parsed = Version::from_str(&line)?;
-
-                    return Ok(Some(parsed));
-                }
-            }
-
-            return Ok(None);
-        }
-
-        Ok(None)
-    }
+    // pub fn from_file() -> anyhow::Result<Option<Version>> {
+    //     let pwd = current_dir()?;
+    //
+    //     for file_name in NODE_FILES.iter() {
+    //         let path = pwd.join(file_name);
+    //         let exists = path.exists();
+    //
+    //         if !exists {
+    //             continue;
+    //         }
+    //
+    //         let mut file = fs::File::open(path)?;
+    //
+    //         if file_name == &PACKAGE_JSON {
+    //             let mut contents = String::new();
+    //             file.read_to_string(&mut contents)?;
+    //
+    //             let parsed: PackageJson = serde_json::from_str(&contents)?;
+    //
+    //             if let Some(Engines { node: Some(v) }) = parsed.engines {
+    //                 let parsed = Version::from_str(&v)?;
+    //
+    //                 return Ok(Some(parsed));
+    //             }
+    //         } else {
+    //             let file = BufReader::new(file);
+    //             let lines = file.lines().next();
+    //
+    //             if let Some(line) = lines {
+    //                 let line = line?;
+    //                 let parsed = Version::from_str(&line)?;
+    //
+    //                 return Ok(Some(parsed));
+    //             }
+    //         }
+    //
+    //         return Ok(None);
+    //     }
+    //
+    //     Ok(None)
+    // }
 }
 
 impl FromStr for Version {
@@ -140,138 +137,138 @@ impl std::fmt::Display for Version {
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use std::str::FromStr;
-
-    #[test]
-    fn only_major() {
-        let ver = Version::from_str("10").unwrap();
-        assert_eq!(ver, Version::Major(10))
-    }
-
-    #[test]
-    fn not_major() {
-        let ver = Version::from_str("10.15").unwrap();
-        assert_ne!(ver, Version::Major(10))
-    }
-
-    #[test]
-    fn major_minor() {
-        let ver = Version::from_str("10.15").unwrap();
-        assert_eq!(ver, Version::MajorMinor(10, 15))
-    }
-
-    #[test]
-    fn not_major_minor() {
-        let ver = Version::from_str("10").unwrap();
-        assert_ne!(ver, Version::MajorMinor(10, 10))
-    }
-
-    #[test]
-    fn match_full_version() {
-        let ver = NodeVersion::parse("10.15.0").unwrap();
-        assert!(Version::Full(ver.clone()).match_node_version(&ver))
-    }
-
-    #[test]
-    fn match_major_version() {
-        let ver = NodeVersion::parse("10.15.0").unwrap();
-        assert!(Version::Major(10).match_node_version(&ver))
-    }
-
-    #[test]
-    fn not_match_major_version() {
-        let ver = NodeVersion::parse("10.15.0").unwrap();
-        assert!(!Version::Major(19).match_node_version(&ver))
-    }
-
-    #[test]
-    fn match_major_minor_version() {
-        let ver = NodeVersion::parse("10.15.0").unwrap();
-        assert!(Version::MajorMinor(10, 15).match_node_version(&ver))
-    }
-
-    #[test]
-    fn not_match_major_minor_version() {
-        let ver = NodeVersion::parse("10.15.0").unwrap();
-        assert!(!Version::MajorMinor(10, 19).match_node_version(&ver))
-    }
-
-    #[test]
-    fn major_to_version() {
-        let expected = NodeVersion::parse("6.1.0").unwrap();
-        let versions = vec![
-            NodeVersion::parse("6.0.0").unwrap(),
-            NodeVersion::parse("6.0.1").unwrap(),
-            expected.clone(),
-            NodeVersion::parse("7.0.1").unwrap(),
-        ];
-        let result = Version::Major(6).to_node_version(&versions);
-
-        assert_eq!(result.unwrap(), &expected);
-    }
-
-    #[test]
-    fn not_major_to_version() {
-        let expected = NodeVersion::parse("6.1.0").unwrap();
-        let versions = vec![
-            NodeVersion::parse("6.0.0").unwrap(),
-            NodeVersion::parse("6.0.1").unwrap(),
-            expected.clone(),
-            NodeVersion::parse("6.2.0").unwrap(),
-            NodeVersion::parse("7.0.1").unwrap(),
-        ];
-        let result = Version::Major(6).to_node_version(&versions);
-
-        assert_ne!(result.unwrap(), &expected);
-    }
-
-    #[test]
-    fn major_minor_to_version() {
-        let expected = NodeVersion::parse("6.0.1").unwrap();
-        let versions = vec![
-            NodeVersion::parse("6.0.0").unwrap(),
-            NodeVersion::parse("6.1.0").unwrap(),
-            expected.clone(),
-            NodeVersion::parse("7.0.1").unwrap(),
-        ];
-        let result = Version::MajorMinor(6, 0).to_node_version(&versions);
-
-        assert_eq!(result.unwrap(), &expected);
-    }
-
-    #[test]
-    fn no_major_minor_to_version() {
-        let expected = NodeVersion::parse("6.0.1").unwrap();
-        let versions = vec![
-            NodeVersion::parse("6.0.0").unwrap(),
-            NodeVersion::parse("6.1.0").unwrap(),
-            expected.clone(),
-            NodeVersion::parse("6.0.5").unwrap(),
-            NodeVersion::parse("7.0.1").unwrap(),
-        ];
-        let result = Version::MajorMinor(6, 0).to_node_version(&versions);
-
-        assert_ne!(result.unwrap(), &expected);
-    }
-
-    #[test]
-    fn from_file() {
-        let file_version = Version::from_file().unwrap().unwrap();
-        let expected = Version::from_str("14").unwrap();
-
-        assert_eq!(file_version, expected);
-    }
-
-    #[test]
-    fn from_file_match_node_version() {
-        let file_version = Version::from_file().unwrap().unwrap();
-        let expected = NodeVersion::parse("14.15.0").unwrap();
-
-        let result = file_version.match_node_version(&expected);
-
-        assert!(result);
-    }
-}
+// #[cfg(test)]
+// mod tests {
+//     use super::*;
+//     use std::str::FromStr;
+//
+//     #[test]
+//     fn only_major() {
+//         let ver = Version::from_str("10").unwrap();
+//         assert_eq!(ver, Version::Major(10))
+//     }
+//
+//     #[test]
+//     fn not_major() {
+//         let ver = Version::from_str("10.15").unwrap();
+//         assert_ne!(ver, Version::Major(10))
+//     }
+//
+//     #[test]
+//     fn major_minor() {
+//         let ver = Version::from_str("10.15").unwrap();
+//         assert_eq!(ver, Version::MajorMinor(10, 15))
+//     }
+//
+//     #[test]
+//     fn not_major_minor() {
+//         let ver = Version::from_str("10").unwrap();
+//         assert_ne!(ver, Version::MajorMinor(10, 10))
+//     }
+//
+//     #[test]
+//     fn match_full_version() {
+//         let ver = NodeVersion::parse("10.15.0").unwrap();
+//         assert!(Version::Full(ver.clone()).match_node_version(&ver))
+//     }
+//
+//     #[test]
+//     fn match_major_version() {
+//         let ver = NodeVersion::parse("10.15.0").unwrap();
+//         assert!(Version::Major(10).match_node_version(&ver))
+//     }
+//
+//     #[test]
+//     fn not_match_major_version() {
+//         let ver = NodeVersion::parse("10.15.0").unwrap();
+//         assert!(!Version::Major(19).match_node_version(&ver))
+//     }
+//
+//     #[test]
+//     fn match_major_minor_version() {
+//         let ver = NodeVersion::parse("10.15.0").unwrap();
+//         assert!(Version::MajorMinor(10, 15).match_node_version(&ver))
+//     }
+//
+//     #[test]
+//     fn not_match_major_minor_version() {
+//         let ver = NodeVersion::parse("10.15.0").unwrap();
+//         assert!(!Version::MajorMinor(10, 19).match_node_version(&ver))
+//     }
+//
+//     #[test]
+//     fn major_to_version() {
+//         let expected = NodeVersion::parse("6.1.0").unwrap();
+//         let versions = vec![
+//             NodeVersion::parse("6.0.0").unwrap(),
+//             NodeVersion::parse("6.0.1").unwrap(),
+//             expected.clone(),
+//             NodeVersion::parse("7.0.1").unwrap(),
+//         ];
+//         let result = Version::Major(6).to_node_version(&versions);
+//
+//         assert_eq!(result.unwrap(), &expected);
+//     }
+//
+//     #[test]
+//     fn not_major_to_version() {
+//         let expected = NodeVersion::parse("6.1.0").unwrap();
+//         let versions = vec![
+//             NodeVersion::parse("6.0.0").unwrap(),
+//             NodeVersion::parse("6.0.1").unwrap(),
+//             expected.clone(),
+//             NodeVersion::parse("6.2.0").unwrap(),
+//             NodeVersion::parse("7.0.1").unwrap(),
+//         ];
+//         let result = Version::Major(6).to_node_version(&versions);
+//
+//         assert_ne!(result.unwrap(), &expected);
+//     }
+//
+//     #[test]
+//     fn major_minor_to_version() {
+//         let expected = NodeVersion::parse("6.0.1").unwrap();
+//         let versions = vec![
+//             NodeVersion::parse("6.0.0").unwrap(),
+//             NodeVersion::parse("6.1.0").unwrap(),
+//             expected.clone(),
+//             NodeVersion::parse("7.0.1").unwrap(),
+//         ];
+//         let result = Version::MajorMinor(6, 0).to_node_version(&versions);
+//
+//         assert_eq!(result.unwrap(), &expected);
+//     }
+//
+//     #[test]
+//     fn no_major_minor_to_version() {
+//         let expected = NodeVersion::parse("6.0.1").unwrap();
+//         let versions = vec![
+//             NodeVersion::parse("6.0.0").unwrap(),
+//             NodeVersion::parse("6.1.0").unwrap(),
+//             expected.clone(),
+//             NodeVersion::parse("6.0.5").unwrap(),
+//             NodeVersion::parse("7.0.1").unwrap(),
+//         ];
+//         let result = Version::MajorMinor(6, 0).to_node_version(&versions);
+//
+//         assert_ne!(result.unwrap(), &expected);
+//     }
+//
+//     #[test]
+//     fn from_file() {
+//         let file_version = Version::from_file().unwrap().unwrap();
+//         let expected = Version::from_str("14").unwrap();
+//
+//         assert_eq!(file_version, expected);
+//     }
+//
+//     #[test]
+//     fn from_file_match_node_version() {
+//         let file_version = Version::from_file().unwrap().unwrap();
+//         let expected = NodeVersion::parse("14.15.0").unwrap();
+//
+//         let result = file_version.match_node_version(&expected);
+//
+//         assert!(result);
+//     }
+// }

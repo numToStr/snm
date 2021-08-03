@@ -1,4 +1,5 @@
-use std::str::FromStr;
+use serde::Deserialize;
+use std::{env::current_dir, fs::read_to_string, str::FromStr};
 
 use crate::lib::{
     fetcher2::{Lts, Release},
@@ -6,6 +7,9 @@ use crate::lib::{
 };
 
 use super::{dist_version::DistVersion, ParseVersion};
+
+const PACKAGE_JSON: &str = "package.json";
+const NODE_FILES: [&str; 3] = [".nvmrc", ".node-version", PACKAGE_JSON];
 
 /// `UserVersion` represents the user provided version
 /// It could be alias, lts codename, partial or full semver
@@ -67,6 +71,16 @@ impl FromStr for UserVersion {
     }
 }
 
+#[derive(Debug, Deserialize)]
+pub struct Engines {
+    node: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct PkgJson {
+    engines: Option<Engines>,
+}
+
 impl UserVersion {
     pub fn match_release(&self, release: &Release) -> bool {
         match (self, &release.version, &release.lts) {
@@ -74,8 +88,43 @@ impl UserVersion {
             (Self::MajorMinor(maj, min), DistVersion(x), _) => *maj == x.major && *min == x.minor,
             (Self::Major(a), DistVersion(b), _) => *a == b.major,
             (Self::Lts(a), _, Lts::Yes(b)) => a.to_lowercase() == b.to_lowercase(),
+            // FIXME: add wildcard semver
             // (Self::Alias(_), _) => false,
             _ => false,
         }
+    }
+
+    pub fn from_file() -> SnmRes<Self> {
+        let pwd = current_dir()?;
+
+        for f_name in NODE_FILES {
+            let f_path = pwd.join(&f_name);
+
+            if !f_path.exists() {
+                continue;
+            }
+
+            let version_file = read_to_string(&f_path)?;
+
+            if f_name.eq(PACKAGE_JSON) {
+                let pkg_json: PkgJson = serde_json::from_str(&version_file)?;
+
+                if let Some(Engines { node: Some(v) }) = pkg_json.engines {
+                    let parsed = Self::parse(&v)?;
+
+                    return Ok(parsed);
+                }
+            } else {
+                let line = version_file.lines().next();
+
+                if let Some(l) = line {
+                    let parsed = Self::parse(l)?;
+
+                    return Ok(parsed);
+                }
+            }
+        }
+
+        anyhow::bail!("Unable to read version from dotfiles. Please provide a version manually.")
     }
 }
