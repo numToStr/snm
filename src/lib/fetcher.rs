@@ -6,11 +6,27 @@ use super::{
     SnmRes,
 };
 
-#[derive(Debug, Deserialize)]
-#[serde(untagged)]
+#[derive(Debug)]
 pub enum Lts {
-    No(bool),
+    No,
     Yes(String),
+}
+
+// NOTE:
+// I had to manually implement deserializer because the lts codename is coming from api
+// is in sentence case. So I am converting it to lowercase to be consistent.
+impl<'de> Deserialize<'de> for Lts {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let val = match String::deserialize(deserializer) {
+            Ok(v) => Self::Yes(v.to_lowercase()),
+            _ => Self::No,
+        };
+
+        Ok(val)
+    }
 }
 
 #[derive(Debug, Deserialize)]
@@ -42,7 +58,7 @@ impl Fetcher {
     pub fn latest(&self) -> SnmRes<&Release> {
         self.releases
             .iter()
-            .find(|x| matches!(x.lts, Lts::No(_)))
+            .find(|x| matches!(x.lts, Lts::No))
             .ok_or_else(|| anyhow::anyhow!("Unable to find {} release", "latest"))
     }
 

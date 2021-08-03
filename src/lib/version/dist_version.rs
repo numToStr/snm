@@ -74,7 +74,7 @@ impl DistVersion {
 
                 let release = Release {
                     version: dist_ver,
-                    lts: Lts::No(false),
+                    lts: Lts::No,
                 };
 
                 let is_match = version.match_release(&release);
