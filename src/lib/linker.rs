@@ -7,15 +7,9 @@ use std::{
 
 use super::SnmRes;
 
-pub struct Linker<'a> {
-    src: &'a Path,
-}
+pub struct Linker;
 
-impl<'a> Linker<'a> {
-    pub fn new(src: &'a Path) -> Self {
-        Self { src }
-    }
-
+impl Linker {
     pub fn remove_link(path: &Path) -> SnmRes<()> {
         if path.exists() {
             #[cfg(unix)]
@@ -28,11 +22,11 @@ impl<'a> Linker<'a> {
         Ok(())
     }
 
-    pub fn create_link(&self, dest: &Path) -> SnmRes<()> {
-        Self::remove_link(dest)?;
+    pub fn create_link(original: &Path, link: &Path) -> SnmRes<()> {
+        Self::remove_link(link)?;
 
         #[cfg(unix)]
-        std::os::unix::fs::symlink(self.src, dest)?;
+        std::os::unix::fs::symlink(original, link)?;
 
         #[cfg(windows)]
         std::os::windows::fs::symlink_dir(from, to)?;
@@ -42,6 +36,16 @@ impl<'a> Linker<'a> {
 
     pub fn read_link(path: &Path) -> SnmRes<PathBuf> {
         std::fs::read_link(path).map_err(anyhow::Error::new)
+    }
+
+    pub fn read_convert_to_dist(alias_dir: &Path, release_dir: &Path) -> SnmRes<DistVersion> {
+        let linked = Self::read_link(alias_dir)?;
+        let link_ver = linked
+            .strip_prefix(release_dir)?
+            .to_str()
+            .ok_or_else(|| anyhow::anyhow!("WTF"))?;
+
+        DistVersion::parse(link_ver)
     }
 
     pub fn list_aliases(

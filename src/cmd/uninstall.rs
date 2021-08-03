@@ -1,7 +1,7 @@
 use crate::config::Config;
 use crate::lib::{
     linker::Linker,
-    version::{dist_version::DistVersion, user_version::UserVersion, ParseVersion},
+    version::{dist_version::DistVersion, user_version::UserVersion},
     SnmRes,
 };
 use clap::Clap;
@@ -23,7 +23,7 @@ impl super::Command for UnInstall {
 
         // first we need to find out the whether the provided version is an alias, lts codename or partial semver
         // If the version is alias or codename, then we need to find the linked/installed version
-        let found_version = match &self.version_or_alias {
+        let version = match &self.version_or_alias {
             UserVersion::Lts(l) | UserVersion::Alias(l) => {
                 let alias_ver = alias_dir.join(l);
 
@@ -31,54 +31,38 @@ impl super::Command for UnInstall {
                     anyhow::bail!("Alias {} not found", l);
                 }
 
-                let linked = Linker::read_link(&alias_ver)?;
-
-                let link_ver = linked.strip_prefix(&release_dir)?;
-
-                match link_ver.to_str() {
-                    Some(p) => {
-                        let parsed = DistVersion::parse(p)?;
-                        Some(parsed)
-                    }
-                    _ => None,
-                }
+                Linker::read_convert_to_dist(&alias_dir, &release_dir)?
             }
-            x => {
-                let dist_version = DistVersion::match_version(&release_dir, x)?;
-
-                Some(dist_version)
-            }
+            x => DistVersion::match_version(&release_dir, x)?,
         };
 
         // So, when the linked version is found then we need to find the other linked aliases,
         // then remove them all the aliases before removing the actuall installed version
-        if let Some(version) = found_version {
-            let aliases = Linker::list_for_version(&version, &alias_dir, &release_dir)?;
+        let aliases = Linker::list_for_version(&version, &alias_dir, &release_dir)?;
 
-            let is_default = aliases.iter().any(|x| x.as_str() == "default");
+        let is_default = aliases.iter().any(|x| x.as_str() == "default");
 
-            if is_default && self.no_used {
-                anyhow::bail!("Unable to uninstall. Version {} is currently used", version);
+        if is_default && self.no_used {
+            anyhow::bail!("Unable to uninstall. Version {} is currently used", version);
+        }
+
+        let is_aliases_empty = aliases.is_empty();
+
+        // Removing symlink first
+        if !is_aliases_empty {
+            for alias in &aliases {
+                let alias = alias_dir.join(&alias);
+                Linker::remove_link(&alias)?;
             }
+        }
 
-            let is_aliases_empty = aliases.is_empty();
+        // Then removing the actual installed version
+        std::fs::remove_dir_all(release_dir.join(version.to_string()))?;
 
-            // Removing symlink first
-            if !is_aliases_empty {
-                for alias in &aliases {
-                    let alias = alias_dir.join(&alias);
-                    Linker::remove_link(&alias)?;
-                }
-            }
+        println!("Removed version: {}", version);
 
-            // Then removing the actual installed version
-            std::fs::remove_dir_all(release_dir.join(version.to_string()))?;
-
-            println!("Removed version: {}", version);
-
-            if !is_aliases_empty {
-                println!("Removed aliases: {}", aliases.join(", "));
-            }
+        if !is_aliases_empty {
+            println!("Removed aliases: {}", aliases.join(", "));
         }
 
         Ok(())

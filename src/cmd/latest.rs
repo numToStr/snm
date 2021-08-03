@@ -16,14 +16,12 @@ impl super::Command for Latest {
         let dwnld = Downloader2::new(&config.dist_mirror, &release.version);
         let dest = dwnld.download(&config.release_dir())?;
 
-        let linker = Linker::new(&dest);
-
-        linker.create_link(&config.alias_dir().join(&ALIAS))?;
+        Linker::create_link(&dest, &config.alias_dir().join(&ALIAS))?;
 
         println!("Alias     : {}", ALIAS);
 
         if !config.no_use {
-            linker.create_link(&config.alias_default())?;
+            Linker::create_link(&dest, &config.alias_default())?;
         }
 
         Ok(())

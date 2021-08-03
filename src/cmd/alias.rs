@@ -24,7 +24,7 @@ impl super::Command for Alias {
 
         let link_src = release_dir.join(&link_ver);
 
-        Linker::new(&link_src).create_link(&config.alias_dir().join(&self.alias))?;
+        Linker::create_link(&link_src, &config.alias_dir().join(&self.alias))?;
 
         println!("Version {} is aliased to {}", link_ver, self.alias);
 

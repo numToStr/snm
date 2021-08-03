@@ -31,18 +31,16 @@ impl super::Command for Install {
 
         let dwnld_dir = dwnldr.download(&config.release_dir())?;
 
-        let linker = Linker::new(&dwnld_dir);
-
         if let Lts::Yes(lts) = release.lts {
             let lts = format!("lts-{}", lts);
 
-            linker.create_link(&config.alias_dir().join(&lts))?;
+            Linker::create_link(&dwnld_dir, &config.alias_dir().join(&lts))?;
 
             println!("Alias     : {}", &lts);
         }
 
         if !config.no_use {
-            linker.create_link(&config.alias_default())?;
+            Linker::create_link(&dwnld_dir, &config.alias_default())?;
         }
 
         Ok(())

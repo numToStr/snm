@@ -1,7 +1,7 @@
 use crate::config::Config;
 use crate::lib::{
     linker::Linker,
-    version::{dist_version::DistVersion, user_version::UserVersion, ParseVersion},
+    version::{dist_version::DistVersion, user_version::UserVersion},
     SnmRes,
 };
 use clap::Clap;
@@ -29,25 +29,20 @@ impl super::Command for Use {
                     anyhow::bail!("Alias {} not found", alias);
                 }
 
-                let link_path = Linker::read_link(&alias_dir)?;
-                let link_ver = link_path.strip_prefix(&release_dir)?.to_str();
+                let dist_ver = Linker::read_convert_to_dist(&alias_dir, &release_dir)?;
 
-                if let Some(v) = link_ver {
-                    let dist_ver = DistVersion::parse(v)?;
+                let dist_path = release_dir.join(dist_ver.to_string());
 
-                    let dist_path = release_dir.join(dist_ver.to_string());
+                Linker::create_link(&dist_path, &config.alias_default())?;
 
-                    Linker::new(&dist_path).create_link(&config.alias_default())?;
-
-                    println!("Using Alias {}", &alias);
-                }
+                println!("Using Alias {}", &alias);
             }
             version => {
                 let dist_ver = DistVersion::match_version(&release_dir, &version)?;
 
                 let dist_path = release_dir.join(dist_ver.to_string());
 
-                Linker::new(&dist_path).create_link(&config.alias_default())?;
+                Linker::create_link(&dist_path, &config.alias_default())?;
 
                 println!("Using Node.js {}", dist_ver);
             }
