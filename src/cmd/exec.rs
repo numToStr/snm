@@ -7,7 +7,7 @@ use clap::Clap;
 use std::env;
 use std::process::{self, Command, Stdio};
 
-#[derive(Debug, Clap, PartialEq, Eq)]
+#[derive(Debug, Clap)]
 pub struct Exec {
     /// Nodejs version needed for executing the following command
     version: UserVersion,

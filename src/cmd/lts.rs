@@ -4,7 +4,7 @@ use clap::Clap;
 
 const ALIAS: &str = "lts-latest";
 
-#[derive(Debug, Clap, PartialEq, Eq)]
+#[derive(Debug, Clap)]
 pub struct Lts;
 
 impl super::Command for Lts {

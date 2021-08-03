@@ -9,7 +9,7 @@ use crate::lib::{
 
 use clap::Clap;
 
-#[derive(Debug, Clap, PartialEq, Eq)]
+#[derive(Debug, Clap)]
 pub struct Install {
     /// A version string. Can be a partial semver or a LTS version name by the format lts/NAME
     version: UserVersion,

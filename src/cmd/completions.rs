@@ -7,7 +7,7 @@ use clap_generate::{
     generators::{Bash, Fish, PowerShell, Zsh},
 };
 
-#[derive(Debug, Clap, PartialEq, Eq)]
+#[derive(Debug, Clap)]
 pub struct Completions {
     /// Type of shell you want to configure
     #[clap(subcommand)]

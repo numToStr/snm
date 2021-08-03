@@ -5,7 +5,7 @@ use crate::lib::{
 
 use clap::Clap;
 
-#[derive(Debug, Clap, PartialEq, Eq)]
+#[derive(Debug, Clap)]
 pub struct Alias {
     /// Partial semver string
     version: UserVersion,

@@ -3,7 +3,7 @@ use crate::lib::version::{dist_version::DistVersion, user_version::UserVersion};
 use crate::lib::SnmRes;
 use clap::Clap;
 
-#[derive(Debug, Clap, PartialEq, Eq)]
+#[derive(Debug, Clap)]
 pub struct Which {
     /// Can be a partial semver string.
     version: UserVersion,

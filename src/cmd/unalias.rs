@@ -4,7 +4,7 @@ use crate::{
 };
 use clap::Clap;
 
-#[derive(Debug, Clap, PartialEq, Eq)]
+#[derive(Debug, Clap)]
 pub struct UnAlias {
     /// Name of the alias
     #[clap(conflicts_with = "all")]

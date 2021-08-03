@@ -2,7 +2,7 @@ use crate::config::Config;
 use crate::lib::{fetcher2::Fetcher2, version::user_version::UserVersion, SnmRes};
 use clap::Clap;
 
-#[derive(Debug, Clap, PartialEq, Eq)]
+#[derive(Debug, Clap)]
 pub struct LsRemote {
     /// Version that needs to be searched. Can be a partial semver string.
     version: Option<UserVersion>,

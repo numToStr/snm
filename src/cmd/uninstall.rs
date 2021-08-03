@@ -6,7 +6,7 @@ use crate::lib::{
 };
 use clap::Clap;
 
-#[derive(Debug, Clap, PartialEq, Eq)]
+#[derive(Debug, Clap)]
 pub struct UnInstall {
     /// Version or Alias that needs to be removed
     version_or_alias: UserVersion,

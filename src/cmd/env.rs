@@ -3,7 +3,7 @@ use crate::lib::SnmRes;
 use crate::shell::{bash, fish, pwsh, zsh, Shell, ShellKind};
 use clap::Clap;
 
-#[derive(Debug, Clap, PartialEq, Eq)]
+#[derive(Debug, Clap)]
 pub struct Env {
     /// Add the shell script to run `snm use` on directory change
     #[clap(short, long)]

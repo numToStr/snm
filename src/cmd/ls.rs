@@ -2,7 +2,7 @@ use crate::config::Config;
 use crate::lib::{linker::Linker, version::dist_version::DistVersion, SnmRes};
 use clap::Clap;
 
-#[derive(Debug, Clap, PartialEq, Eq)]
+#[derive(Debug, Clap)]
 pub struct Ls;
 
 impl super::Command for Ls {

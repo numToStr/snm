@@ -6,7 +6,7 @@ use crate::lib::{
 };
 use clap::Clap;
 
-#[derive(Debug, Clap, PartialEq, Eq)]
+#[derive(Debug, Clap)]
 pub struct Use {
     /// Can be a partial semver or a LTS version name by the format lts/NAME.
     version: Option<UserVersion>,

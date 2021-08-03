@@ -3,7 +3,7 @@ use crate::lib::{linker::Linker, version::dist_version::DistVersion, SnmRes};
 use clap::Clap;
 use std::fs::remove_dir_all;
 
-#[derive(Debug, Clap, PartialEq, Eq)]
+#[derive(Debug, Clap)]
 pub struct Prune;
 
 impl super::Command for Prune {

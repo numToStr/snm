@@ -3,62 +3,54 @@ use crate::cmd::{
     uninstall, which, Command,
 };
 use crate::config::Config;
-use clap::{crate_authors, crate_description, crate_name, crate_version, Clap};
+use clap::{crate_authors, crate_description, crate_name, crate_version, Clap, Subcommand};
 
-#[derive(Clap, Debug, PartialEq, Eq)]
+#[derive(Subcommand, Debug)]
 pub enum SubCommand {
     /// Alias a version to a common name
-    #[clap(name = "alias", visible_alias = "a")]
+    #[clap(visible_alias = "a")]
     Alias(alias::Alias),
 
     /// Sets up the shell variables for snm
-    #[clap(name = "env")]
     Env(env::Env),
 
     /// Executes a command within snm context with the modified PATH
     ///
     /// Example: snm exec 14 -- node -v | snm exec 14 -- yarn start
-    #[clap(name = "exec")]
     Exec(exec::Exec),
 
     /// Prints shell's completion script for snm to the stdout
-    #[clap(name = "completions")]
     Completions(completions::Completions),
 
     /// Install Nodejs with the given version or lts codename
     ///
     /// Example: snm install 14 | snm install lts/fermium
-    #[clap(name = "install", visible_alias = "i")]
+    #[clap(visible_alias = "i")]
     Install(install::Install),
 
     /// Changes Nodejs version
     ///
     /// NOTE: If the <version> is not given, then version will be picked from .nvmrc or .node-version
-    #[clap(name = "use", visible_alias = "as")]
+    #[clap(visible_alias = "as")]
     Use(r#use::Use),
 
     /// Install the latest CURRENT release
-    #[clap(name = "latest")]
     Latest(latest::Latest),
 
     /// Install the latest LTS release
-    #[clap(name = "lts")]
     Lts(lts::Lts),
 
     /// List all the local downloaded versions with their aliases (if any)
-    #[clap(name = "ls")]
     Ls(ls::Ls),
 
     /// List remote Nodejs versions
-    #[clap(name = "ls-remote", visible_alias = "lsr")]
+    #[clap(visible_alias = "lsr")]
     LsRemote(ls_remote::LsRemote),
 
     /// Output path for downloaded node <version>
-    #[clap(name = "which")]
     Which(which::Which),
 
     /// Remove all downloaded versions except the installed version
-    #[clap(name = "prune")]
     Prune(prune::Prune),
 
     /// Remove the aliases

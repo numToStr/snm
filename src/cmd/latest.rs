@@ -5,7 +5,7 @@ use clap::Clap;
 
 const ALIAS: &str = "latest";
 
-#[derive(Debug, Clap, PartialEq, Eq)]
+#[derive(Debug, Clap)]
 pub struct Latest;
 
 impl super::Command for Latest {
