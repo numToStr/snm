@@ -17,9 +17,9 @@ impl super::Command for Ls {
             match aliases.get(&version) {
                 Some(a) => {
                     if a.contains(&"default".to_string()) {
-                        println!("> {}\t{}", version, a.join(", "));
+                        println!("> {} \t{}", version, a.join(", "));
                     } else {
-                        println!("- {}\t{}", version, a.join(", "));
+                        println!("- {} \t{}", version, a.join(", "));
                     }
                 }
                 _ => {
