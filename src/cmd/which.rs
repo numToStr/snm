@@ -1,5 +1,6 @@
 use crate::config::Config;
 use crate::lib::version::{dist_version::DistVersion, user_version::UserVersion};
+use crate::lib::SnmRes;
 use clap::Clap;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
@@ -9,9 +10,7 @@ pub struct Which {
 }
 
 impl super::Command for Which {
-    type InitResult = ();
-
-    fn init(&self, config: Config) -> anyhow::Result<Self::InitResult> {
+    fn init(self, config: Config) -> SnmRes<()> {
         let release_dir = config.release_dir();
 
         let versions = DistVersion::match_versions(&release_dir, &self.version)?;

@@ -1,5 +1,6 @@
 use crate::alias::{self, Alias};
 use crate::config::Config;
+use crate::lib::SnmRes;
 use crate::version::NodeVersion;
 use clap::Clap;
 use colored::*;
@@ -9,9 +10,7 @@ use std::fs;
 pub struct Prune;
 
 impl super::Command for Prune {
-    type InitResult = ();
-
-    fn init(&self, config: Config) -> anyhow::Result<Self::InitResult> {
+    fn init(self, config: Config) -> SnmRes<()> {
         let default_alias = config.alias_default();
 
         if !default_alias.exists() {

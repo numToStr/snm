@@ -1,6 +1,6 @@
-use crate::cli::Cli;
 use crate::config::Config;
 use crate::shell::ShellKind;
+use crate::{cli::Cli, lib::SnmRes};
 use clap::{crate_name, Clap, IntoApp};
 use clap_generate::{
     generate,
@@ -15,9 +15,7 @@ pub struct Completions {
 }
 
 impl super::Command for Completions {
-    type InitResult = ();
-
-    fn init(&self, _: Config) -> anyhow::Result<Self::InitResult> {
+    fn init(self, _: Config) -> SnmRes<()> {
         let name = crate_name!();
         let mut app = Cli::into_app();
         let mut stdout = std::io::stdout();

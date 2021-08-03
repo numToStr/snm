@@ -76,7 +76,7 @@ pub enum SubCommand {
 }
 
 impl SubCommand {
-    pub fn exec(&self, config: Config) -> anyhow::Result<()> {
+    pub fn exec(self, config: Config) -> anyhow::Result<()> {
         match self {
             Self::Alias(m) => m.init(config),
             Self::Env(m) => m.init(config),

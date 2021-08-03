@@ -15,9 +15,7 @@ pub struct Alias {
 }
 
 impl super::Command for Alias {
-    type InitResult = ();
-
-    fn init(&self, config: Config) -> SnmRes<Self::InitResult> {
+    fn init(self, config: Config) -> SnmRes<()> {
         let release_dir = config.release_dir();
 
         let dist_version = DistVersion::match_version(&release_dir, &self.version)?;

@@ -1,5 +1,6 @@
 use crate::alias::Alias;
 use crate::config::Config;
+use crate::lib::SnmRes;
 use crate::symlink::symlink_to;
 use crate::version::{NodeVersion, Version};
 use clap::Clap;
@@ -12,9 +13,7 @@ pub struct Use {
 }
 
 impl super::Command for Use {
-    type InitResult = ();
-
-    fn init(&self, config: Config) -> anyhow::Result<Self::InitResult> {
+    fn init(self, config: Config) -> SnmRes<()> {
         // If version is not provided then fetch version from file
         let version = match &self.version {
             Some(v) => v.clone(),

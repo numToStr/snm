@@ -1,4 +1,5 @@
 use crate::config::Config;
+use crate::lib::SnmRes;
 use crate::version::{NodeVersion, Version};
 use clap::Clap;
 use colored::*;
@@ -18,9 +19,7 @@ pub struct Exec {
 }
 
 impl super::Command for Exec {
-    type InitResult = ();
-
-    fn init(&self, config: Config) -> anyhow::Result<Self::InitResult> {
+    fn init(self, config: Config) -> SnmRes<()> {
         let path = {
             let dir = config.release_dir();
             let versions = NodeVersion::list_versions(&dir)?;

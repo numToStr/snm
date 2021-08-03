@@ -9,9 +9,7 @@ const ALIAS: &str = "latest";
 pub struct Latest;
 
 impl super::Command for Latest {
-    type InitResult = ();
-
-    fn init(&self, config: Config) -> SnmRes<Self::InitResult> {
+    fn init(self, config: Config) -> SnmRes<()> {
         let releases = Fetcher2::fetch(&config.dist_mirror)?;
         let release = releases.latest()?;
 

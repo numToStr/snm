@@ -16,9 +16,7 @@ pub struct UnAlias {
 }
 
 impl super::Command for UnAlias {
-    type InitResult = ();
-
-    fn init(&self, config: Config) -> SnmRes<Self::InitResult> {
+    fn init(self, config: Config) -> SnmRes<()> {
         let alias_dir = config.alias_dir();
 
         if self.all {

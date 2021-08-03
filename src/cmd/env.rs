@@ -1,4 +1,5 @@
 use crate::config::Config;
+use crate::lib::SnmRes;
 use crate::shell::{bash, fish, pwsh, zsh, Shell, ShellKind};
 use clap::Clap;
 
@@ -18,9 +19,7 @@ pub struct Env {
 }
 
 impl super::Command for Env {
-    type InitResult = ();
-
-    fn init(&self, config: Config) -> anyhow::Result<Self::InitResult> {
+    fn init(self, config: Config) -> SnmRes<()> {
         let shell: &dyn Shell = match &self.shell {
             ShellKind::Bash => &bash::Bash,
             ShellKind::Zsh => &zsh::Zsh,

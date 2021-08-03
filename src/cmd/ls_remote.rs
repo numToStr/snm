@@ -1,7 +1,5 @@
 use crate::config::Config;
-use crate::lib::fetcher2::Fetcher2;
-use crate::lib::version::user_version::UserVersion;
-
+use crate::lib::{fetcher2::Fetcher2, version::user_version::UserVersion, SnmRes};
 use clap::Clap;
 
 #[derive(Debug, Clap, PartialEq, Eq)]
@@ -19,9 +17,7 @@ pub struct LsRemote {
 }
 
 impl super::Command for LsRemote {
-    type InitResult = ();
-
-    fn init(&self, config: Config) -> anyhow::Result<Self::InitResult> {
+    fn init(self, config: Config) -> SnmRes<()> {
         if !self.all {
             println!("-- Displaying {} results --", self.count)
         }

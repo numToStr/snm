@@ -8,9 +8,7 @@ const ALIAS: &str = "lts-latest";
 pub struct Lts;
 
 impl super::Command for Lts {
-    type InitResult = ();
-
-    fn init(&self, config: Config) -> SnmRes<Self::InitResult> {
+    fn init(self, config: Config) -> SnmRes<()> {
         let releases = Fetcher2::fetch(&config.dist_mirror)?;
         let release = releases.lts()?;
 

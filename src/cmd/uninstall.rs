@@ -17,9 +17,7 @@ pub struct UnInstall {
 }
 
 impl super::Command for UnInstall {
-    type InitResult = ();
-
-    fn init(&self, config: Config) -> SnmRes<Self::InitResult> {
+    fn init(self, config: Config) -> SnmRes<()> {
         let release_dir = config.release_dir();
         let alias_dir = config.alias_dir();
 

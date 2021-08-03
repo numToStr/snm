@@ -16,9 +16,7 @@ pub struct Install {
 }
 
 impl super::Command for Install {
-    type InitResult = ();
-
-    fn init(&self, config: Config) -> SnmRes<Self::InitResult> {
+    fn init(self, config: Config) -> SnmRes<()> {
         if let UserVersion::Alias(_) = self.version {
             anyhow::bail!("Unable to install version: {:?}", self.version)
         }

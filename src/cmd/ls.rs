@@ -6,9 +6,7 @@ use clap::Clap;
 pub struct Ls;
 
 impl super::Command for Ls {
-    type InitResult = ();
-
-    fn init(&self, config: Config) -> SnmRes<Self::InitResult> {
+    fn init(self, config: Config) -> SnmRes<()> {
         let release_dir = config.release_dir();
 
         let versions = DistVersion::list_versions(&release_dir)?;
