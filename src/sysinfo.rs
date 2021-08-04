@@ -8,6 +8,11 @@ pub fn platform_name() -> &'static str {
     "linux"
 }
 
+#[cfg(windows)]
+pub fn platform_name() -> &'static str {
+    "win"
+}
+
 #[cfg(all(
     target_pointer_width = "32",
     any(target_arch = "arm", target_arch = "aarch64")

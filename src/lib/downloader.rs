@@ -1,11 +1,9 @@
+use console::style;
+use indicatif::HumanBytes;
 use std::{
     io::Read,
     path::{Path, PathBuf},
 };
-
-use console::style;
-use indicatif::HumanBytes;
-use tempfile::Builder;
 use url::Url;
 
 use super::{version::dist_version::DistVersion, SnmRes};
@@ -17,13 +15,19 @@ impl Dist {
     fn new(mirror: &Url, version: &DistVersion) -> Self {
         use crate::sysinfo::{platform_arch, platform_name};
 
-        // FIXME: windows support
+        #[cfg(unix)]
+        let extension = "tar.xz";
+
+        #[cfg(windows)]
+        let extension = "zip";
+
         Dist(format!(
-            "{}/v{ver}/node-v{ver}-{}-{}.tar.xz",
+            "{}/v{version}/node-v{version}-{}-{}.{}",
             mirror,
             platform_name(),
             platform_arch(),
-            ver = version
+            extension,
+            version = version
         ))
     }
 }
@@ -46,8 +50,10 @@ impl<'a> Downloader<'a> {
         Self { version, dist }
     }
 
-    // FIXME: windows support
-    fn extract_to(&self, source: impl Read + Send, dest: &Path) -> SnmRes<()> {
+    #[cfg(unix)]
+    fn extract_to(&self, source: &mut (impl Read + Send), dest: &Path) -> SnmRes<()> {
+        let tmp_dir = tempfile::Builder::new().tempdir_in(dest)?;
+
         let xz_stream = xz2::read::XzDecoder::new(source);
         let mut tar_stream = tar::Archive::new(xz_stream);
         let entries = tar_stream.entries()?;
@@ -55,9 +61,72 @@ impl<'a> Downloader<'a> {
         for entry in entries {
             let mut entry = entry?;
             let entry_path: PathBuf = entry.path()?.iter().skip(1).collect();
-            let dest = dest.join(entry_path);
+            let tmp_dir = tmp_dir.join(entry_path);
 
-            entry.unpack(dest)?;
+            entry.unpack(tmp_dir)?;
+        }
+
+        let install_dir = dest.join(self.version.to_string());
+
+        std::fs::rename(&tmp_dir, &dest)?;
+
+        Ok(())
+    }
+
+    #[cfg(windows)]
+    fn extract_to(&self, source: &mut (impl Read + Send), dest: &Path) -> SnmRes<()> {
+        use std::{fs, io};
+
+        let mut tmp_file = tempfile::Builder::new().tempfile_in(&dest)?;
+
+        io::copy(source, &mut tmp_file)?;
+
+        let mut archive = zip::read::ZipArchive::new(&tmp_file)?;
+
+        let install_dir = dest.join(self.version.to_string());
+
+        for i in 0..archive.len() {
+            let mut file = archive.by_index(i)?;
+
+            let outpath = {
+                let f = match file.enclosed_name() {
+                    Some(path) => path.iter().skip(1).collect::<PathBuf>(),
+                    None => continue,
+                };
+
+                install_dir.join(f)
+            };
+
+            {
+                let comment = file.comment();
+                if !comment.is_empty() {
+                    println!("File {} comment: {}", i, comment);
+                }
+            }
+
+            if file.name().ends_with('/') {
+                fs::create_dir_all(&outpath)?;
+            } else {
+                if let Some(p) = outpath.parent() {
+                    if !p.exists() {
+                        fs::create_dir_all(&p)?;
+                    }
+                }
+
+                let mut outfile = fs::File::create(&outpath)?;
+
+                io::copy(&mut file, &mut outfile)?;
+            }
+
+            // Get and Set permissions
+            #[cfg(unix)]
+            {
+                use std::os::unix::fs::PermissionsExt;
+
+                if let Some(mode) = file.unix_mode() {
+                    fs::set_permissions(&outpath, fs::Permissions::from_mode(mode))?;
+                }
+            }
         }
 
         Ok(())
@@ -71,8 +140,6 @@ impl<'a> Downloader<'a> {
         if dest.exists() {
             anyhow::bail!("Version {} already exists locally", style(version).bold());
         }
-
-        let tmp_dir = Builder::new().tempdir_in(release_dir)?;
 
         let resp = ureq::get(&self.dist.0).call()?;
 
@@ -89,9 +156,7 @@ impl<'a> Downloader<'a> {
         println!("Release   : {}", style(self.dist.as_ref()).bold());
         println!("Size      : {}", style(size).bold());
 
-        self.extract_to(resp.into_reader(), tmp_dir.as_ref())?;
-
-        std::fs::rename(tmp_dir.as_ref(), &dest)?;
+        self.extract_to(&mut resp.into_reader(), &release_dir)?;
 
         println!();
         println!("Installed : {}", style(dest.display()).bold());

@@ -29,7 +29,7 @@ impl Linker {
         std::os::unix::fs::symlink(original, link)?;
 
         #[cfg(windows)]
-        std::os::windows::fs::symlink_dir(from, to)?;
+        std::os::windows::fs::symlink_dir(original, link)?;
 
         Ok(())
     }
