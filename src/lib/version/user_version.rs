@@ -16,14 +16,10 @@ const VERSION_FILES: [&str; 3] = [".nvmrc", ".node-version", PACKAGE_JSON];
 /// It could be alias, lts codename, partial or full semver
 #[derive(Debug, PartialEq, Eq)]
 pub enum UserVersion {
-    /// Only major version i.e 14 | 16
-    Major(u64),
-    // Major and Minor both ie. 14.16 | 16.10
-    MajorMinor(u64, u64),
     /// Full semver ie. 14.17.8
     Full(DistVersion),
-    /// Wildcard semver ie. >14.14 <=12.3
-    WildCard(VersionReq),
+    /// Partial or Range semver ie. 12 | 14.13 | >14.14 | <=12.3
+    Partial(VersionReq),
     /// Alias name ie. latest, lts
     Alias(String),
     /// LTS codename ie. Fermium, Erbium
@@ -47,7 +43,7 @@ impl ParseVersion<'_> for UserVersion {
             Err(_) => {
                 // Check if the version is wildcard semver
                 match VersionReq::parse(ver) {
-                    Ok(x) => Self::WildCard(x),
+                    Ok(x) => Self::Partial(x),
                     Err(err) => {
                         // Check whether alias, if first char is not numeric
                         if let Some(ch) = trimmed.chars().next() {
@@ -56,15 +52,7 @@ impl ParseVersion<'_> for UserVersion {
                             }
                         };
 
-                        let mut s = trimmed.splitn(2, '.');
-
-                        match (s.next(), s.next()) {
-                            (Some(maj), None) => Self::Major(maj.parse::<u64>()?),
-                            (Some(maj), Some(min)) => {
-                                Self::MajorMinor(maj.parse::<u64>()?, min.parse::<u64>()?)
-                            }
-                            _ => anyhow::bail!(err),
-                        }
+                        anyhow::bail!(err)
                     }
                 }
             }
@@ -85,10 +73,8 @@ impl FromStr for UserVersion {
 impl Display for UserVersion {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Self::Major(x) => write!(f, "{}.x.x", x),
-            Self::MajorMinor(x, y) => write!(f, "{}.{}.x", x, y),
             Self::Full(x) => x.fmt(f),
-            Self::WildCard(x) => x.fmt(f),
+            Self::Partial(x) => x.fmt(f),
             Self::Alias(x) => f.write_str(x.as_str()),
             Self::Lts(x) => write!(f, "lts-{}", x),
         }
@@ -109,9 +95,7 @@ impl UserVersion {
     pub fn match_release(&self, release: &Release) -> bool {
         match (self, &release.version, &release.lts) {
             (Self::Full(a), b, _) => a == b,
-            (Self::WildCard(a), DistVersion(b), _) => a.matches(b),
-            (Self::MajorMinor(maj, min), DistVersion(x), _) => *maj == x.major && *min == x.minor,
-            (Self::Major(a), DistVersion(b), _) => *a == b.major,
+            (Self::Partial(a), DistVersion(b), _) => a.matches(b),
             (Self::Lts(a), _, Lts::Yes(b)) => a.to_lowercase() == b.to_lowercase(),
             _ => false,
         }
