@@ -1,4 +1,4 @@
-use crate::config::Config;
+use crate::cli::Config;
 use clap::Clap;
 use console::style;
 use snm_core::{linker::Linker, version::dist_version::DistVersion, SnmRes};

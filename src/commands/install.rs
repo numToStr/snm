@@ -1,4 +1,4 @@
-use crate::config::Config;
+use crate::cli::Config;
 use snm_core::{
     downloader::Downloader,
     fetcher::{Fetcher, Lts},

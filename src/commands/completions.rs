@@ -1,5 +1,5 @@
 use crate::cli::Cli;
-use crate::config::Config;
+use crate::cli::Config;
 use clap::{crate_name, Clap, IntoApp};
 use clap_generate::{
     generate,

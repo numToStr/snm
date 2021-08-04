@@ -13,7 +13,7 @@ pub mod uninstall;
 pub mod r#use;
 pub mod which;
 
-use crate::config::Config;
+use crate::cli::Config;
 use snm_core::SnmRes;
 
 pub trait Command {

@@ -1,4 +1,4 @@
-use crate::config::Config;
+use crate::cli::Config;
 use clap::Clap;
 use snm_core::{
     shell::{bash, fish, pwsh, zsh, Shell, ShellKind},
