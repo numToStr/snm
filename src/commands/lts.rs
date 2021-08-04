@@ -1,7 +1,7 @@
 use crate::config::Config;
-use crate::lib::{downloader::Downloader, fetcher::Fetcher, linker::Linker, SnmRes};
 use clap::Clap;
 use console::style;
+use snm_core::{downloader::Downloader, fetcher::Fetcher, linker::Linker, SnmRes};
 
 const ALIAS: &str = "lts-latest";
 

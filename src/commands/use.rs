@@ -1,11 +1,11 @@
 use crate::config::Config;
-use crate::lib::{
+use clap::Clap;
+use console::style;
+use snm_core::{
     linker::Linker,
     version::{dist_version::DistVersion, user_version::UserVersion},
     SnmRes,
 };
-use clap::Clap;
-use console::style;
 
 #[derive(Debug, Clap)]
 pub struct Use {

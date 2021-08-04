@@ -2,7 +2,7 @@ use semver::VersionReq;
 use serde::Deserialize;
 use std::{env::current_dir, fmt::Display, fs::read_to_string, str::FromStr};
 
-use crate::lib::{
+use crate::{
     fetcher::{Lts, Release},
     SnmRes,
 };

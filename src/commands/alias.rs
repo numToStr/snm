@@ -1,5 +1,5 @@
 use crate::config::Config;
-use crate::lib::{
+use snm_core::{
     linker::Linker, version::dist_version::DistVersion, version::user_version::UserVersion, SnmRes,
 };
 

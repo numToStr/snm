@@ -1,9 +1,9 @@
 use crate::config::Config;
-use crate::lib::{
+use clap::Clap;
+use snm_core::{
     shell::{bash, fish, pwsh, zsh, Shell, ShellKind},
     SnmRes,
 };
-use clap::Clap;
 
 #[derive(Debug, Clap)]
 pub struct Env {

@@ -1,11 +1,11 @@
 use crate::cli::Cli;
 use crate::config::Config;
-use crate::lib::{shell::ShellKind, SnmRes};
 use clap::{crate_name, Clap, IntoApp};
 use clap_generate::{
     generate,
     generators::{Bash, Fish, PowerShell, Zsh},
 };
+use snm_core::{shell::ShellKind, SnmRes};
 
 #[derive(Debug, Clap)]
 pub struct Completions {

@@ -1,9 +1,7 @@
-use crate::{
-    config::Config,
-    lib::{linker::Linker, SnmRes},
-};
+use crate::config::Config;
 use clap::Clap;
 use console::style;
+use snm_core::{linker::Linker, SnmRes};
 
 #[derive(Debug, Clap)]
 pub struct UnAlias {

@@ -13,7 +13,8 @@ pub mod uninstall;
 pub mod r#use;
 pub mod which;
 
-use crate::{config::Config, lib::SnmRes};
+use crate::config::Config;
+use snm_core::SnmRes;
 
 pub trait Command {
     fn init(self, config: Config) -> SnmRes<()>;

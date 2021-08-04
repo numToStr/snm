@@ -1,9 +1,9 @@
 use crate::config::Config;
-use crate::lib::{
+use clap::Clap;
+use snm_core::{
     version::{dist_version::DistVersion, user_version::UserVersion},
     SnmRes,
 };
-use clap::Clap;
 use std::env;
 use std::process::{self, Command, Stdio};
 

@@ -1,4 +1,4 @@
-use crate::lib::version::{dist_version::DistVersion, ParseVersion};
+use crate::version::{dist_version::DistVersion, ParseVersion};
 use std::{
     collections::HashMap,
     fs::read_dir,

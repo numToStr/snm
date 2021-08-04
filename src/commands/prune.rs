@@ -1,7 +1,7 @@
 use crate::config::Config;
-use crate::lib::{linker::Linker, version::dist_version::DistVersion, SnmRes};
 use clap::Clap;
 use console::style;
+use snm_core::{linker::Linker, version::dist_version::DistVersion, SnmRes};
 use std::fs::remove_dir_all;
 
 #[derive(Debug, Clap)]

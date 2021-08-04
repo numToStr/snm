@@ -10,6 +10,12 @@ license-file = "LICENSE"
 readme = "README.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+name = "snm_core"
+path = "src/lib/mod.rs"
+
+[[bin]]
+name = "snm"
 
 [dependencies]
 anyhow = "1.0.40"

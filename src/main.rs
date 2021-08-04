@@ -1,7 +1,6 @@
 mod cli;
 mod commands;
 mod config;
-mod lib;
 
 use console::style;
 

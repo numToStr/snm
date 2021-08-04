@@ -1,7 +1,7 @@
 use crate::config::Config;
-use crate::lib::{fetcher::Fetcher, version::user_version::UserVersion, SnmRes};
 use clap::Clap;
 use console::style;
+use snm_core::{fetcher::Fetcher, version::user_version::UserVersion, SnmRes};
 
 #[derive(Debug, Clap)]
 pub struct LsRemote {

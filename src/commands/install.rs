@@ -1,5 +1,5 @@
 use crate::config::Config;
-use crate::lib::{
+use snm_core::{
     downloader::Downloader,
     fetcher::{Fetcher, Lts},
     linker::Linker,

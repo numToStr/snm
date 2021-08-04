@@ -1,7 +1,9 @@
 use crate::config::Config;
-use crate::lib::version::{dist_version::DistVersion, user_version::UserVersion};
-use crate::lib::SnmRes;
 use clap::Clap;
+use snm_core::{
+    version::{dist_version::DistVersion, user_version::UserVersion},
+    SnmRes,
+};
 
 #[derive(Debug, Clap)]
 pub struct Which {
