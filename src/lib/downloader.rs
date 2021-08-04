@@ -13,7 +13,7 @@ struct Dist(pub String);
 
 impl Dist {
     fn new(mirror: &Url, version: &DistVersion) -> Self {
-        use crate::sysinfo::{platform_arch, platform_name};
+        use crate::lib::sysinfo::{platform_arch, platform_name};
 
         #[cfg(unix)]
         let extension = "tar.xz";

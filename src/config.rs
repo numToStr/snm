@@ -37,18 +37,6 @@ pub struct Config {
     pub no_use: bool,
 }
 
-// Config::default() is intended to only be used within tests
-impl Default for Config {
-    fn default() -> Self {
-        Config {
-            no_use: false,
-            // log_level: "info".to_string(),
-            snm_dir: home_dir().unwrap().join(".snm_test").into(),
-            dist_mirror: Url::parse("https://nodejs.org/dist").unwrap(),
-        }
-    }
-}
-
 impl Config {
     pub fn ensure_create<P: AsRef<Path>>(&self, path: P) -> P {
         create_dir_all(&path).ok();

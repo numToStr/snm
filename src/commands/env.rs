@@ -1,6 +1,8 @@
 use crate::config::Config;
-use crate::lib::SnmRes;
-use crate::shell::{bash, fish, pwsh, zsh, Shell, ShellKind};
+use crate::lib::{
+    shell::{bash, fish, pwsh, zsh, Shell, ShellKind},
+    SnmRes,
+};
 use clap::Clap;
 
 #[derive(Debug, Clap)]

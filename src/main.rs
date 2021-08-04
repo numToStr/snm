@@ -2,8 +2,6 @@ mod cli;
 mod commands;
 mod config;
 mod lib;
-mod shell;
-mod sysinfo;
 
 use console::style;
 

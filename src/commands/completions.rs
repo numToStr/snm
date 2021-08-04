@@ -1,6 +1,6 @@
+use crate::cli::Cli;
 use crate::config::Config;
-use crate::shell::ShellKind;
-use crate::{cli::Cli, lib::SnmRes};
+use crate::lib::{shell::ShellKind, SnmRes};
 use clap::{crate_name, Clap, IntoApp};
 use clap_generate::{
     generate,
