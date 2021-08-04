@@ -8,7 +8,7 @@ use console::style;
 #[derive(Debug, Clap)]
 pub struct UnAlias {
     /// Name of the alias
-    #[clap(conflicts_with = "all")]
+    #[clap(conflicts_with = "all", required_unless_present = "all")]
     alias: Option<String>,
 
     /// Remove all the aliases
@@ -26,7 +26,6 @@ impl super::Command for UnAlias {
             return Ok(());
         }
 
-        // FIXME: throw error if no alias provided
         if let Some(alias) = &self.alias {
             let alias_path = alias_dir.join(&alias);
 
