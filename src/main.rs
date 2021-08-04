@@ -1,5 +1,5 @@
 mod cli;
-mod cmd;
+mod commands;
 mod config;
 mod lib;
 mod shell;

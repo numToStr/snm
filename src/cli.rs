@@ -1,4 +1,4 @@
-use crate::cmd::{
+use crate::commands::{
     alias, completions, env, exec, install, latest, ls, ls_remote, lts, prune, r#use, unalias,
     uninstall, which, Command,
 };
