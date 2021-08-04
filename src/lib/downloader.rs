@@ -61,14 +61,14 @@ impl<'a> Downloader<'a> {
         for entry in entries {
             let mut entry = entry?;
             let entry_path: PathBuf = entry.path()?.iter().skip(1).collect();
-            let tmp_dir = tmp_dir.join(entry_path);
+            let tmp_dir = tmp_dir.as_ref().join(entry_path);
 
             entry.unpack(tmp_dir)?;
         }
 
         let install_dir = dest.join(self.version.to_string());
 
-        std::fs::rename(&tmp_dir, &dest)?;
+        std::fs::rename(&tmp_dir, &install_dir)?;
 
         Ok(())
     }
@@ -156,7 +156,7 @@ impl<'a> Downloader<'a> {
         println!("Release   : {}", style(self.dist.as_ref()).bold());
         println!("Size      : {}", style(size).bold());
 
-        self.extract_to(&mut resp.into_reader(), &release_dir)?;
+        self.extract_to(&mut resp.into_reader(), release_dir)?;
 
         println!();
         println!("Installed : {}", style(dest.display()).bold());
