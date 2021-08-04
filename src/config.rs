@@ -56,11 +56,9 @@ impl Config {
     }
 
     pub fn snm_home(&self) -> PathBuf {
-        self.ensure_create(
-            self.snm_dir
-                .clone()
-                .unwrap_or_else(|| home_dir().expect("Can't get home directory.").join(".snm")),
-        )
+        self.snm_dir
+            .to_owned()
+            .unwrap_or_else(|| home_dir().expect("Can't get home directory.").join(".snm"))
     }
 
     pub fn release_dir(&self) -> PathBuf {
@@ -69,6 +67,10 @@ impl Config {
 
     pub fn alias_dir(&self) -> PathBuf {
         self.ensure_create(self.snm_home().join("aliases"))
+    }
+
+    pub fn download_dir(&self) -> PathBuf {
+        self.ensure_create(self.snm_home().join("downloads"))
     }
 
     pub fn alias_default(&self) -> PathBuf {

@@ -51,8 +51,13 @@ impl<'a> Downloader<'a> {
     }
 
     #[cfg(unix)]
-    fn extract_to(&self, source: &mut (impl Read + Send), dest: &Path) -> SnmRes<()> {
-        let tmp_dir = tempfile::Builder::new().tempdir_in(dest)?;
+    fn extract_to<S: Read + Send>(
+        &self,
+        source: &mut S,
+        release_dir: &Path,
+        download_dir: &Path,
+    ) -> SnmRes<()> {
+        let tmp_dir = tempfile::Builder::new().tempdir_in(download_dir)?;
 
         let xz_stream = xz2::read::XzDecoder::new(source);
         let mut tar_stream = tar::Archive::new(xz_stream);
@@ -66,7 +71,7 @@ impl<'a> Downloader<'a> {
             entry.unpack(tmp_dir)?;
         }
 
-        let install_dir = dest.join(self.version.to_string());
+        let install_dir = release_dir.join(self.version.to_string());
 
         std::fs::rename(&tmp_dir, &install_dir)?;
 
@@ -74,16 +79,21 @@ impl<'a> Downloader<'a> {
     }
 
     #[cfg(windows)]
-    fn extract_to(&self, source: &mut (impl Read + Send), dest: &Path) -> SnmRes<()> {
+    fn extract_to<S: Read + Send>(
+        &self,
+        source: &mut S,
+        release_dir: &Path,
+        download_dir: &Path,
+    ) -> SnmRes<()> {
         use std::{fs, io};
 
-        let mut tmp_file = tempfile::Builder::new().tempfile_in(&dest)?;
+        let mut tmp_file = tempfile::Builder::new().tempfile_in(download_dir)?;
 
         io::copy(source, &mut tmp_file)?;
 
         let mut archive = zip::read::ZipArchive::new(&tmp_file)?;
 
-        let install_dir = dest.join(self.version.to_string());
+        let install_dir = release_dir.join(self.version.to_string());
 
         for i in 0..archive.len() {
             let mut file = archive.by_index(i)?;
@@ -132,7 +142,7 @@ impl<'a> Downloader<'a> {
         Ok(())
     }
 
-    pub fn download(&self, release_dir: &Path) -> SnmRes<PathBuf> {
+    pub fn download(&self, release_dir: &Path, download_dir: &Path) -> SnmRes<PathBuf> {
         let version: String = self.version.to_string();
 
         let dest = release_dir.join(&version);
@@ -156,7 +166,7 @@ impl<'a> Downloader<'a> {
         println!("Release   : {}", style(self.dist.as_ref()).bold());
         println!("Size      : {}", style(size).bold());
 
-        self.extract_to(&mut resp.into_reader(), release_dir)?;
+        self.extract_to(&mut resp.into_reader(), release_dir, download_dir)?;
 
         println!();
         println!("Installed : {}", style(dest.display()).bold());

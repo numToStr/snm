@@ -15,7 +15,7 @@ impl super::Command for Latest {
         let release = releases.latest()?;
 
         let dwnld = Downloader::new(&config.dist_mirror, &release.version);
-        let dest = dwnld.download(&config.release_dir())?;
+        let dest = dwnld.download(&config.release_dir(), &config.download_dir())?;
 
         Linker::create_link(&dest, &config.alias_dir().join(&ALIAS))?;
 

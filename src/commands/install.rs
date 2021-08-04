@@ -33,7 +33,7 @@ impl super::Command for Install {
 
         let dwnldr = Downloader::new(&config.dist_mirror, &release.version);
 
-        let dwnld_dir = dwnldr.download(&config.release_dir())?;
+        let dwnld_dir = dwnldr.download(&config.release_dir(), &config.download_dir())?;
 
         if let Lts::Yes(lts) = release.lts {
             let lts = format!("lts-{}", lts);
