@@ -22,8 +22,11 @@ impl super::Command for Prune {
 
         let used_ver = Linker::read_convert_to_dist(&default_alias, &release_dir)?;
 
-        // Nuke the alias directory
+        // Nuke the alias directory after reading the default alias
         remove_dir_all(config.alias_dir())?;
+
+        // Nuke the download directory, to cleanup any redundant downloads
+        remove_dir_all(&config.download_dir())?;
 
         // Removing all the versions except the one which is aliased to `default`
         let dist_versions = DistVersion::list_versions(&release_dir)?;
