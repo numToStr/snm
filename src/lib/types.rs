@@ -1,6 +1,5 @@
 use std::{
     fmt::{self, Display, Formatter},
-    path::MAIN_SEPARATOR,
     str::FromStr,
 };
 
@@ -39,7 +38,7 @@ pub struct UserAlias(String);
 
 impl UserAlias {
     pub fn new(s: &str) -> Self {
-        Self(s.replace(MAIN_SEPARATOR, "-"))
+        Self(s.replace('/', "-").replace('\\', "-"))
     }
 }
 
