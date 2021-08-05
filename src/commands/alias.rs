@@ -1,6 +1,7 @@
 use crate::cli::Config;
 use snm_core::{
-    linker::Linker, version::dist_version::DistVersion, version::user_version::UserVersion, SnmRes,
+    linker::Linker, types::UserAlias, version::dist_version::DistVersion,
+    version::user_version::UserVersion, SnmRes,
 };
 
 use clap::Clap;
@@ -12,7 +13,7 @@ pub struct Alias {
     version: UserVersion,
 
     /// A string consist of alphanumeric digits
-    alias: String,
+    alias: UserAlias,
 }
 
 impl super::Command for Alias {
@@ -25,7 +26,7 @@ impl super::Command for Alias {
 
         let link_src = release_dir.join(&link_ver);
 
-        Linker::create_link(&link_src, &config.alias_dir().join(&self.alias))?;
+        Linker::create_link(&link_src, &config.alias_dir().join(self.alias.as_ref()))?;
 
         println!(
             "Version {} is aliased to {}",

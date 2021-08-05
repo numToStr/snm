@@ -1,13 +1,13 @@
 use crate::cli::Config;
 use clap::Clap;
 use console::style;
-use snm_core::{linker::Linker, SnmRes};
+use snm_core::{linker::Linker, types::UserAlias, SnmRes};
 
 #[derive(Debug, Clap)]
 pub struct UnAlias {
     /// Name of the alias
     #[clap(conflicts_with = "all", required_unless_present = "all")]
-    alias: Option<String>,
+    alias: Option<UserAlias>,
 
     /// Remove all the aliases
     #[clap(short, long)]
@@ -25,7 +25,7 @@ impl super::Command for UnAlias {
         }
 
         if let Some(alias) = &self.alias {
-            let alias_path = alias_dir.join(&alias);
+            let alias_path = alias_dir.join(alias.as_ref());
 
             if !alias_path.exists() {
                 anyhow::bail!("Alias {} not found", style(alias).bold());

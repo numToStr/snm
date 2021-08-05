@@ -4,7 +4,7 @@ use std::{env::current_dir, fmt::Display, fs::read_to_string, str::FromStr};
 
 use crate::{
     fetcher::{Lts, Release},
-    types::UserLts,
+    types::{UserAlias, UserLts},
     SnmRes,
 };
 
@@ -20,7 +20,7 @@ pub enum UserVersion {
     /// Full, Partial or Range semver ie. 14 | 14.17 | 14.17.4 | >14.14 | <=12.3
     Semver(VersionReq),
     /// Alias name ie. latest, lts
-    Alias(String),
+    Alias(UserAlias),
     /// LTS codename ie. fermium, erbium
     Lts(UserLts),
 }
@@ -36,7 +36,7 @@ impl ParseVersion<'_> for UserVersion {
                 if UserLts::is_lts(ver) {
                     Self::Lts(UserLts::new(ver))
                 } else {
-                    Self::Alias(ver.to_string())
+                    Self::Alias(UserAlias::new(ver))
                 }
             }
         };
@@ -57,7 +57,7 @@ impl Display for UserVersion {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::Semver(x) => x.fmt(f),
-            Self::Alias(x) => f.write_str(x.as_str()),
+            Self::Alias(x) => x.fmt(f),
             Self::Lts(x) => x.fmt(f),
         }
     }

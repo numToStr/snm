@@ -35,7 +35,7 @@ impl super::Command for UnInstall {
                 Linker::read_convert_to_dist(&alias_dir, &release_dir)?
             }
             UserVersion::Alias(alias) => {
-                let alias_ver = alias_dir.join(alias);
+                let alias_ver = alias_dir.join(alias.as_ref());
 
                 if !alias_ver.exists() {
                     anyhow::bail!("Alias {} not found", style(alias).bold());

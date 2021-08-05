@@ -39,7 +39,7 @@ impl super::Command for Use {
                 println!("Using Codename {}", style(lts_code).bold());
             }
             UserVersion::Alias(alias) => {
-                let alias_dir = config.alias_dir().join(&alias);
+                let alias_dir = config.alias_dir().join(alias.as_ref());
 
                 if !alias_dir.exists() {
                     anyhow::bail!("Alias {} not found", style(alias).bold());
