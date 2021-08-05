@@ -3,6 +3,7 @@ use crate::commands::{
     uninstall, which, Command,
 };
 use clap::Subcommand;
+use snm_core::SnmRes;
 
 use super::Config;
 
@@ -41,17 +42,19 @@ pub enum SubCommand {
     /// Install the latest LTS release
     Lts(lts::Lts),
 
-    /// List all the local downloaded versions with their aliases (if any)
+    /// List all the local installed versions with their aliases (if any)
     Ls(ls::Ls),
 
     /// List remote Nodejs versions
     #[clap(visible_alias = "lsr")]
     LsRemote(ls_remote::LsRemote),
 
-    /// Output path for downloaded node <version>
+    /// Output path for installed node <version>
     Which(which::Which),
 
-    /// Remove all downloaded versions except the installed version
+    /// Remove all the installed versions except the used version.
+    ///
+    /// NOTE: This will also remove any redundant downloads
     Prune(prune::Prune),
 
     /// Remove the aliases
@@ -63,13 +66,13 @@ pub enum SubCommand {
     /// Example: snm uninstall 14 | snm uninstall lts-fermium
     ///
     /// NOTE: If given an alias like ten or lts-fermium then it will remove the version that the alias is pointing to and all the aliases which are pointing to the same version.
-    /// Also, uninstalling a version will throw an error, if multiple installation is found in the same semver range
+    /// Also, If multiple installtion were found for a version, then it will remove the latest.
     #[clap(name = "uninstall", visible_alias = "rm")]
     UnInstall(uninstall::UnInstall),
 }
 
 impl SubCommand {
-    pub fn exec(self, config: Config) -> anyhow::Result<()> {
+    pub fn exec(self, config: Config) -> SnmRes<()> {
         match self {
             Self::Alias(m) => m.init(config),
             Self::Env(m) => m.init(config),
