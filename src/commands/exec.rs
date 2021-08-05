@@ -1,7 +1,7 @@
 use crate::cli::Config;
 use clap::Clap;
 use snm_core::{
-    version::{dist_version::DistVersion, user_version::UserVersion},
+    version::{DistVersion, UserVersion},
     SnmRes,
 };
 use std::env;

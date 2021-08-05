@@ -8,7 +8,7 @@ use crate::{
     SnmRes,
 };
 
-use super::{dist_version::DistVersion, ParseVersion};
+use super::{DistVersion, ParseVersion};
 
 const PACKAGE_JSON: &str = "package.json";
 const VERSION_FILES: [&str; 3] = [".nvmrc", ".node-version", PACKAGE_JSON];

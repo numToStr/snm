@@ -9,7 +9,7 @@ use crate::{
     SnmRes,
 };
 
-use super::{user_version::UserVersion, ParseVersion};
+use super::{ParseVersion, UserVersion};
 
 /// `DistVersion` represents full semver range according to the node release
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]

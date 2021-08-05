@@ -3,7 +3,7 @@ use clap::Clap;
 use console::style;
 use snm_core::{
     linker::Linker,
-    version::{dist_version::DistVersion, user_version::UserVersion},
+    version::{DistVersion, UserVersion},
     SnmRes,
 };
 

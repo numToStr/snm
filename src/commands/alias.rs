@@ -1,7 +1,9 @@
 use crate::cli::Config;
 use snm_core::{
-    linker::Linker, types::UserAlias, version::dist_version::DistVersion,
-    version::user_version::UserVersion, SnmRes,
+    linker::Linker,
+    types::UserAlias,
+    version::{DistVersion, UserVersion},
+    SnmRes,
 };
 
 use clap::Clap;

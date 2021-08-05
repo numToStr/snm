@@ -1,7 +1,7 @@
 use std::str::FromStr;
 
 use semver::VersionReq;
-use snm_core::version::user_version::UserVersion;
+use snm_core::{types::UserLts, version::UserVersion};
 
 #[test]
 fn only_major() {
@@ -11,7 +11,7 @@ fn only_major() {
         ver,
         UserVersion::Semver(VersionReq::from_str("10").unwrap())
     );
-    assert_ne!(ver, UserVersion::Lts("nope".to_string()));
+    assert_ne!(ver, UserVersion::Lts(UserLts::new("nope")));
 }
 
 #[test]
@@ -22,7 +22,7 @@ fn major_minor() {
         ver,
         UserVersion::Semver(VersionReq::from_str("10.15").unwrap())
     );
-    assert_ne!(ver, UserVersion::Lts("nope".to_string()));
+    assert_ne!(ver, UserVersion::Lts(UserLts::new("nope")));
 }
 
 // #[test]

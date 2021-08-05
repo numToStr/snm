@@ -6,7 +6,7 @@ use std::{
 };
 use url::Url;
 
-use super::{version::dist_version::DistVersion, SnmRes};
+use super::{version::DistVersion, SnmRes};
 
 #[derive(Debug)]
 struct Dist(pub String);

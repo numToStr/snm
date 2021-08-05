@@ -2,7 +2,7 @@ use serde::Deserialize;
 use url::Url;
 
 use super::{
-    version::{dist_version::DistVersion, user_version::UserVersion},
+    version::{DistVersion, UserVersion},
     SnmRes,
 };
 

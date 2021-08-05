@@ -1,7 +1,10 @@
-use super::SnmRes;
+mod dist_version;
+pub use dist_version::*;
 
-pub mod dist_version;
-pub mod user_version;
+mod user_version;
+pub use user_version::*;
+
+use super::SnmRes;
 
 pub(super) trait ParseVersion<'a> {
     type Item;

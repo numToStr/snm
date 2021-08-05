@@ -1,7 +1,7 @@
 use crate::cli::Config;
 use clap::Clap;
 use console::style;
-use snm_core::{linker::Linker, version::dist_version::DistVersion, SnmRes};
+use snm_core::{linker::Linker, version::DistVersion, SnmRes};
 
 #[derive(Debug, Clap)]
 pub struct Ls;

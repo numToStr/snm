@@ -4,7 +4,7 @@ use snm_core::{
     fetcher::{Fetcher, Lts},
     linker::Linker,
     types::UserLts,
-    version::user_version::UserVersion,
+    version::UserVersion,
     SnmRes,
 };
 
