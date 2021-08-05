@@ -4,6 +4,7 @@ use std::{env::current_dir, fmt::Display, fs::read_to_string, str::FromStr};
 
 use crate::{
     fetcher::{Lts, Release},
+    types::UserLts,
     SnmRes,
 };
 
@@ -21,7 +22,7 @@ pub enum UserVersion {
     /// Alias name ie. latest, lts
     Alias(String),
     /// LTS codename ie. fermium, erbium
-    Lts(String),
+    Lts(UserLts),
 }
 
 impl ParseVersion<'_> for UserVersion {
@@ -32,8 +33,8 @@ impl ParseVersion<'_> for UserVersion {
             Ok(x) => Self::Semver(x),
             Err(_) => {
                 // Check if Lts, else alias
-                if ver.starts_with("lts/") || ver.starts_with("lts-") {
-                    Self::Lts(ver[4..].to_string())
+                if UserLts::is_lts(ver) {
+                    Self::Lts(UserLts::new(ver))
                 } else {
                     Self::Alias(ver.to_string())
                 }
@@ -44,7 +45,7 @@ impl ParseVersion<'_> for UserVersion {
     }
 }
 
-// NOTE: this is used by `clap` to parse use input
+// NOTE: this is used by `clap` to parse user input
 impl FromStr for UserVersion {
     type Err = anyhow::Error;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
@@ -57,7 +58,7 @@ impl Display for UserVersion {
         match self {
             Self::Semver(x) => x.fmt(f),
             Self::Alias(x) => f.write_str(x.as_str()),
-            Self::Lts(x) => write!(f, "lts-{}", x),
+            Self::Lts(x) => x.fmt(f),
         }
     }
 }
@@ -76,7 +77,7 @@ impl UserVersion {
     pub fn match_release(&self, release: &Release) -> bool {
         match (self, &release.version, &release.lts) {
             (Self::Semver(a), DistVersion(b), _) => a.matches(b),
-            (Self::Lts(a), _, Lts::Yes(b)) => a.to_lowercase() == b.to_lowercase(),
+            (Self::Lts(a), _, Lts::Yes(b)) => a.as_ref() == b,
             _ => false,
         }
     }

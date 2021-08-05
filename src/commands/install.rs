@@ -3,6 +3,7 @@ use snm_core::{
     downloader::Downloader,
     fetcher::{Fetcher, Lts},
     linker::Linker,
+    types::UserLts,
     version::user_version::UserVersion,
     SnmRes,
 };
@@ -36,7 +37,7 @@ impl super::Command for Install {
         let dwnld_dir = dwnldr.download(&config.release_dir(), &config.download_dir())?;
 
         if let Lts::Yes(lts) = release.lts {
-            let lts = format!("lts-{}", lts);
+            let lts = format!("{}{}", UserLts::PREFIX, lts);
 
             Linker::create_link(&dwnld_dir, &config.alias_dir().join(&lts))?;
 

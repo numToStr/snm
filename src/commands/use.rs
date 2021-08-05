@@ -23,7 +23,22 @@ impl super::Command for Use {
         let release_dir = config.release_dir();
 
         match version {
-            UserVersion::Lts(alias) | UserVersion::Alias(alias) => {
+            UserVersion::Lts(lts_code) => {
+                let codename_dir = config.alias_dir().join(lts_code.to_string());
+
+                if !codename_dir.exists() {
+                    anyhow::bail!("Codename {} not found", style(lts_code).bold());
+                }
+
+                let dist_ver = Linker::read_convert_to_dist(&codename_dir, &release_dir)?;
+
+                let dist_path = release_dir.join(dist_ver.to_string());
+
+                Linker::create_link(&dist_path, &config.alias_default())?;
+
+                println!("Using Codename {}", style(lts_code).bold());
+            }
+            UserVersion::Alias(alias) => {
                 let alias_dir = config.alias_dir().join(&alias);
 
                 if !alias_dir.exists() {
