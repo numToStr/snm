@@ -22,7 +22,7 @@ impl Shell for Zsh {
             r#"
                 autoload -U add-zsh-hook
                 _snm_autoload_hook () {
-                    if [[ -f .node-version || -f .nvmrc ]]; then
+                    if [[ -f .node-version || -f .nvmrc || -f package.json ]]; then
                         snm use
                     fi
                 }

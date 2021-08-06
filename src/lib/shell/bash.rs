@@ -21,7 +21,7 @@ impl Shell for Bash {
         indoc::indoc!(
             r#"
                 __snm_use_if_file_found() {
-                    if [[ -f .node-version || -f .nvmrc ]]; then
+                    if [[ -f .node-version || -f .nvmrc || -f package.json ]]; then
                         snm use
                     fi
                 }

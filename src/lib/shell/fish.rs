@@ -22,7 +22,7 @@ impl Shell for Fish {
             r#"
                 function _snm_autoload_hook --on-variable PWD --description 'Change Node version on directory change'
                     status --is-command-substitution; and return
-                    if test -f .node-version -o -f .nvmrc
+                    if test -f .node-version -o -f .nvmrc -o -f package.json
                         snm use
                     end
                 end
