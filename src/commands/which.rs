@@ -5,6 +5,12 @@ use snm_core::{
     SnmRes,
 };
 
+#[cfg(unix)]
+const EXT: &str = "node";
+
+#[cfg(windows)]
+const EXT: &str = "node.exe";
+
 #[derive(Debug, Clap)]
 pub struct Which {
     /// Can be a partial semver string.
@@ -18,14 +24,14 @@ impl super::Command for Which {
         let versions = DistVersion::match_versions(&release_dir, &self.version)?;
 
         if versions.len() == 1 {
-            if let Some(v) = versions.first() {
-                println!("{}", v);
+            if let Some(ver) = versions.first() {
+                let bin_path = config.bin_path(release_dir.join(ver.to_string())).join(EXT);
+
+                println!("{}", bin_path.display());
             }
         } else {
             for ver in versions {
-                let bin_path = config
-                    .bin_path(release_dir.join(ver.to_string()))
-                    .join("node");
+                let bin_path = config.bin_path(release_dir.join(ver.to_string())).join(EXT);
 
                 println!("- {} \t{}", ver, bin_path.display())
             }

@@ -35,7 +35,7 @@ impl<'de> Deserialize<'de> for DistVersion {
 
 impl Display for DistVersion {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.0.to_string())
+        self.0.fmt(f)
     }
 }
 
