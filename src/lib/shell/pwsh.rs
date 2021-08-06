@@ -26,10 +26,10 @@ impl Shell for Pwsh {
     fn use_on_cd(&self) -> &'static str {
         indoc::indoc!(
             r#"
-                function Set-LocationWithsnm { param($path); Set-Location $path; If ((Test-Path .nvmrc) -Or (Test-Path .node-version) -Or (Test-Path package.json)) { & snm use } }
-                Set-Alias cd_with_snm Set-LocationWithsnm -Force
+                function Set-LocationWithSnm { param($path); Set-Location $path; If ((Test-Path .nvmrc) -Or (Test-Path .node-version) -Or (Test-Path package.json)) { & snm use } }
+                Set-Alias cd_with_snm Set-LocationWithSnm -Force
                 Remove-Item alias:\cd
-                New-Alias cd Set-LocationWithsnm
+                New-Alias cd Set-LocationWithSnm
             "#
         )
     }

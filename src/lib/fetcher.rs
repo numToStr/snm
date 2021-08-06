@@ -1,3 +1,4 @@
+use console::style;
 use serde::Deserialize;
 use url::Url;
 
@@ -52,14 +53,14 @@ impl Fetcher {
         self.releases
             .iter()
             .find(|x| matches!(x.lts, Lts::Yes(_)))
-            .ok_or_else(|| anyhow::anyhow!("Unable to find {} release", "lts"))
+            .ok_or_else(|| anyhow::anyhow!("Unable to find {} release", style("lts").bold()))
     }
 
     pub fn latest(&self) -> SnmRes<&Release> {
         self.releases
             .iter()
             .find(|x| matches!(x.lts, Lts::No))
-            .ok_or_else(|| anyhow::anyhow!("Unable to find {} release", "latest"))
+            .ok_or_else(|| anyhow::anyhow!("Unable to find {} release", style("latest").bold()))
     }
 
     pub fn find_release(&self, version: &UserVersion) -> Option<&Release> {

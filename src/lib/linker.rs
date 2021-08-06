@@ -43,7 +43,7 @@ impl Linker {
         let link_ver = linked
             .strip_prefix(release_dir)?
             .to_str()
-            .ok_or_else(|| anyhow::anyhow!("WTF"))?;
+            .ok_or_else(|| anyhow::anyhow!("Unable to read and convert alias"))?;
 
         DistVersion::parse(link_ver)
     }

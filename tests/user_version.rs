@@ -56,7 +56,7 @@ fn match_release_semver() {
 }
 
 #[test]
-fn no_match_release_semver() {
+fn match_release_semver_fail() {
     let ver = UserVersion::parse("12").unwrap();
     let release = Release {
         version: DistVersion::parse("18.12.13").unwrap(),
@@ -78,7 +78,7 @@ fn match_release_lts() {
 }
 
 #[test]
-fn no_match_release_lts() {
+fn match_release_lts_fail() {
     let ver = UserVersion::parse("lts/boron").unwrap();
     let release = Release {
         version: DistVersion::parse("14.10.13").unwrap(),
