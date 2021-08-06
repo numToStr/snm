@@ -13,7 +13,7 @@ use super::{ParseVersion, UserVersion};
 
 /// `DistVersion` represents full semver range according to the node release
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct DistVersion(pub Version);
+pub struct DistVersion(pub(super) Version);
 
 impl ParseVersion<'_> for DistVersion {
     type Item = Self;
@@ -36,6 +36,12 @@ impl<'de> Deserialize<'de> for DistVersion {
 impl Display for DistVersion {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         self.0.fmt(f)
+    }
+}
+
+impl AsRef<Version> for DistVersion {
+    fn as_ref(&self) -> &Version {
+        &self.0
     }
 }
 

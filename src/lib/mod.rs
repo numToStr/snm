@@ -7,3 +7,5 @@ pub mod types;
 pub mod version;
 
 pub type SnmRes<T> = anyhow::Result<T>;
+
+pub const MIRROR: &str = "https://nodejs.org/dist";

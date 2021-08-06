@@ -6,7 +6,7 @@ use super::{
     SnmRes,
 };
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum Lts {
     No,
     Yes(String),
@@ -62,9 +62,9 @@ impl Fetcher {
             .ok_or_else(|| anyhow::anyhow!("Unable to find {} release", "latest"))
     }
 
-    pub fn find_release(self, version: &UserVersion) -> Option<Release> {
+    pub fn find_release(&self, version: &UserVersion) -> Option<&Release> {
         self.releases
-            .into_iter()
+            .iter()
             .find(|release| version.match_release(release))
     }
 

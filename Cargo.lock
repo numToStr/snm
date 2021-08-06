@@ -634,6 +634,7 @@ dependencies = [
  "dirs-next",
  "indicatif",
  "indoc",
+ "lazy_static",
  "semver",
  "serde",
  "serde_json",

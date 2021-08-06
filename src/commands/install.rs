@@ -20,7 +20,7 @@ pub struct Install {
 impl super::Command for Install {
     fn init(self, config: Config) -> SnmRes<()> {
         if let UserVersion::Alias(x) = self.version {
-            anyhow::bail!("Unable to install version: {}", style(x).bold())
+            anyhow::bail!("Unable to install version {}", style(x).bold())
         }
 
         let fetcher = Fetcher::fetch(&config.dist_mirror)?;
@@ -36,7 +36,7 @@ impl super::Command for Install {
 
         let dwnld_dir = dwnldr.download(&config.release_dir(), &config.download_dir())?;
 
-        if let Lts::Yes(lts) = release.lts {
+        if let Lts::Yes(lts) = &release.lts {
             let lts = format!("{}{}", UserLts::PREFIX, lts);
 
             Linker::create_link(&dwnld_dir, &config.alias_dir().join(&lts))?;

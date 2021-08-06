@@ -32,6 +32,9 @@ tempfile = "3.2.0"
 ureq = { version = "2.1.1", features = ["json"] }
 url = "2.2.2"
 
+[dev-dependencies]
+lazy_static = "1.4.0"
+
 [target.'cfg(unix)'.dependencies]
 xz2 = "0.1.6"
 tar = "0.4.33"

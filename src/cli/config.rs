@@ -1,6 +1,6 @@
 use clap::Clap;
 use dirs_next::home_dir;
-use snm_core::types::UserAlias;
+use snm_core::{types::UserAlias, MIRROR};
 use std::{
     fs::create_dir_all,
     path::{Path, PathBuf},
@@ -18,7 +18,7 @@ pub struct Config {
         long = "node-dist-mirror",
         name = "mirror",
         env = "SNM_NODE_DIST_MIRROR",
-        default_value = "https://nodejs.org/dist",
+        default_value = MIRROR,
         global = true
     )]
     pub dist_mirror: Url,
