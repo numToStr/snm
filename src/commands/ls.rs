@@ -1,7 +1,7 @@
 use crate::cli::Config;
 use clap::Clap;
 use console::style;
-use snm_core::{linker::Linker, version::DistVersion, SnmRes};
+use snm_core::{linker::Linker, types::UserAlias, version::DistVersion, SnmRes};
 
 #[derive(Debug, Clap)]
 pub struct Ls;
@@ -17,7 +17,7 @@ impl super::Command for Ls {
         for version in versions.into_iter() {
             match aliases.get(&version) {
                 Some(a) => {
-                    if a.contains(&"default".to_string()) {
+                    if a.contains(&UserAlias::DEFAULT.to_string()) {
                         println!("> {} \t{}", style(version).bold(), a.join(", "));
                     } else {
                         println!("- {} \t{}", version, a.join(", "));

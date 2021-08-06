@@ -1,3 +1,4 @@
+use crate::sysinfo::{platform_arch, platform_name};
 use console::style;
 use indicatif::HumanBytes;
 use std::{
@@ -9,12 +10,10 @@ use url::Url;
 use super::{version::DistVersion, SnmRes};
 
 #[derive(Debug)]
-struct Dist(pub String);
+struct Dist(String);
 
 impl Dist {
     fn new(mirror: &Url, version: &DistVersion) -> Self {
-        use crate::sysinfo::{platform_arch, platform_name};
-
         #[cfg(unix)]
         let extension = "tar.xz";
 
@@ -65,7 +64,10 @@ impl<'a> Downloader<'a> {
 
         for entry in entries {
             let mut entry = entry?;
+
+            // Stripping the first path segment which is usually the name of the file
             let entry_path: PathBuf = entry.path()?.iter().skip(1).collect();
+
             let tmp_dir = tmp_dir.as_ref().join(entry_path);
 
             entry.unpack(tmp_dir)?;
@@ -100,6 +102,7 @@ impl<'a> Downloader<'a> {
 
             let outpath = {
                 let f = match file.enclosed_name() {
+                    // Stripping the first path segment which is usually the name of the file
                     Some(path) => path.iter().skip(1).collect::<PathBuf>(),
                     None => continue,
                 };

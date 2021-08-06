@@ -3,6 +3,7 @@ use clap::Clap;
 use console::style;
 use snm_core::{
     linker::Linker,
+    types::UserAlias,
     version::{DistVersion, UserVersion},
     SnmRes,
 };
@@ -50,7 +51,8 @@ impl super::Command for UnInstall {
         // then remove them all the aliases before removing the actuall installed version
         let aliases = Linker::list_for_version(&version, &alias_dir, &release_dir)?;
 
-        let is_default = aliases.iter().any(|x| x.as_str() == "default");
+        // Checking whether the version is currently used or not
+        let is_default = aliases.iter().any(|x| x.as_str() == UserAlias::DEFAULT);
 
         if is_default && self.no_used {
             anyhow::bail!(

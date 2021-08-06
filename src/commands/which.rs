@@ -27,7 +27,7 @@ impl super::Command for Which {
                     .bin_path(release_dir.join(ver.to_string()))
                     .join("node");
 
-                println!("- {}\t{}", ver, bin_path.display())
+                println!("- {} \t{}", ver, bin_path.display())
             }
         }
 

@@ -1,7 +1,7 @@
 use crate::cli::Config;
 use clap::Clap;
 use console::style;
-use snm_core::{linker::Linker, version::DistVersion, SnmRes};
+use snm_core::{linker::Linker, types::UserAlias, version::DistVersion, SnmRes};
 use std::fs::remove_dir_all;
 
 #[derive(Debug, Clap)]
@@ -14,7 +14,7 @@ impl super::Command for Prune {
         if !default_alias.exists() {
             anyhow::bail!(
                 "Unable to prune. No {} alias found",
-                style("default").bold()
+                style(UserAlias::DEFAULT).bold()
             );
         }
 

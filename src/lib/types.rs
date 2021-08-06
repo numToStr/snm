@@ -37,6 +37,8 @@ impl AsRef<str> for UserLts {
 pub struct UserAlias(String);
 
 impl UserAlias {
+    pub const DEFAULT: &'static str = "default";
+
     pub fn new(s: &str) -> Self {
         Self(s.replace('/', "-").replace('\\', "-"))
     }

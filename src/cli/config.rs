@@ -1,5 +1,6 @@
 use clap::Clap;
 use dirs_next::home_dir;
+use snm_core::types::UserAlias;
 use std::{
     fs::create_dir_all,
     path::{Path, PathBuf},
@@ -62,7 +63,7 @@ impl Config {
     }
 
     pub fn alias_default(&self) -> PathBuf {
-        self.alias_dir().join("default")
+        self.alias_dir().join(UserAlias::DEFAULT)
     }
 
     pub fn bin_path(&self, path: PathBuf) -> PathBuf {
