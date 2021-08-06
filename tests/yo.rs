@@ -130,22 +130,3 @@
 //         assert!(version.match_node_version(&lts.version));
 //     }
 // }
-
-// For DistVersion
-// #[cfg(test)]
-// mod tests {
-//     use super::*;
-//
-//     #[test]
-//     fn parse_test() {
-//         let expected_semver = NodeVersion::Semver(semver::Version::parse("14.12.0").unwrap());
-//         let result_semver = NodeVersion::parse("14.12.0").unwrap();
-//
-//         assert_eq!(result_semver, expected_semver);
-//
-//         let expected_lts = NodeVersion::Lts("boron".to_string());
-//         let result_lts = NodeVersion::parse("lts/boron").unwrap();
-//
-//         assert_eq!(result_lts, expected_lts);
-//     }
-// }
