@@ -2,6 +2,10 @@
     <code>🤏 Smol Node Manager</code>
 </h1>
 
+![snm](https://user-images.githubusercontent.com/24727447/128605309-a0ba7189-4f44-4d11-9671-c14c7c06aaed.gif "snm in action")
+
+<p align="center"><sup>Terminal: kitty | Prompt: starship</sup></p>
+
 ## ✨ Features
 
 -   It's fast as it is written in Rust.
