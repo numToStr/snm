@@ -14,7 +14,7 @@
 
 #### From package managers
 
--   **Using `cargo` (Linux/macOS/Windows)**
+-   Using `cargo` (Linux/macOS/Windows)
 
 ```sh
 cargo install snm
@@ -32,7 +32,7 @@ cargo install snm
 <!-- scoop install fnm -->
 <!-- ``` -->
 
--   **Using `yay` or `pamac` (Arch Linux)**
+-   Using `yay` or `pamac` (Arch Linux)
 
 > Why snm is available for Arch? Because I love Arch Linux
 
@@ -54,7 +54,7 @@ Check out the [Release page](https://github.com/numToStr/snm/releases) for prebu
 curl -fsSL https://git.io/JLFnA | bash
 ```
 
-**Available Params**
+Available Params
 
 -   `--install-dir` : Set a custom directory for binary installation. Defaults to `$HOME/.snm`
 -   `--skip-shell` : Skip appending shell specific loader to the `$SHELL` config file.
@@ -214,7 +214,7 @@ snm exec 10 -- yarn start
 
 -   `snm help <subcommand>` or `snm <subcommand> --help` : Help doc for the subcommand
 
-**NOTE: This is a small part of help doc. Please make sure to read the inbuilt help**
+> NOTE: This is a small part of help doc. Please make sure to read the inbuilt help
 
 #### Completions
 
