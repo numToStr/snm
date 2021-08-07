@@ -1,6 +1,7 @@
 pub mod downloader;
 pub mod fetcher;
 pub mod linker;
+pub mod loader;
 pub mod shell;
 pub mod sysinfo;
 pub mod types;
