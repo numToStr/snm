@@ -51,14 +51,6 @@ jobs:
             - name: Git Checkout
               uses: actions/checkout@v2
 
-            - name: Install prerequisites
-              shell: bash
-              run: |
-                  case ${{ matrix.job.target }} in
-                    armv7-unknown-linux-gnueabihf) sudo apt-get -y update ; sudo apt-get -y install gcc-arm-linux-gnueabihf ;;
-                    aarch64-unknown-linux-gnu) sudo apt-get -y update ; sudo apt-get -y install gcc-aarch64-linux-gnu ;;
-                  esac
-
             - name: Initialize workflow variables
               id: vars
               shell: bash
@@ -125,16 +117,9 @@ jobs:
                   command: build
                   args: --release --target=${{ matrix.job.target }}
 
-            - name: Upload build artifacts
-              uses: actions/upload-artifact@v2
-              with:
-                  name: ${{ env.PROJECT_NAME }}-${{ matrix.job.target }}
-                  path: target/${{ matrix.job.target }}/release/${{ env.PROJECT_NAME }}${{ steps.vars.outputs.EXE_suffix }}
-
             - name: Package
               shell: bash
               id: package
-              # if: startsWith(github.ref, 'refs/tags/')
               run: |
                   ARCHIVE_DIR='${{ steps.vars.outputs.STAGING }}/${{ steps.vars.outputs.PKG_BASENAME }}/'
                   # Binary
@@ -149,7 +134,6 @@ jobs:
 
             - name: Publish archives and packages
               uses: softprops/action-gh-release@v1
-              # if: startsWith(github.ref, 'refs/tags/')
               with:
                   files: ${{ steps.vars.outputs.STAGING }}/${{ steps.vars.outputs.PKG_NAME }}
               env:
@@ -159,7 +143,7 @@ jobs:
         name: Publish Rust Crate on crates.io
         runs-on: ubuntu-latest
         timeout-minutes: 20
-        # if: startsWith(github.ref, 'refs/tags/')
+        needs: build
         steps:
             - uses: actions/checkout@v2
 
@@ -180,7 +164,6 @@ jobs:
         name: Publish AUR package
         runs-on: ubuntu-latest
         timeout-minutes: 20
-        # if: startsWith(github.ref, 'refs/tags/')
         needs: build
         steps:
             - uses: actions/checkout@v2

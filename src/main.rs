@@ -1,18 +1,7 @@
-mod alias;
-mod archive;
 mod cli;
-mod cmd;
-mod config;
-mod downloader;
-mod fetcher;
-mod progress_bar;
-mod shell;
-mod symlink;
-mod sysinfo;
-mod url;
-mod version;
+mod commands;
 
-use colored::*;
+use console::style;
 
 fn main() {
     let app = cli::parse();
@@ -20,11 +9,7 @@ fn main() {
     let code = match app.cmd.exec(app.options) {
         Ok(_) => 0,
         Err(e) => {
-            eprintln!(
-                "{} :: {}",
-                "ERROR".bright_blue(),
-                e.to_string().bright_red()
-            );
+            eprintln!("{} :: {}", style("ERROR").red(), e.to_string());
             1
         }
     };
