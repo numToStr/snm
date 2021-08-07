@@ -2,7 +2,7 @@
     <code>🤏 Smol Node Manager</code>
 </h1>
 
-## Features
+## ✨ Features
 
 -   It's fast as it is written in Rust.
 -   Cross Platfrom (Linux/macOS/Windows)
@@ -10,20 +10,9 @@
 -   Supports multiple shells
 -   Tons of commands and options
 
-## Installation
+## 🚀 Installation
 
-### From script (Linux/macOS/Windows)
-
-```sh
-curl -fsSL https://git.io/JLFnA | bash
-```
-
-#### Available Params
-
--   `--install-dir` : Set a custom directory for binary installation. Defaults to `$HOME/.snm`
--   `--skip-shell` : Skip appending shell specific loader to the `$SHELL` config file.
-
-### From package managers
+#### From package managers
 
 -   **Using `cargo` (Linux/macOS/Windows)**
 
@@ -59,13 +48,24 @@ pamac build snm
 
 Check out the [Release page](https://github.com/numToStr/snm/releases) for prebuild binaries for `snm`, available for different operating systems.
 
+#### From script (Linux/macOS/Windows)
+
+```sh
+curl -fsSL https://git.io/JLFnA | bash
+```
+
+**Available Params**
+
+-   `--install-dir` : Set a custom directory for binary installation. Defaults to `$HOME/.snm`
+-   `--skip-shell` : Skip appending shell specific loader to the `$SHELL` config file.
+
 ---
 
-NOTE: `snm` uses symlinks underneath to manage aliases. So, If you are using **Windows** make sure you have enabled **Developer Mode** or your user has permission to create symlinks. You can read more [here](https://blogs.windows.com/windowsdeveloper/2016/12/02/symlinks-windows-10/)
+> NOTE: `snm` uses symlinks underneath to manage aliases. So, If you are using **Windows** make sure you have enabled **Developer Mode** or your user has permission to create symlinks. You can read more [here](https://blogs.windows.com/windowsdeveloper/2016/12/02/symlinks-windows-10/)
 
 ---
 
-## Shell
+## 🔧 Setup
 
 -   **Bash**
 
@@ -101,9 +101,9 @@ snm env pwsh | Out-String | Invoke-Expression
 
 You can find more about the powershell profile [here](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_profiles)
 
-## Usage
+## 🤞 Usage
 
-### Global Options/Flags
+#### Global Options/Flags
 
 | Options              | Env Variable           | Description                                         |
 | -------------------- | ---------------------- | --------------------------------------------------- |
@@ -122,7 +122,7 @@ snm [--snm-dir="~/.something/else"] [--node-dist-mirror="https://myrelease.com"]
 | `--version` | Prints the version        |
 | `--help`    | Prints the help doc       |
 
-### Commands
+#### Commands
 
 -   `snm install <version|alias>` : Install Nodejs with the provided version or lts codename
 
@@ -216,7 +216,7 @@ snm exec 10 -- yarn start
 
 **NOTE: This is a small part of help doc. Please make sure to read the inbuilt help**
 
-### Completions
+#### Completions
 
 `snm` binary has inbuilt completions supports. Please follow the instruction to generate completions according to your shell.
 
@@ -246,11 +246,13 @@ snm completions pwsh
 
 After generating the completions, please follow your shell instructions on how to load and use them.
 
-## Contributing
+## 🤝 Contributing
 
-PRs are always welcome. You can help me by adding more tests 🤞.
+PRs are always welcome. You can help me by adding more tests :).
 
 First, You need to install rust toolchain via [rustup](https://rustup.rs/).
+
+> Minimum Supported Rust Version (MSRV): 1.54.0
 
 -   **Setup**
 
@@ -281,7 +283,7 @@ cargo run -- --help
 cargo run -- lsr 14
 ```
 
-## Credits
+## 💐 Credits
 
 This project would not be possible without these awesome projects.
 
