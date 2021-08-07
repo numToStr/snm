@@ -15,8 +15,8 @@ Versions:
 
 Dotfiles:
 
-    Version can also be defined in these files and can used with 'use' command in order.
-    Only the version pattern which are defined above are supported.
+    Version defined in the following files can be used with the 'use' command. Files are looked
+    up in the order they are listed below. Version patterns that are defined above are supported.
 
     - .nvmrc
     - .node-version
