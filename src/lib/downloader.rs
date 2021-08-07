@@ -58,11 +58,10 @@ impl<'a> Downloader<'a> {
         source: &mut S,
         release_dir: &Path,
         download_dir: &Path,
-        bar: &Bar,
     ) -> SnmRes<()> {
         let tmp_dir = tempfile::Builder::new().tempdir_in(download_dir)?;
 
-        let xz_stream = xz2::read::XzDecoder::new(bar.take_reader(source));
+        let xz_stream = xz2::read::XzDecoder::new(source);
         let mut tar_stream = tar::Archive::new(xz_stream);
         let entries = tar_stream.entries()?;
 
@@ -90,7 +89,6 @@ impl<'a> Downloader<'a> {
         source: &mut S,
         release_dir: &Path,
         download_dir: &Path,
-        bar: &Bar,
     ) -> SnmRes<()> {
         use std::{fs, io};
 
@@ -177,7 +175,11 @@ impl<'a> Downloader<'a> {
 
         let bar = Bar::new(len.unwrap_or_default());
 
-        self.extract_to(&mut resp.into_reader(), release_dir, download_dir, &bar)?;
+        self.extract_to(
+            &mut bar.take_reader(resp.into_reader()),
+            release_dir,
+            download_dir,
+        )?;
 
         bar.finish();
 
