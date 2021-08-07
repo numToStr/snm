@@ -2,6 +2,8 @@
 use indicatif::{ProgressBar, ProgressBarIter, ProgressStyle};
 use std::io::Read;
 
+const TMPL: &str = "{spinner} [{elapsed_precise}] [{wide_bar}] {bytes}/{total_bytes} ({eta})";
+
 pub struct Spinner {
     s: ProgressBar,
 }
@@ -16,12 +18,10 @@ impl Spinner {
         Self { s }
     }
 
-    pub fn stop(&self) {
+    pub fn finish(&self) {
         self.s.finish_and_clear();
     }
 }
-
-const TMPL: &str = "{spinner} [{elapsed_precise}] [{wide_bar}] {bytes}/{total_bytes} ({eta})";
 
 pub struct Bar {
     bar: ProgressBar,

@@ -1,5 +1,5 @@
 use crate::{
-    loader::Bar,
+    loader::{Bar, Spinner},
     sysinfo::{platform_arch, platform_name},
 };
 use console::style;
@@ -173,15 +173,23 @@ impl<'a> Downloader<'a> {
         println!("Size      : {}", style(size).bold());
         println!();
 
-        let bar = Bar::new(len.unwrap_or_default());
+        if let Some(l) = len {
+            let bar = Bar::new(l);
 
-        self.extract_to(
-            &mut bar.take_reader(resp.into_reader()),
-            release_dir,
-            download_dir,
-        )?;
+            self.extract_to(
+                &mut bar.take_reader(resp.into_reader()),
+                release_dir,
+                download_dir,
+            )?;
 
-        bar.finish();
+            bar.finish();
+        } else {
+            let spinner = Spinner::new("Installing...");
+
+            self.extract_to(&mut resp.into_reader(), release_dir, download_dir)?;
+
+            spinner.finish()
+        }
 
         println!("Installed : {}", style(dest.display()).bold());
 
