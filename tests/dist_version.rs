@@ -1,4 +1,4 @@
-use semver::Version;
+use semver::{BuildMetadata, Prerelease, Version};
 use snm_core::version::{DistVersion, ParseVersion};
 
 #[test]
@@ -12,8 +12,8 @@ fn parse() {
             major: 14,
             minor: 17,
             patch: 4,
-            pre: vec![],
-            build: vec![]
+            pre: Prerelease::EMPTY,
+            build: BuildMetadata::EMPTY
         }
     );
 }
