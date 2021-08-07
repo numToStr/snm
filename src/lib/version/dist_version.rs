@@ -1,4 +1,4 @@
-use std::{fmt::Display, fs::read_dir, path::Path};
+use std::{fmt::Display, fs::read_dir};
 
 use console::style;
 use semver::Version;
@@ -6,6 +6,7 @@ use serde::Deserialize;
 
 use crate::{
     fetcher::{Lts, Release},
+    types::ReleaseDir,
     SnmRes,
 };
 
@@ -47,14 +48,14 @@ impl AsRef<Version> for DistVersion {
 
 impl DistVersion {
     /// To list all the installed versions
-    pub fn list_versions(release_dir: &Path) -> SnmRes<Vec<Self>> {
+    pub fn list_versions(release_dir: &ReleaseDir) -> SnmRes<Vec<Self>> {
         let mut versions: Vec<Self> = vec![];
 
-        let entries = read_dir(release_dir)?;
+        let entries = read_dir(release_dir.as_ref())?;
 
         for entry in entries {
             let entry = entry?.path();
-            let entry = entry.strip_prefix(release_dir)?;
+            let entry = entry.strip_prefix(release_dir.as_ref())?;
 
             if let Some(e) = entry.to_str() {
                 let dist_ver = Self::parse(e)?;
@@ -67,14 +68,14 @@ impl DistVersion {
     }
 
     /// To match multiple installed versions with a provided user version
-    pub fn match_versions(release_dir: &Path, version: &UserVersion) -> SnmRes<Vec<Self>> {
+    pub fn match_versions(r_dir: &ReleaseDir, version: &UserVersion) -> SnmRes<Vec<Self>> {
         let mut versions: Vec<Self> = vec![];
 
-        let entries = read_dir(release_dir)?;
+        let entries = read_dir(r_dir.as_ref())?;
 
         for entry in entries {
             let entry = entry?.path();
-            let entry = entry.strip_prefix(release_dir)?;
+            let entry = entry.strip_prefix(r_dir.as_ref())?;
 
             if let Some(e) = entry.to_str() {
                 let dist_ver = Self::parse(e)?;
@@ -99,8 +100,8 @@ impl DistVersion {
     }
 
     /// To match a installed version with the user provided version
-    pub fn match_version(release_dir: &Path, version: &UserVersion) -> SnmRes<Self> {
-        let versions = Self::match_versions(release_dir, version)?;
+    pub fn match_version(r_dir: &ReleaseDir, version: &UserVersion) -> SnmRes<Self> {
+        let versions = Self::match_versions(r_dir, version)?;
 
         // NOTE: version list is already sorted, so I am returning the first element
         let max = versions.into_iter().next().ok_or_else(|| {

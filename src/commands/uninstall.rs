@@ -27,9 +27,9 @@ impl super::Command for UnInstall {
         // If the version is alias or codename, then we need to find the linked/installed version
         let version = match &self.version_or_alias {
             UserVersion::Lts(lts_code) => {
-                let alias_ver = alias_dir.join(lts_code.to_string());
+                let alias_ver = alias_dir.join(&lts_code.to_string());
 
-                if !alias_ver.exists() {
+                if !alias_ver.as_ref().exists() {
                     anyhow::bail!("Codename {} not found", style(lts_code).bold());
                 }
 
@@ -38,7 +38,7 @@ impl super::Command for UnInstall {
             UserVersion::Alias(alias) => {
                 let alias_ver = alias_dir.join(alias.as_ref());
 
-                if !alias_ver.exists() {
+                if !alias_ver.as_ref().exists() {
                     anyhow::bail!("Alias {} not found", style(alias).bold());
                 }
 
@@ -72,7 +72,7 @@ impl super::Command for UnInstall {
         }
 
         // Then removing the actual installed version
-        std::fs::remove_dir_all(release_dir.join(version.to_string()))?;
+        std::fs::remove_dir_all(release_dir.join(version.to_string()).as_ref())?;
 
         println!("Removed version: {}", style(version).bold());
 

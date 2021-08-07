@@ -1,8 +1,10 @@
-use crate::version::{DistVersion, ParseVersion};
+use crate::{
+    types::{AliasDir, ReleaseDir},
+    version::{DistVersion, ParseVersion},
+};
 use std::{
     collections::HashMap,
-    fs::read_dir,
-    path::{Path, PathBuf},
+    fs::{read_dir, read_link},
 };
 
 use super::SnmRes;
@@ -10,38 +12,34 @@ use super::SnmRes;
 pub struct Linker;
 
 impl Linker {
-    pub fn remove_link(path: &Path) -> SnmRes<()> {
-        if path.exists() {
+    pub fn remove_link(path: &AliasDir) -> SnmRes<()> {
+        if path.as_ref().exists() {
             #[cfg(unix)]
-            std::fs::remove_file(path)?;
+            std::fs::remove_file(path.as_ref())?;
 
             #[cfg(windows)]
-            std::fs::remove_dir(path)?;
+            std::fs::remove_dir(path.as_ref())?;
         }
 
         Ok(())
     }
 
-    pub fn create_link(original: &Path, link: &Path) -> SnmRes<()> {
+    pub fn create_link(original: &ReleaseDir, link: &AliasDir) -> SnmRes<()> {
         Self::remove_link(link)?;
 
         #[cfg(unix)]
-        std::os::unix::fs::symlink(original, link)?;
+        std::os::unix::fs::symlink(original.as_ref(), link.as_ref())?;
 
         #[cfg(windows)]
-        std::os::windows::fs::symlink_dir(original, link)?;
+        std::os::windows::fs::symlink_dir(original.as_ref(), link.as_ref())?;
 
         Ok(())
     }
 
-    pub fn read_link(path: &Path) -> SnmRes<PathBuf> {
-        std::fs::read_link(path).map_err(anyhow::Error::new)
-    }
-
-    pub fn read_convert_to_dist(alias_dir: &Path, release_dir: &Path) -> SnmRes<DistVersion> {
-        let linked = Self::read_link(alias_dir)?;
+    pub fn read_convert_to_dist(a_dir: &AliasDir, r_dir: &ReleaseDir) -> SnmRes<DistVersion> {
+        let linked = read_link(a_dir.as_ref())?;
         let link_ver = linked
-            .strip_prefix(release_dir)?
+            .strip_prefix(r_dir.as_ref())?
             .to_str()
             .ok_or_else(|| anyhow::anyhow!("Unable to read and convert alias"))?;
 
@@ -49,18 +47,18 @@ impl Linker {
     }
 
     pub fn list_aliases(
-        alias_dir: &Path,
-        release_dir: &Path,
+        a_dir: &AliasDir,
+        r_dir: &ReleaseDir,
     ) -> SnmRes<HashMap<DistVersion, Vec<String>>> {
         let mut aliases: HashMap<DistVersion, Vec<String>> = HashMap::new();
-        let entries = read_dir(&alias_dir)?;
+        let entries = read_dir(&a_dir.as_ref())?;
 
         for entry in entries {
             let entry = entry?.path();
-            let link = Self::read_link(&entry)?;
+            let link = read_link(&entry)?;
 
-            let link_ver = link.strip_prefix(release_dir)?;
-            let alias = entry.strip_prefix(alias_dir)?;
+            let link_ver = link.strip_prefix(r_dir.as_ref())?;
+            let alias = entry.strip_prefix(a_dir.as_ref())?;
 
             if let (Some(v), Some(a)) = (link_ver.to_str(), alias.to_str()) {
                 let dist_ver = DistVersion::parse(v)?;
@@ -77,18 +75,18 @@ impl Linker {
 
     pub fn list_for_version(
         version: &DistVersion,
-        alias_dir: &Path,
-        release_dir: &Path,
+        a_dir: &AliasDir,
+        r_dir: &ReleaseDir,
     ) -> SnmRes<Vec<String>> {
         let mut aliases: Vec<String> = vec![];
-        let entries = read_dir(&alias_dir)?;
+        let entries = read_dir(&a_dir.as_ref())?;
 
         for entry in entries {
             let entry = entry?.path();
-            let link = Self::read_link(&entry)?;
+            let link = read_link(&entry)?;
 
-            let link_ver = link.strip_prefix(release_dir)?;
-            let alias = entry.strip_prefix(alias_dir)?;
+            let link_ver = link.strip_prefix(r_dir.as_ref())?;
+            let alias = entry.strip_prefix(a_dir.as_ref())?;
 
             if let (Some(v), Some(a)) = (link_ver.to_str(), alias.to_str()) {
                 if DistVersion::parse(v)?.eq(version) {

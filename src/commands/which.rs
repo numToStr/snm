@@ -19,19 +19,23 @@ pub struct Which {
 
 impl super::Command for Which {
     fn init(self, config: Config) -> SnmRes<()> {
-        let release_dir = config.release_dir();
+        let r_dir = config.release_dir();
 
-        let versions = DistVersion::match_versions(&release_dir, &self.version)?;
+        let versions = DistVersion::match_versions(&r_dir, &self.version)?;
 
         if versions.len() == 1 {
             if let Some(ver) = versions.first() {
-                let bin_path = config.bin_path(release_dir.join(ver.to_string())).join(EXT);
+                let bin_path = config
+                    .bin_path(r_dir.join(ver.to_string()).as_ref())
+                    .join(EXT);
 
                 println!("{}", bin_path.display());
             }
         } else {
             for ver in versions {
-                let bin_path = config.bin_path(release_dir.join(ver.to_string())).join(EXT);
+                let bin_path = config
+                    .bin_path(r_dir.join(ver.to_string()).as_ref())
+                    .join(EXT);
 
                 println!("- {} \t{}", ver, bin_path.display())
             }

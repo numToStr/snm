@@ -1,5 +1,6 @@
 use crate::cli::Config;
 use clap::Clap;
+use console::style;
 use snm_core::{
     version::{DistVersion, UserVersion},
     SnmRes,
@@ -24,9 +25,13 @@ impl super::Command for Exec {
         let path = {
             let release_dir = config.release_dir();
             let version = DistVersion::match_version(&release_dir, &self.version)?;
-            let bin_path = config.bin_path(release_dir.join(version.to_string()));
-            let path_env = env::var_os("PATH")
-                .ok_or_else(|| anyhow::anyhow!("Unable to read environment variable $PATH"))?;
+            let bin_path = config.bin_path(release_dir.join(version.to_string()).as_ref());
+            let path_env = env::var_os("PATH").ok_or_else(|| {
+                anyhow::anyhow!(
+                    "Unable to read environment variable {}",
+                    style("$PATH").bold()
+                )
+            })?;
 
             let mut splits: Vec<_> = env::split_paths(&path_env).collect();
             splits.insert(0, bin_path);
@@ -40,7 +45,7 @@ impl super::Command for Exec {
             .stderr(Stdio::inherit())
             .env("PATH", &path)
             .spawn()
-            .map_err(|_| anyhow::anyhow!("Can't spawn program {}", &self.binary))?
+            .map_err(|_| anyhow::anyhow!("Can't spawn program {}", style(self.binary).bold()))?
             .wait()
             .map_err(|_| anyhow::anyhow!("Failed to grab exit code"))?;
 

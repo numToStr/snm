@@ -19,7 +19,7 @@ impl super::Command for UnAlias {
         let alias_dir = config.alias_dir();
 
         if self.all {
-            std::fs::remove_dir_all(alias_dir)?;
+            std::fs::remove_dir_all(alias_dir.as_ref())?;
             println!("Removed all the aliases");
             return Ok(());
         }
@@ -27,7 +27,7 @@ impl super::Command for UnAlias {
         if let Some(alias) = &self.alias {
             let alias_path = alias_dir.join(alias.as_ref());
 
-            if !alias_path.exists() {
+            if !alias_path.as_ref().exists() {
                 anyhow::bail!("Alias {} not found", style(alias).bold());
             }
 

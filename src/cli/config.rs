@@ -1,6 +1,9 @@
 use clap::Clap;
 use dirs_next::home_dir;
-use snm_core::{types::UserAlias, MIRROR};
+use snm_core::{
+    types::{AliasDir, DownloadDir, ReleaseDir, UserAlias},
+    MIRROR,
+};
 use std::{
     fs::create_dir_all,
     path::{Path, PathBuf},
@@ -50,27 +53,35 @@ impl Config {
             .unwrap_or_else(|| home_dir().expect("Can't get home directory.").join(".snm"))
     }
 
-    pub fn release_dir(&self) -> PathBuf {
-        self.ensure_create(self.snm_home().join("releases"))
+    pub fn release_dir(&self) -> ReleaseDir {
+        let p = self.ensure_create(self.snm_home().join("releases"));
+
+        ReleaseDir::new(p)
     }
 
-    pub fn alias_dir(&self) -> PathBuf {
-        self.ensure_create(self.snm_home().join("aliases"))
+    pub fn alias_dir(&self) -> AliasDir {
+        let p = self.ensure_create(self.snm_home().join("aliases"));
+
+        AliasDir::new(p)
     }
 
-    pub fn download_dir(&self) -> PathBuf {
-        self.ensure_create(self.snm_home().join("downloads"))
+    pub fn download_dir(&self) -> DownloadDir {
+        let p = self.ensure_create(self.snm_home().join("downloads"));
+
+        DownloadDir::new(p)
     }
 
-    pub fn alias_default(&self) -> PathBuf {
-        self.alias_dir().join(UserAlias::DEFAULT)
+    pub fn alias_default(&self) -> AliasDir {
+        let p = self.alias_dir().as_ref().join(UserAlias::DEFAULT);
+
+        AliasDir::new(p)
     }
 
-    pub fn bin_path(&self, path: PathBuf) -> PathBuf {
+    pub fn bin_path(&self, path: &Path) -> PathBuf {
         if cfg!(unix) {
             path.join("bin")
         } else {
-            path
+            path.to_path_buf()
         }
     }
 }

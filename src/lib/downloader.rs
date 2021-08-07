@@ -1,13 +1,11 @@
 use crate::{
     loader::{Bar, Spinner},
     sysinfo::{platform_arch, platform_name},
+    types::{DownloadDir, ReleaseDir},
 };
 use console::style;
 use indicatif::HumanBytes;
-use std::{
-    io::Read,
-    path::{Path, PathBuf},
-};
+use std::{io::Read, path::PathBuf};
 use url::Url;
 
 use super::{version::DistVersion, SnmRes};
@@ -56,10 +54,10 @@ impl<'a> Downloader<'a> {
     fn extract_to<S: Read + Send>(
         &self,
         source: &mut S,
-        release_dir: &Path,
-        download_dir: &Path,
+        r_dir: &ReleaseDir,
+        d_dir: &DownloadDir,
     ) -> SnmRes<()> {
-        let tmp_dir = tempfile::Builder::new().tempdir_in(download_dir)?;
+        let tmp_dir = tempfile::Builder::new().tempdir_in(d_dir.as_ref())?;
 
         let xz_stream = xz2::read::XzDecoder::new(source);
         let mut tar_stream = tar::Archive::new(xz_stream);
@@ -76,7 +74,7 @@ impl<'a> Downloader<'a> {
             entry.unpack(tmp_dir)?;
         }
 
-        let install_dir = release_dir.join(self.version.to_string());
+        let install_dir = r_dir.as_ref().join(self.version.to_string());
 
         std::fs::rename(&tmp_dir, &install_dir)?;
 
@@ -87,18 +85,18 @@ impl<'a> Downloader<'a> {
     fn extract_to<S: Read + Send>(
         &self,
         source: &mut S,
-        release_dir: &Path,
-        download_dir: &Path,
+        r_dir: &ReleaseDir,
+        d_dir: &DownloadDir,
     ) -> SnmRes<()> {
         use std::{fs, io};
 
-        let mut tmp_file = tempfile::Builder::new().tempfile_in(download_dir)?;
+        let mut tmp_file = tempfile::Builder::new().tempfile_in(d_dir.as_ref())?;
 
         io::copy(source, &mut tmp_file)?;
 
         let mut archive = zip::read::ZipArchive::new(&tmp_file)?;
 
-        let install_dir = release_dir.join(self.version.to_string());
+        let install_dir = r_dir.as_ref().join(self.version.to_string());
 
         for i in 0..archive.len() {
             let mut file = archive.by_index(i)?;
@@ -148,12 +146,12 @@ impl<'a> Downloader<'a> {
         Ok(())
     }
 
-    pub fn download(&self, release_dir: &Path, download_dir: &Path) -> SnmRes<PathBuf> {
+    pub fn download(&self, r_dir: &ReleaseDir, d_dir: &DownloadDir) -> SnmRes<ReleaseDir> {
         let version: String = self.version.to_string();
 
-        let dest = release_dir.join(&version);
+        let dest = r_dir.join(&version);
 
-        if dest.exists() {
+        if dest.as_ref().exists() {
             anyhow::bail!("Version {} already exists locally", style(version).bold());
         }
 
@@ -176,22 +174,18 @@ impl<'a> Downloader<'a> {
         if let Some(l) = len {
             let bar = Bar::new(l);
 
-            self.extract_to(
-                &mut bar.take_reader(resp.into_reader()),
-                release_dir,
-                download_dir,
-            )?;
+            self.extract_to(&mut bar.take_reader(resp.into_reader()), r_dir, d_dir)?;
 
             bar.finish();
         } else {
             let spinner = Spinner::new("Installing...");
 
-            self.extract_to(&mut resp.into_reader(), release_dir, download_dir)?;
+            self.extract_to(&mut resp.into_reader(), r_dir, d_dir)?;
 
             spinner.finish()
         }
 
-        println!("Installed : {}", style(dest.display()).bold());
+        println!("Installed : {}", style(dest.as_ref().display()).bold());
 
         Ok(dest)
     }
