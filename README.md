@@ -3,9 +3,9 @@
 </h1>
 
 <p align="center">
-  <!-- <a aria-label="build" href="https://github.com/numToStr/snm/actions/workflows/build.yml"> -->
-  <!--   <img alt="build" src="https://github.com/numToStr/snm/actions/workflows/build.yml/badge.svg"> -->
-  <!-- </a> -->
+  <a aria-label="build" href="https://github.com/numToStr/snm/actions/workflows/build.yml">
+    <img alt="build" src="https://github.com/numToStr/snm/actions/workflows/build.yml/badge.svg">
+  </a>
   <a aria-label="crates.io" href="https://crates.io/crates/snm">
     <img alt="crates.io" src="https://img.shields.io/crates/v/snm.svg">
   </a>
