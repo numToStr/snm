@@ -2,6 +2,18 @@
     <code>🤏 Smol Node Manager</code>
 </h1>
 
+<p align="center">
+  <!-- <a aria-label="build" href="https://github.com/numToStr/snm/actions/workflows/build.yml"> -->
+  <!--   <img alt="build" src="https://github.com/numToStr/snm/actions/workflows/build.yml/badge.svg"> -->
+  <!-- </a> -->
+  <a aria-label="crates.io" href="https://crates.io/crates/snm">
+    <img alt="crates.io" src="https://img.shields.io/crates/v/snm.svg">
+  </a>
+  <a aria-label="arch-aur" href="https://aur.archlinux.org/packages/snm/">
+    <img alt="arch-aur" src="https://img.shields.io/aur/version/snm">
+  </a>
+</p>
+
 ![snm](https://user-images.githubusercontent.com/24727447/128605309-a0ba7189-4f44-4d11-9671-c14c7c06aaed.gif "snm in action")
 
 <p align="center"><sup>Terminal: kitty | Prompt: starship</sup></p>
