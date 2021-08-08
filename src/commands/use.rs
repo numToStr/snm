@@ -36,7 +36,7 @@ impl super::Command for Use {
 
                 Linker::create_link(&dist_path, &config.alias_default())?;
 
-                println!("Using Codename {}", style(lts_code).bold());
+                println!("Using codename: {}", style(lts_code).bold());
             }
             UserVersion::Alias(alias) => {
                 let alias_dir = config.alias_dir().join(alias.as_ref());
@@ -51,7 +51,7 @@ impl super::Command for Use {
 
                 Linker::create_link(&dist_path, &config.alias_default())?;
 
-                println!("Using Alias {}", style(alias).bold());
+                println!("Using alias: {}", style(alias).bold());
             }
             version => {
                 let dist_ver = DistVersion::match_version(&r_dir, &version)?;
@@ -60,7 +60,7 @@ impl super::Command for Use {
 
                 Linker::create_link(&dist_path, &config.alias_default())?;
 
-                println!("Using version {}", style(dist_ver).bold());
+                println!("Using version: {}", style(dist_ver).bold());
             }
         }
 

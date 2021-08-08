@@ -47,7 +47,7 @@ impl super::Command for Install {
         if !config.no_use {
             Linker::create_link(&dwnld_dir, &config.alias_default())?;
             println!();
-            println!("Using version {}", style(&release.version).bold());
+            println!("Using version: {}", style(&release.version).bold());
         }
 
         Ok(())
