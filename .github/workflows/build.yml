@@ -159,58 +159,58 @@ jobs:
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    # publish_rust_crate:
-    #     name: "Publish Rust Crate on crates.io"
-    #     if: startsWith(github.ref, 'refs/tags/v')
-    #     runs-on: ubuntu-latest
-    #     timeout-minutes: 20
-    #     needs: build
-    #     steps:
-    #         - uses: actions/checkout@v2
-    #
-    #         - name: Install Rust toolchain
-    #           uses: actions-rs/toolchain@v1
-    #           with:
-    #               toolchain: stable
-    #               override: true
-    #               profile: minimal
-    #
-    #         - name: Publish
-    #           uses: actions-rs/cargo@v1
-    #           with:
-    #               command: publish
-    #               args: --verbose --token ${{ secrets.CARGO_TOKEN }}
-    #
-    # publish_aur_package:
-    #     name: "Publish AUR package"
-    #     if: startsWith(github.ref, 'refs/tags/v')
-    #     runs-on: ubuntu-latest
-    #     timeout-minutes: 20
-    #     needs: build
-    #     env:
-    #       AUTHOR: numToStr
-    #       EMAIL: sudo@vikasraj.dev
-    #     steps:
-    #         - uses: actions/checkout@v2
-    #
-    #         - name: Generate PKGBUILD
-    #           id: gen_pkgbuild
-    #           shell: bash
-    #           run: |
-    #               sed -i -e "s%{{AUTHOR}}%${{ env.AUTHOR }}%g;" ./.aur/PKGBUILD
-    #               sed -i -e "s%{{EMAIL}}%${{ env.EMAIL }}%g;" ./.aur/PKGBUILD
-    #               sed -i -e "s%{{NAME}}%${{ env.PROJECT_NAME }}%g;" ./.aur/PKGBUILD
-    #               sed -i -e "s%{{DESC}}%${{ env.PROJECT_DESC }}%g;" ./.aur/PKGBUILD
-    #               sed -i -e "s%{{VERSION}}%${{ env.PROJECT_VERSION }}%g;" ./.aur/PKGBUILD
-    #               sed -i -e "s%{{URL}}%${{ env.PROJECT_HOMEPAGE }}%g;" ./.aur/PKGBUILD
-    #               cat ./.aur/PKGBUILD
-    #
-    #         - name: Publish to the AUR
-    #           uses: KSXGitHub/github-actions-deploy-aur@v2
-    #           with:
-    #               pkgname: ${{ env.PROJECT_NAME }}
-    #               pkgbuild: ./.aur/PKGBUILD
-    #               commit_username: ${{ env.AUTHOR }}
-    #               commit_email: ${{ env.EMAIL }}
-    #               commit_message: ${{ env.PROJECT_VERSION }}
-    #               ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
+    publish_rust_crate:
+        name: "Publish Rust Crate on crates.io"
+        if: startsWith(github.ref, 'refs/tags/v')
+        runs-on: ubuntu-latest
+        timeout-minutes: 20
+        needs: build
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: "Install Rust toolchain"
+              uses: actions-rs/toolchain@v1
+              with:
+                  toolchain: stable
+                  override: true
+                  profile: minimal
+
+            - name: "Publish"
+              uses: actions-rs/cargo@v1
+              with:
+                  command: publish
+                  args: --verbose --token ${{ secrets.CARGO_TOKEN }}
+
+    publish_aur_package:
+        name: "Publish AUR package"
+        if: startsWith(github.ref, 'refs/tags/v')
+        runs-on: ubuntu-latest
+        timeout-minutes: 20
+        needs: build
+        env:
+          AUTHOR: numToStr
+          EMAIL: sudo@vikasraj.dev
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: "Generate PKGBUILD"
+              id: gen_pkgbuild
+              shell: bash
+              run: |
+                  sed -i -e "s%{{AUTHOR}}%${{ env.AUTHOR }}%g;" ./.aur/PKGBUILD
+                  sed -i -e "s%{{EMAIL}}%${{ env.EMAIL }}%g;" ./.aur/PKGBUILD
+                  sed -i -e "s%{{NAME}}%${{ env.PROJECT_NAME }}%g;" ./.aur/PKGBUILD
+                  sed -i -e "s%{{DESC}}%${{ env.PROJECT_DESC }}%g;" ./.aur/PKGBUILD
+                  sed -i -e "s%{{VERSION}}%${{ env.PROJECT_VERSION }}%g;" ./.aur/PKGBUILD
+                  sed -i -e "s%{{URL}}%${{ env.PROJECT_HOMEPAGE }}%g;" ./.aur/PKGBUILD
+                  cat ./.aur/PKGBUILD
+
+            - name: "Publish to AUR"
+              uses: KSXGitHub/github-actions-deploy-aur@v2
+              with:
+                  pkgname: ${{ env.PROJECT_NAME }}
+                  pkgbuild: ./.aur/PKGBUILD
+                  commit_username: ${{ env.AUTHOR }}
+                  commit_email: ${{ env.EMAIL }}
+                  commit_message: ${{ env.PROJECT_VERSION }}
+                  ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
