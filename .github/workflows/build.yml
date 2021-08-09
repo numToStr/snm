@@ -151,7 +151,7 @@ jobs:
                 echo ::set-output name=IS_RELEASE::${IS_RELEASE}
 
             - name: "Publish archives and packages"
-              uses: softprops/action-gh-release@v1
+              uses: softprops/action-gh-release@v0.1.8
               if: steps.is-release.outputs.IS_RELEASE
               with:
                 files: |
