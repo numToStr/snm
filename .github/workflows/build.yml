@@ -193,6 +193,20 @@ jobs:
         steps:
             - uses: actions/checkout@v2
 
+            - name: "Extract crate information"
+              shell: bash
+              run: |
+                # NOTE: version on AUR is not prefixed with `v`
+                REF_TAG=$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -n1)
+                case ${GITHUB_REF} in
+                  refs/tags/*) REF_TAG=${GITHUB_REF#refs/tags/v} ;;
+                esac;
+
+                echo "PROJECT_VERSION=${REF_TAG}" >> $GITHUB_ENV
+                echo "PROJECT_NAME=$(sed -n 's/^name = "\(.*\)"/\1/p' Cargo.toml | head -n1)" >> $GITHUB_ENV
+                echo "PROJECT_DESC=$(sed -n 's/^description = "\(.*\)"/\1/p' Cargo.toml | head -n1)" >> $GITHUB_ENV
+                echo "PROJECT_HOMEPAGE=$(sed -n 's/^homepage = "\(.*\)"/\1/p' Cargo.toml)" >> $GITHUB_ENV
+
             - name: "Generate PKGBUILD"
               id: gen_pkgbuild
               shell: bash
@@ -208,8 +222,8 @@ jobs:
             - name: "Publish to AUR"
               uses: KSXGitHub/github-actions-deploy-aur@v2.2.5
               with:
-                  pkgname: ${{ env.PROJECT_NAME }}
                   pkgbuild: ./.aur/PKGBUILD
+                  pkgname: ${{ env.PROJECT_NAME }}
                   commit_username: ${{ env.AUTHOR }}
                   commit_email: ${{ env.EMAIL }}
                   commit_message: ${{ env.PROJECT_VERSION }}
