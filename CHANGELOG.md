@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.7.0]
+## [0.7.0] - 2021-08-09
 
 I finally rewrote the whole program to be more idiomatic. Removing any unnecessary code, making the codebase more readable and maintainable. Sadly, in doing so I've to introduce some breaking change. I've listed the major changes below:
 
