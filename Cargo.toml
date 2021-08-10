@@ -1,6 +1,6 @@
 [package]
 name = "snm"
-version = "0.7.0"
+version = "0.8.0-dev"
 description = "Smol and simple node version manager"
 authors = ["Vikas Raj <sudo@vikasraj.dev>"]
 edition = "2018"
