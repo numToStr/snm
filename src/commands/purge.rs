@@ -5,10 +5,27 @@ use snm_core::{linker::Linker, types::UserAlias, version::DistVersion, SnmRes};
 use std::fs::remove_dir_all;
 
 #[derive(Debug, Clap)]
-pub struct Prune;
+pub struct Purge {
+    /// Remove everything, including the active version
+    #[clap(short, long)]
+    all: bool,
+}
 
-impl super::Command for Prune {
+impl super::Command for Purge {
     fn init(self, config: Config) -> SnmRes<()> {
+        // If all=true then nuke the snm home directory
+        if self.all {
+            let snm_home = config.snm_home();
+
+            if snm_home.exists() {
+                remove_dir_all(snm_home)?;
+            }
+
+            println!("Purge complete!");
+
+            return Ok(());
+        }
+
         let default_alias = config.alias_default();
 
         if !default_alias.as_ref().exists() {
@@ -31,7 +48,7 @@ impl super::Command for Prune {
         // Removing all the versions except the one which is aliased to `default`
         let dist_versions = DistVersion::list_versions(&release_dir)?;
         for version in dist_versions {
-            // If the version is currently used then don't deleted
+            // If the version is currently active then don't delete
             if version.eq(&used_ver) {
                 continue;
             }
@@ -49,6 +66,8 @@ impl super::Command for Prune {
             &release_dir.join(used_ver.to_string()),
             &config.alias_default(),
         )?;
+
+        println!("Purge complete!");
 
         Ok(())
     }

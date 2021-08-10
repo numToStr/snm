@@ -1,5 +1,5 @@
 use crate::commands::{
-    alias, completions, env, exec, install, latest, ls, ls_remote, lts, prune, r#use, unalias,
+    alias, completions, env, exec, install, latest, ls, ls_remote, lts, purge, r#use, unalias,
     uninstall, which, Command,
 };
 use clap::Subcommand;
@@ -49,13 +49,14 @@ pub enum SubCommand {
     #[clap(visible_alias = "lsr")]
     LsRemote(ls_remote::LsRemote),
 
-    /// Output path for installed node <version>
+    /// Output path for installed node version
     Which(which::Which),
 
-    /// Remove all the installed versions except the used version.
+    /// Remove all the installed versions and aliases. By default, active version is not removed.
     ///
     /// NOTE: This will also remove any redundant downloads
-    Prune(prune::Prune),
+    #[clap(visible_alias = "prune")]
+    Purge(purge::Purge),
 
     /// Remove the aliases
     #[clap(name = "unalias", visible_alias = "rma")]
@@ -85,7 +86,7 @@ impl SubCommand {
             Self::Ls(m) => m.init(config),
             Self::LsRemote(m) => m.init(config),
             Self::Which(m) => m.init(config),
-            Self::Prune(m) => m.init(config),
+            Self::Purge(m) => m.init(config),
             Self::UnAlias(m) => m.init(config),
             Self::UnInstall(m) => m.init(config),
         }

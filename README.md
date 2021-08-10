@@ -224,7 +224,15 @@ snm exec 10 -- node -v
 snm exec 10 -- yarn start
 ```
 
--   `snm prune` : Remove all downloaded versions except the installed version
+-   `snm purge` : Remove all the installed versions and aliases. Except the active version.
+
+```
+# Doesn't remove the active version
+snm purge
+
+# Will remove everything including the active version
+snm purge --all
+```
 
 -   `snm which <version>` : Prints path for the downloaded Nodejs version
 
