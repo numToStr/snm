@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.8.0]
+
+### Changes
+
+-   Rename `prune` command to `purge` but retain `prune` as an alias [#82](https://github.com/numToStr/snm/pull/82)
+
+```shell
+# Now both are valid
+snm prune # just an alias to purge
+snm purge
+```
+
+-   Add `--all` flag to `purge` command to also remove the active version [#82](https://github.com/numToStr/snm/pull/82)
+
+```shell
+snm purge --all
+```
+
 ## [0.7.0] - 2021-08-09
 
 I finally rewrote the whole program to be more idiomatic. Removing any unnecessary code, making the codebase more readable and maintainable. Sadly, in doing so I've to introduce some breaking change. I've listed the major changes below:
