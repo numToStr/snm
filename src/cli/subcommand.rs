@@ -1,5 +1,5 @@
 use crate::commands::{
-    alias, completions, env, exec, install, latest, ls, ls_remote, lts, prune, r#use, unalias,
+    alias, completions, env, exec, install, latest, ls, ls_remote, lts, purge, r#use, unalias,
     uninstall, which, Command,
 };
 use clap::Subcommand;
@@ -42,31 +42,34 @@ pub enum SubCommand {
     /// Install the latest LTS release
     Lts(lts::Lts),
 
-    /// List all the local installed versions with their aliases (if any)
+    /// List all the local installed versions with their aliases
     Ls(ls::Ls),
 
     /// List remote Nodejs versions
     #[clap(visible_alias = "lsr")]
     LsRemote(ls_remote::LsRemote),
 
-    /// Output path for installed node <version>
+    /// Output path for installed node version
     Which(which::Which),
 
-    /// Remove all the installed versions except the used version.
+    /// Remove everything except the active version.
     ///
     /// NOTE: This will also remove any redundant downloads
-    Prune(prune::Prune),
+    #[clap(visible_alias = "prune")]
+    Purge(purge::Purge),
 
-    /// Remove the aliases
+    /// Unlink the alias
+    ///
+    /// NOTE: This only removes the alias and doesn't remove the linked version
     #[clap(name = "unalias", visible_alias = "rma")]
     UnAlias(unalias::UnAlias),
 
-    /// Remove the installed Nodejs with the given version or alias
+    /// Remove the installed version or alias
     ///
     /// Example: snm uninstall 14 | snm uninstall lts-fermium
     ///
     /// NOTE: If given an alias like ten or lts-fermium then it will remove the version that the alias is pointing to and all the aliases which are pointing to the same version.
-    /// Also, If multiple installtion were found for a version, then it will remove the latest.
+    /// Also, If multiple installation were found for a version, then it will remove the latest.
     #[clap(name = "uninstall", visible_alias = "rm")]
     UnInstall(uninstall::UnInstall),
 }
@@ -85,7 +88,7 @@ impl SubCommand {
             Self::Ls(m) => m.init(config),
             Self::LsRemote(m) => m.init(config),
             Self::Which(m) => m.init(config),
-            Self::Prune(m) => m.init(config),
+            Self::Purge(m) => m.init(config),
             Self::UnAlias(m) => m.init(config),
             Self::UnInstall(m) => m.init(config),
         }
