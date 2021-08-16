@@ -49,7 +49,9 @@ pub enum SubCommand {
     #[clap(visible_alias = "lsr")]
     LsRemote(ls_remote::LsRemote),
 
-    /// Output path for installed node version
+    /// Output path for the active node version
+    ///
+    /// NOTE: If the <version> is given then it will try to find the path for all the installation which matches the given version
     Which(which::Which),
 
     /// Remove everything except the active version.
