@@ -18,9 +18,9 @@ path = "src/lib/mod.rs"
 name = "snm"
 
 [dependencies]
-anyhow = "1.0.42"
+anyhow = "1.0.43"
 clap = "3.0.0-beta.4"
-clap_generate = "3.0.0-beta.2"
+clap_generate = "3.0.0-beta.4"
 console = "0.14.1"
 dirs-next = "2.0.0"
 indicatif = "0.16.2"
@@ -37,7 +37,7 @@ lazy_static = "1.4.0"
 
 [target.'cfg(unix)'.dependencies]
 xz2 = "0.1.6"
-tar = "0.4.35"
+tar = "0.4.37"
 
 [target.'cfg(windows)'.dependencies]
 zip = "0.5.13"
