@@ -17,8 +17,14 @@ const VERSION_FILES: [&str; 3] = [".nvmrc", ".node-version", PACKAGE_JSON];
 /// It could be alias, lts codename, partial or full semver
 #[derive(Debug, PartialEq, Eq)]
 pub enum UserVersion {
-    /// Full, Partial or Range semver ie. 14 | 14.17 | 14.17.4 | >14.14 | <=12.3
-    Semver(VersionReq),
+    /// Only major segment ie. 18
+    Major(u64),
+    /// Major and Minor segment ie. 12.3
+    MajorMinor(u64, u64),
+    /// Full semver ie. 14.17.4
+    Semver(DistVersion),
+    /// Range semver ie. >14.14 | <=12.3
+    Range(VersionReq),
     /// Alias name ie. latest, lts
     Alias(UserAlias),
     /// LTS codename ie. fermium, erbium
@@ -27,21 +33,32 @@ pub enum UserVersion {
 
 impl ParseVersion<'_> for UserVersion {
     type Item = Self;
-    fn parse(ver: &str) -> SnmRes<Self::Item> {
-        // check if the version is a semver string
-        let m = match VersionReq::parse(ver.trim_start_matches('v')) {
-            Ok(x) => Self::Semver(x),
-            Err(_) => {
-                // Check if Lts, else alias
-                if UserLts::is_lts(ver) {
-                    Self::Lts(UserLts::new(ver))
-                } else {
-                    Self::Alias(UserAlias::new(ver))
+    fn parse(v: &str) -> SnmRes<Self::Item> {
+        let trimmed = v.trim_start_matches('v');
+
+        let version = if let Ok(x) = DistVersion::parse(trimmed) {
+            Self::Semver(x)
+        } else {
+            let is_numeric = trimmed.chars().next().unwrap_or_default().is_numeric();
+
+            if is_numeric {
+                let mut splitted = trimmed.splitn(2, '.');
+
+                match (splitted.next(), splitted.next()) {
+                    (Some(a), Some(b)) => Self::MajorMinor(a.parse::<u64>()?, b.parse::<u64>()?),
+                    (Some(a), None) => Self::Major(a.parse::<u64>()?),
+                    _ => anyhow::bail!("Unable to parse the user provided version"),
                 }
+            } else if let Ok(x) = VersionReq::parse(v) {
+                Self::Range(x)
+            } else if UserLts::is_lts(v) {
+                Self::Lts(UserLts::new(v))
+            } else {
+                Self::Alias(UserAlias::new(v))
             }
         };
 
-        Ok(m)
+        Ok(version)
     }
 }
 
@@ -56,7 +73,10 @@ impl FromStr for UserVersion {
 impl Display for UserVersion {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
+            Self::Major(major) => write!(f, "v{}.x.x", major),
+            Self::MajorMinor(major, minor) => write!(f, "v{}.{}.x", major, minor),
             Self::Semver(x) => x.fmt(f),
+            Self::Range(x) => x.fmt(f),
             Self::Alias(x) => x.fmt(f),
             Self::Lts(x) => x.fmt(f),
         }
@@ -76,7 +96,10 @@ pub struct PkgJson {
 impl UserVersion {
     pub fn match_release(&self, release: &Release) -> bool {
         match (self, &release.version, &release.lts) {
-            (Self::Semver(a), DistVersion(b), _) => a.matches(b),
+            (Self::Major(a), DistVersion(b), _) => a == &b.major,
+            (Self::MajorMinor(a, b), DistVersion(c), _) => a == &c.major && b == &c.minor,
+            (Self::Semver(a), b, _) => a.eq(b),
+            (Self::Range(a), DistVersion(b), _) => a.matches(b),
             (Self::Lts(a), _, Lts::Yes(b)) => a.as_ref() == b,
             _ => false,
         }
