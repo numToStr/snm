@@ -30,7 +30,7 @@ fn latest() {
 #[test]
 fn find_release_semver() {
     let dist_version = DistVersion::parse("10.10.0").unwrap();
-    let user_version = UserVersion::Semver(VersionReq::parse("10").unwrap());
+    let user_version = UserVersion::Range(VersionReq::parse("10").unwrap());
     let release = FETCH.find_release(&user_version).unwrap();
 
     assert_eq!(release.version.as_ref().major, dist_version.as_ref().major)

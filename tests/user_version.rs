@@ -1,4 +1,3 @@
-use semver::VersionReq;
 use snm_core::{
     fetcher::{Lts, Release},
     types::{UserAlias, UserLts},
@@ -11,7 +10,7 @@ fn major() {
     let s = "10";
     let ver = UserVersion::from_str(s).unwrap();
 
-    assert_eq!(ver, UserVersion::Semver(VersionReq::from_str(s).unwrap()));
+    assert_eq!(ver, UserVersion::Major(10));
 }
 
 #[test]
@@ -19,7 +18,7 @@ fn major_minor() {
     let s = "10.15";
     let ver = UserVersion::from_str(s).unwrap();
 
-    assert_eq!(ver, UserVersion::Semver(VersionReq::from_str(s).unwrap()));
+    assert_eq!(ver, UserVersion::MajorMinor(10, 15));
 }
 
 #[test]
@@ -27,7 +26,7 @@ fn full() {
     let s = "10.15.10";
     let ver = UserVersion::from_str(s).unwrap();
 
-    assert_eq!(ver, UserVersion::Semver(VersionReq::from_str(s).unwrap()));
+    assert_eq!(ver, UserVersion::Semver(DistVersion::parse(s).unwrap()));
 }
 
 #[test]
@@ -42,6 +41,25 @@ fn alias() {
     let s = "i-am-alias";
     let v = UserVersion::from_str(s).unwrap();
     assert_eq!(v, UserVersion::Alias(UserAlias::new(s)))
+}
+
+#[test]
+fn range() {
+    let r = ">=14.13";
+    let v = UserVersion::parse(r).unwrap();
+
+    let rel_gt = Release {
+        version: DistVersion::parse("14.19.10").unwrap(),
+        lts: Lts::No,
+    };
+
+    let rel_lt = Release {
+        version: DistVersion::parse("13.10.4").unwrap(),
+        lts: Lts::No,
+    };
+
+    assert!(v.match_release(&rel_gt));
+    assert!(!v.match_release(&rel_lt));
 }
 
 #[test]
@@ -93,7 +111,7 @@ fn from_file_nvmrc() {
     // Check .nvmrc in project root
     let from_file = UserVersion::from_file().unwrap();
 
-    let version = UserVersion::Semver(VersionReq::parse("14").unwrap());
+    let version = UserVersion::Major(14);
 
     let release = Release {
         version: DistVersion::parse("14.10.13").unwrap(),
