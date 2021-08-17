@@ -11,7 +11,7 @@ use snm_core::{
 #[derive(Debug, Clap)]
 pub struct UnInstall {
     /// Semver, Alias or Lts codename that needs to be removed
-    version_or_alias: UserVersion,
+    version: UserVersion,
 
     /// Don't remove if the version is currently used.
     #[clap(short = 'N', long)]
@@ -25,7 +25,7 @@ impl super::Command for UnInstall {
 
         // first we need to find out the whether the provided version is an alias, lts codename or partial semver
         // If the version is alias or codename, then we need to find the linked/installed version
-        let version = match &self.version_or_alias {
+        let version = match &self.version {
             UserVersion::Lts(lts_code) => {
                 let alias_ver = alias_dir.join(&lts_code.to_string());
 
