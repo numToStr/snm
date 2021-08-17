@@ -31,7 +31,7 @@ impl super::Command for Purge {
         if !default_alias.as_ref().exists() {
             anyhow::bail!(
                 "Unable to prune. No {} alias found",
-                style(UserAlias::DEFAULT).bold()
+                style(UserAlias::ACTIVE).bold()
             );
         }
 

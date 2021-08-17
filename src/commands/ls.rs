@@ -17,7 +17,7 @@ impl super::Command for Ls {
         for version in versions.into_iter() {
             match aliases.get(&version) {
                 Some(a) => {
-                    if a.contains(&UserAlias::DEFAULT.to_string()) {
+                    if a.iter().any(|x| *x == UserAlias::ACTIVE) {
                         println!("> {} \t{}", style(version).bold(), a.join(", "));
                     } else {
                         println!("- {} \t{}", version, a.join(", "));

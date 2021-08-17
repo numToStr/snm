@@ -72,9 +72,7 @@ impl Config {
     }
 
     pub fn alias_default(&self) -> AliasDir {
-        let p = self.alias_dir().as_ref().join(UserAlias::DEFAULT);
-
-        AliasDir::new(p)
+        self.alias_dir().join(UserAlias::ACTIVE)
     }
 
     pub fn bin_path(&self, path: &Path) -> PathBuf {

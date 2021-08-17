@@ -33,7 +33,7 @@ impl super::Command for UnInstall {
                     anyhow::bail!("Codename {} not found", style(lts_code).bold());
                 }
 
-                Linker::read_convert_to_dist(&alias_dir, &release_dir)?
+                Linker::read_convert_to_dist(&alias_ver, &release_dir)?
             }
             UserVersion::Alias(alias) => {
                 let alias_ver = alias_dir.join(alias.as_ref());
@@ -42,7 +42,7 @@ impl super::Command for UnInstall {
                     anyhow::bail!("Alias {} not found", style(alias).bold());
                 }
 
-                Linker::read_convert_to_dist(&alias_dir, &release_dir)?
+                Linker::read_convert_to_dist(&alias_ver, &release_dir)?
             }
             x => DistVersion::match_version(&release_dir, x)?,
         };
@@ -52,7 +52,7 @@ impl super::Command for UnInstall {
         let aliases = Linker::list_for_version(&version, &alias_dir, &release_dir)?;
 
         // Checking whether the version is currently used or not
-        let is_default = aliases.iter().any(|x| x.as_str() == UserAlias::DEFAULT);
+        let is_default = aliases.iter().any(|x| *x == UserAlias::ACTIVE);
 
         if is_default && self.no_used {
             anyhow::bail!(
