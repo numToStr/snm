@@ -16,7 +16,7 @@ use super::{ParseVersion, UserVersion};
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct DistVersion(pub(super) Version);
 
-impl ParseVersion<'_> for DistVersion {
+impl ParseVersion for DistVersion {
     type Item = Self;
     fn parse(v: &str) -> SnmRes<Self::Item> {
         Ok(DistVersion(Version::parse(v)?))

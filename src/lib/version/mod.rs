@@ -6,7 +6,7 @@ pub use user_version::*;
 
 use super::SnmRes;
 
-pub trait ParseVersion<'a> {
+pub trait ParseVersion {
     type Item;
-    fn parse(v: &'a str) -> SnmRes<Self::Item>;
+    fn parse(v: &str) -> SnmRes<Self::Item>;
 }

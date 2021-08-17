@@ -31,7 +31,7 @@ pub enum UserVersion {
     Lts(UserLts),
 }
 
-impl ParseVersion<'_> for UserVersion {
+impl ParseVersion for UserVersion {
     type Item = Self;
     fn parse(v: &str) -> SnmRes<Self::Item> {
         let trimmed = v.trim_start_matches('v');
