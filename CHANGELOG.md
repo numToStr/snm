@@ -18,6 +18,10 @@ snm purge
 snm purge --all
 ```
 
+-   Update `clap` to `v3.0.0-beta.2` [#84](https://github.com/numToStr/snm/pull/84)
+
+-   Make `<version>` argument optional in `snm which` [#86](https://github.com/numToStr/snm/pull/86)
+
 ## [0.7.0] - 2021-08-09
 
 I finally rewrote the whole program to be more idiomatic. Removing any unnecessary code, making the codebase more readable and maintainable. Sadly, in doing so I've to introduce some breaking change. I've listed the major changes below:
