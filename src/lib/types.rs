@@ -4,6 +4,8 @@ use std::{
     str::FromStr,
 };
 
+use console::style;
+
 macro_rules! as_ref {
     ($impl: ident, $ty: ty) => {
         impl AsRef<$ty> for $impl {
@@ -72,6 +74,10 @@ impl Display for UserAlias {
 impl FromStr for UserAlias {
     type Err = anyhow::Error;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
+        if s == Self::DEFAULT {
+            anyhow::bail!("{} is not allowed", style(Self::DEFAULT).bold())
+        }
+
         Ok(Self::new(s))
     }
 }

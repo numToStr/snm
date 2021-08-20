@@ -54,7 +54,8 @@ impl ParseVersion for UserVersion {
             } else if UserLts::is_lts(v) {
                 Self::Lts(UserLts::new(v))
             } else {
-                Self::Alias(UserAlias::new(v))
+                // from_str method is used bcz it returns err if the given alias is same as active alias
+                Self::Alias(UserAlias::from_str(v)?)
             }
         };
 
