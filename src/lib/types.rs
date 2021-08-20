@@ -74,8 +74,8 @@ impl Display for UserAlias {
 impl FromStr for UserAlias {
     type Err = anyhow::Error;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        if s == Self::DEFAULT {
-            anyhow::bail!("{} is not allowed", style(Self::DEFAULT).bold())
+        if s == Self::ACTIVE {
+            anyhow::bail!("{} is not allowed", style(Self::ACTIVE).bold())
         }
 
         Ok(Self::new(s))
