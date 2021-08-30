@@ -13,9 +13,9 @@ pub struct UnInstall {
     /// Semver, Alias or Lts codename that needs to be removed
     version: UserVersion,
 
-    /// Don't remove if the version is currently used.
+    /// Don't remove if the version is currently active.
     #[clap(short = 'N', long)]
-    no_used: bool,
+    no_active: bool,
 }
 
 impl super::Command for UnInstall {
@@ -51,12 +51,12 @@ impl super::Command for UnInstall {
         // then remove them all the aliases before removing the actuall installed version
         let aliases = Linker::list_for_version(&version, &alias_dir, &release_dir)?;
 
-        // Checking whether the version is currently used or not
+        // Checking whether the version is currently active or not
         let is_default = aliases.iter().any(|x| *x == UserAlias::ACTIVE);
 
-        if is_default && self.no_used {
+        if is_default && self.no_active {
             anyhow::bail!(
-                "Unable to uninstall. Version {} is currently used!",
+                "Unable to uninstall. Version {} is currently active!",
                 style(version).bold()
             );
         }
