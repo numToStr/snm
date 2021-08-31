@@ -4,6 +4,8 @@ use std::{
     str::FromStr,
 };
 
+use console::style;
+
 macro_rules! as_ref {
     ($impl: ident, $ty: ty) => {
         impl AsRef<$ty> for $impl {
@@ -54,7 +56,7 @@ as_ref!(UserLts, str);
 pub struct UserAlias(String);
 
 impl UserAlias {
-    pub const DEFAULT: &'static str = "default";
+    pub const ACTIVE: &'static str = "active";
 
     pub fn new(s: &str) -> Self {
         Self(s.replace('/', "-").replace('\\', "-"))
@@ -72,6 +74,10 @@ impl Display for UserAlias {
 impl FromStr for UserAlias {
     type Err = anyhow::Error;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
+        if s == Self::ACTIVE {
+            anyhow::bail!("{} is not allowed", style(Self::ACTIVE).bold())
+        }
+
         Ok(Self::new(s))
     }
 }

@@ -2,6 +2,12 @@
 
 ## [0.8.0]
 
+### Breaking
+
+-   Rename active version alias from `default` to `active` [#89](https://github.com/numToStr/snm/pull/89)
+
+> If you are upgrading from an older version, `snm` will not recognize the running version. To fix this just run the `use` command with a version of your choice.
+
 ### Changes
 
 -   Rename `prune` command to `purge` but retain `prune` as an alias [#82](https://github.com/numToStr/snm/pull/82)

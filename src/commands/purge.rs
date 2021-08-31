@@ -31,13 +31,13 @@ impl super::Command for Purge {
         if !default_alias.as_ref().exists() {
             anyhow::bail!(
                 "Unable to prune. No {} alias found",
-                style(UserAlias::DEFAULT).bold()
+                style(UserAlias::ACTIVE).bold()
             );
         }
 
         let release_dir = config.release_dir();
 
-        let used_ver = Linker::read_convert_to_dist(&default_alias, &release_dir)?;
+        let active_ver = Linker::read_convert_to_dist(&default_alias, &release_dir)?;
 
         // Nuke the alias directory after reading the default alias
         remove_dir_all(config.alias_dir().as_ref())?;
@@ -49,7 +49,7 @@ impl super::Command for Purge {
         let dist_versions = DistVersion::list_versions(&release_dir)?;
         for version in dist_versions {
             // If the version is currently active then don't delete
-            if version.eq(&used_ver) {
+            if version.eq(&active_ver) {
                 continue;
             }
 
@@ -63,7 +63,7 @@ impl super::Command for Purge {
         // Restoring the default alias
         // NOTE: don't use the `default_alias` variable
         Linker::create_link(
-            &release_dir.join(used_ver.to_string()),
+            &release_dir.join(active_ver.to_string()),
             &config.alias_default(),
         )?;
 

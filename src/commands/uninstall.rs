@@ -11,11 +11,11 @@ use snm_core::{
 #[derive(Debug, Clap)]
 pub struct UnInstall {
     /// Semver, Alias or Lts codename that needs to be removed
-    version_or_alias: UserVersion,
+    version: UserVersion,
 
-    /// Don't remove if the version is currently used.
+    /// Don't remove if the version is currently active.
     #[clap(short = 'N', long)]
-    no_used: bool,
+    no_active: bool,
 }
 
 impl super::Command for UnInstall {
@@ -25,7 +25,7 @@ impl super::Command for UnInstall {
 
         // first we need to find out the whether the provided version is an alias, lts codename or partial semver
         // If the version is alias or codename, then we need to find the linked/installed version
-        let version = match &self.version_or_alias {
+        let version = match &self.version {
             UserVersion::Lts(lts_code) => {
                 let alias_ver = alias_dir.join(&lts_code.to_string());
 
@@ -33,7 +33,7 @@ impl super::Command for UnInstall {
                     anyhow::bail!("Codename {} not found", style(lts_code).bold());
                 }
 
-                Linker::read_convert_to_dist(&alias_dir, &release_dir)?
+                Linker::read_convert_to_dist(&alias_ver, &release_dir)?
             }
             UserVersion::Alias(alias) => {
                 let alias_ver = alias_dir.join(alias.as_ref());
@@ -42,7 +42,7 @@ impl super::Command for UnInstall {
                     anyhow::bail!("Alias {} not found", style(alias).bold());
                 }
 
-                Linker::read_convert_to_dist(&alias_dir, &release_dir)?
+                Linker::read_convert_to_dist(&alias_ver, &release_dir)?
             }
             x => DistVersion::match_version(&release_dir, x)?,
         };
@@ -51,12 +51,12 @@ impl super::Command for UnInstall {
         // then remove them all the aliases before removing the actuall installed version
         let aliases = Linker::list_for_version(&version, &alias_dir, &release_dir)?;
 
-        // Checking whether the version is currently used or not
-        let is_default = aliases.iter().any(|x| x.as_str() == UserAlias::DEFAULT);
+        // Checking whether the version is currently active or not
+        let is_default = aliases.iter().any(|x| *x == UserAlias::ACTIVE);
 
-        if is_default && self.no_used {
+        if is_default && self.no_active {
             anyhow::bail!(
-                "Unable to uninstall. Version {} is currently used!",
+                "Unable to uninstall. Version {} is currently active!",
                 style(version).bold()
             );
         }
