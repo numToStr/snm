@@ -154,7 +154,7 @@ snm install lts/fermium
 
 -   `snm uninstall [version|alias]` : Removes the installed Nodejs
 
-> If given an alias like `ten` or `lts-fermium` then it will remove the version which the alias is pointing at and all the aliases which are pointing to the same version. Also, uninstalling a version will throw an error, if multiple installation is found in the same semver range or if the provided version/alias is active, add `--force` flag to override this behaviour.
+> If given an alias like `ten` or `lts-fermium` then it will remove the version which the alias is pointing at and all the aliases which are pointing to the same version. Also, uninstalling a version will throw an error, if multiple installation is found in the same semver range or if the provided version/alias is active, add `--force` flag to override this behavior.
 
 ```sh
 # Following command will remove 14.x.x installation

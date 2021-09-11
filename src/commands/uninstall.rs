@@ -56,7 +56,7 @@ impl super::Command for UnInstall {
 
         if is_default && !self.force {
             anyhow::bail!(
-                "Unable to uninstall! Version {} is currently active. Add --force to override this behaviour",
+                "Unable to uninstall! Version {} is currently active. Add --force to override this behavior",
                 style(version).bold()
             );
         }
