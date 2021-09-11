@@ -13,7 +13,7 @@ pub struct UnInstall {
     /// Semver, Alias or Lts codename that needs to be removed
     version: UserVersion,
 
-    /// Forcefull remove the active version
+    /// Forcefully remove the active version
     #[clap(short, long)]
     force: bool,
 }
