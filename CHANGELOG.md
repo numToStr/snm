@@ -28,6 +28,8 @@ snm purge --all
 
 -   Make `<version>` argument optional in `snm which` [#86](https://github.com/numToStr/snm/pull/86)
 
+-   Prevent uninstalling the active version by default [#93](https://github.com/numToStr/snm/pull/93)
+
 ## [0.7.0] - 2021-08-09
 
 I finally rewrote the whole program to be more idiomatic. Removing any unnecessary code, making the codebase more readable and maintainable. Sadly, in doing so I've to introduce some breaking change. I've listed the major changes below:
