@@ -79,12 +79,7 @@ download_snm() {
   # if [ "$USE_HOMEBREW" == "true" ]; then
   #   brew install snm
   # else
-    if [ "$RELEASE" == "latest" ]; then
-      URL="https://github.com/numToStr/snm/releases/latest/download/$FILENAME.tar.gz"
-    else
-      URL="https://github.com/numToStr/snm/releases/download/$RELEASE/$FILENAME.tar.gz"
-    fi
-
+    URL="https://github.com/numToStr/snm/releases/download/$RELEASE/$FILENAME.tar.gz"
     DOWNLOAD_DIR=$(mktemp -d)
 
     echo "Downloading $URL..."
