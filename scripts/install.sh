@@ -60,9 +60,9 @@ set_filename() {
     esac
   # elif [ "$OS" == "Darwin" ] && [ "$FORCE_INSTALL" == "true" ]; then
   elif [ "$OS" == "Darwin" ]; then
-    FILENAME="snm-x86_64-apple-darwin"
+    FILENAME="snm-$RELEASE-x86_64-apple-darwin"
     # USE_HOMEBREW="false"
-    echo "Downloading the latest snm binary from GitHub..."
+    echo "Downloading snm $VERSION binary from GitHub..."
     # echo "  Pro tip: it's eaiser to use Homebrew for managing snm in MacOS."
     # echo "           Remove the \`--force-no-brew\` so it will be easy to upgrade."
   # elif [ "$OS" == "Darwin" ]; then
