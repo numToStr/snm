@@ -19,7 +19,7 @@ name = "snm"
 
 [dependencies]
 anyhow = "1.0.43"
-clap = "3.0.0-beta.4"
+clap = "3.0.0-beta.5"
 clap_generate = "3.0.0-beta.4"
 console = "0.14.1"
 dirs-next = "2.0.0"
