@@ -5,7 +5,6 @@
 set -e
 
 INSTALL_DIR="$HOME/.snm"
-RELEASE="v0.8.0"
 OS="$(uname -s)"
 
 # Parse Flags
@@ -39,6 +38,11 @@ parse_args() {
       ;;
     esac
   done
+}
+
+# Resources: https://gist.github.com/lukechilds/a83e1d7127b78fef38c2914c4ececc3c
+get_latest_release() {
+  RELEASE=$(curl --silent "https://api.github.com/repos/numToStr/snm/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")' &)
 }
 
 set_filename() {
@@ -209,6 +213,7 @@ setup_shell() {
 }
 
 parse_args "$@"
+get_latest_release
 set_filename
 check_dependencies
 download_snm
