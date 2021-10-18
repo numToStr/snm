@@ -1,11 +1,11 @@
-# SOURCE: https://github.com/Schniz/fnm/blob/master/.ci/install.sh
-
 #!/bin/bash
+
+# SOURCE: https://github.com/Schniz/fnm/blob/master/.ci/install.sh
 
 set -e
 
 INSTALL_DIR="$HOME/.snm"
-RELEASE="latest"
+RELEASE="v0.8.0"
 OS="$(uname -s)"
 
 # Parse Flags
@@ -27,7 +27,7 @@ parse_args() {
     #   echo "\`--force-install\`: I hope you know what you're doing." >&2
     #   FORCE_INSTALL="true"
     #   shift
-      ;;
+    #  ;;
     -r | --release)
       RELEASE="$2"
       shift # past release argument
@@ -46,13 +46,13 @@ set_filename() {
     # Based on https://stackoverflow.com/a/45125525
     case "$(uname -m)" in
       arm | armv7*)
-        FILENAME="snm-armv7-unknown-linux-gnueabihf"
+        FILENAME="snm-$RELEASE-armv7-unknown-linux-gnueabihf"
         ;;
       aarch* | armv8*)
-        FILENAME="snm-aarch64-unknown-linux-gnu"
+        FILENAME="snm-$RELEASE-aarch64-unknown-linux-gnu"
         ;;
       *)
-        FILENAME="snm-x86_64-unknown-linux-gnu"
+        FILENAME="snm-$RELEASE-x86_64-unknown-linux-gnu"
     esac
   # elif [ "$OS" == "Darwin" ] && [ "$FORCE_INSTALL" == "true" ]; then
   elif [ "$OS" == "Darwin" ]; then
