@@ -1,11 +1,10 @@
-# SOURCE: https://github.com/Schniz/fnm/blob/master/.ci/install.sh
-
 #!/bin/bash
+
+# SOURCE: https://github.com/Schniz/fnm/blob/master/.ci/install.sh
 
 set -e
 
 INSTALL_DIR="$HOME/.snm"
-RELEASE="latest"
 OS="$(uname -s)"
 
 # Parse Flags
@@ -27,7 +26,7 @@ parse_args() {
     #   echo "\`--force-install\`: I hope you know what you're doing." >&2
     #   FORCE_INSTALL="true"
     #   shift
-      ;;
+    #  ;;
     -r | --release)
       RELEASE="$2"
       shift # past release argument
@@ -41,24 +40,29 @@ parse_args() {
   done
 }
 
+# Resources: https://gist.github.com/lukechilds/a83e1d7127b78fef38c2914c4ececc3c
+get_latest_release() {
+  RELEASE=$(curl --silent "https://api.github.com/repos/numToStr/snm/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")' &)
+}
+
 set_filename() {
   if [ "$OS" == "Linux" ]; then
     # Based on https://stackoverflow.com/a/45125525
     case "$(uname -m)" in
       arm | armv7*)
-        FILENAME="snm-armv7-unknown-linux-gnueabihf"
+        FILENAME="snm-$RELEASE-armv7-unknown-linux-gnueabihf"
         ;;
       aarch* | armv8*)
-        FILENAME="snm-aarch64-unknown-linux-gnu"
+        FILENAME="snm-$RELEASE-aarch64-unknown-linux-gnu"
         ;;
       *)
-        FILENAME="snm-x86_64-unknown-linux-gnu"
+        FILENAME="snm-$RELEASE-x86_64-unknown-linux-gnu"
     esac
   # elif [ "$OS" == "Darwin" ] && [ "$FORCE_INSTALL" == "true" ]; then
   elif [ "$OS" == "Darwin" ]; then
-    FILENAME="snm-x86_64-apple-darwin"
+    FILENAME="snm-$RELEASE-x86_64-apple-darwin"
     # USE_HOMEBREW="false"
-    echo "Downloading the latest snm binary from GitHub..."
+    echo "Downloading snm $VERSION binary from GitHub..."
     # echo "  Pro tip: it's eaiser to use Homebrew for managing snm in MacOS."
     # echo "           Remove the \`--force-no-brew\` so it will be easy to upgrade."
   # elif [ "$OS" == "Darwin" ]; then
@@ -75,12 +79,7 @@ download_snm() {
   # if [ "$USE_HOMEBREW" == "true" ]; then
   #   brew install snm
   # else
-    if [ "$RELEASE" == "latest" ]; then
-      URL="https://github.com/numToStr/snm/releases/latest/download/$FILENAME.tar.gz"
-    else
-      URL="https://github.com/numToStr/snm/releases/download/$RELEASE/$FILENAME.tar.gz"
-    fi
-
+    URL="https://github.com/numToStr/snm/releases/download/$RELEASE/$FILENAME.tar.gz"
     DOWNLOAD_DIR=$(mktemp -d)
 
     echo "Downloading $URL..."
@@ -209,6 +208,7 @@ setup_shell() {
 }
 
 parse_args "$@"
+get_latest_release
 set_filename
 check_dependencies
 download_snm
