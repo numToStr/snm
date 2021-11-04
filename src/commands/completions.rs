@@ -1,10 +1,6 @@
-use crate::cli::Cli;
-use crate::cli::Config;
+use crate::cli::{Cli, Config};
 use clap::{crate_name, IntoApp, Parser};
-use clap_generate::{
-    generate,
-    generators::{Bash, Fish, PowerShell, Zsh},
-};
+use clap_generate::{generate, generators};
 use snm_core::{shell::ShellKind, SnmRes};
 
 #[derive(Debug, Parser)]
@@ -22,16 +18,16 @@ impl super::Command for Completions {
 
         match &self.shell {
             ShellKind::Bash => {
-                generate::<Bash, _>(&mut app, name, &mut stdout);
+                generate(generators::Bash, &mut app, name, &mut stdout);
             }
             ShellKind::Zsh => {
-                generate::<Zsh, _>(&mut app, name, &mut stdout);
+                generate(generators::Zsh, &mut app, name, &mut stdout);
             }
             ShellKind::Fish => {
-                generate::<Fish, _>(&mut app, name, &mut stdout);
+                generate(generators::Fish, &mut app, name, &mut stdout);
             }
             ShellKind::Pwsh => {
-                generate::<PowerShell, _>(&mut app, name, &mut stdout);
+                generate(generators::PowerShell, &mut app, name, &mut stdout);
             }
         };
 
