@@ -18,7 +18,7 @@ path = "src/lib/mod.rs"
 name = "snm"
 
 [dependencies]
-anyhow = "1.0.43"
+anyhow = "1.0.45"
 clap = "3.0.0-beta.5"
 clap_generate = "3.0.0-beta.5"
 console = "0.14.1"
