@@ -1,11 +1,11 @@
 use crate::cli::Config;
-use clap::Clap;
+use clap::Parser;
 use console::style;
 use snm_core::{downloader::Downloader, fetcher::Fetcher, linker::Linker, SnmRes};
 
 const ALIAS: &str = "latest";
 
-#[derive(Debug, Clap)]
+#[derive(Debug, Parser)]
 pub struct Latest;
 
 impl super::Command for Latest {

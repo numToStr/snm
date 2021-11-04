@@ -1,10 +1,10 @@
 use crate::cli::Config;
-use clap::Clap;
+use clap::Parser;
 use console::style;
 use snm_core::{linker::Linker, types::UserAlias, version::DistVersion, SnmRes};
 use std::fs::remove_dir_all;
 
-#[derive(Debug, Clap)]
+#[derive(Debug, Parser)]
 pub struct Purge {
     /// Remove everything, including the active version
     #[clap(short, long)]

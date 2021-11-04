@@ -1,11 +1,11 @@
 use crate::cli::Config;
-use clap::Clap;
+use clap::Parser;
 use snm_core::{
     shell::{bash, fish, pwsh, zsh, Shell, ShellKind},
     SnmRes,
 };
 
-#[derive(Debug, Clap)]
+#[derive(Debug, Parser)]
 pub struct Env {
     /// Add the shell script to run `snm use` on directory change
     #[clap(short, long)]

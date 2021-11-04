@@ -3,7 +3,7 @@ pub mod fish;
 pub mod pwsh;
 pub mod zsh;
 
-use clap::Clap;
+use clap::Parser;
 use std::path::Path;
 
 pub trait Shell {
@@ -12,7 +12,7 @@ pub trait Shell {
     fn use_on_cd(&self) -> &'static str;
 }
 
-#[derive(Debug, Clap, PartialEq, Eq)]
+#[derive(Debug, Parser, PartialEq, Eq)]
 pub enum ShellKind {
     /// Setup the bash shell environment
     Bash,

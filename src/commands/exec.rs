@@ -1,5 +1,5 @@
 use crate::cli::Config;
-use clap::Clap;
+use clap::Parser;
 use console::style;
 use snm_core::{
     version::{DistVersion, UserVersion},
@@ -8,7 +8,7 @@ use snm_core::{
 use std::env;
 use std::process::{self, Command, Stdio};
 
-#[derive(Debug, Clap)]
+#[derive(Debug, Parser)]
 pub struct Exec {
     /// Nodejs version needed for executing the following command
     version: UserVersion,

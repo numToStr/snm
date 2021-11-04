@@ -1,13 +1,13 @@
 use crate::cli::Cli;
 use crate::cli::Config;
-use clap::{crate_name, Clap, IntoApp};
+use clap::{crate_name, IntoApp, Parser};
 use clap_generate::{
     generate,
     generators::{Bash, Fish, PowerShell, Zsh},
 };
 use snm_core::{shell::ShellKind, SnmRes};
 
-#[derive(Debug, Clap)]
+#[derive(Debug, Parser)]
 pub struct Completions {
     /// Type of shell you want to configure
     #[clap(subcommand)]

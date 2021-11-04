@@ -6,10 +6,10 @@ use snm_core::{
     SnmRes,
 };
 
-use clap::Clap;
+use clap::Parser;
 use console::style;
 
-#[derive(Debug, Clap)]
+#[derive(Debug, Parser)]
 pub struct Alias {
     /// Partial semver string
     version: UserVersion,

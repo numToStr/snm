@@ -1,5 +1,5 @@
 use crate::cli::Config;
-use clap::{crate_authors, crate_description, crate_name, crate_version, Clap};
+use clap::{crate_authors, crate_description, crate_name, crate_version, Parser};
 
 use super::SubCommand;
 
@@ -23,7 +23,7 @@ Dotfiles:
     - package.json ('engines.node' field)
 "#;
 
-#[derive(Clap, Debug)]
+#[derive(Parser, Debug)]
 #[clap(
     name = crate_name!(),
     version = crate_version!(),
