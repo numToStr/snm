@@ -1,9 +1,9 @@
 use crate::cli::Config;
-use clap::Clap;
+use clap::Parser;
 use console::style;
 use snm_core::{fetcher::Fetcher, version::UserVersion, SnmRes};
 
-#[derive(Debug, Clap)]
+#[derive(Debug, Parser)]
 pub struct LsRemote {
     /// Version that needs to be searched. Can be a partial semver string.
     version: Option<UserVersion>,

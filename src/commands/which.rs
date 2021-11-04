@@ -1,5 +1,5 @@
 use crate::cli::Config;
-use clap::Clap;
+use clap::Parser;
 use snm_core::{
     linker::Linker,
     version::{DistVersion, UserVersion},
@@ -12,7 +12,7 @@ const EXT: &str = "node";
 #[cfg(windows)]
 const EXT: &str = "node.exe";
 
-#[derive(Debug, Clap)]
+#[derive(Debug, Parser)]
 pub struct Which {
     /// Can be partial or full semver string.
     version: Option<UserVersion>,

@@ -1,9 +1,9 @@
 use crate::cli::Config;
-use clap::Clap;
+use clap::Parser;
 use console::style;
 use snm_core::{linker::Linker, types::UserAlias, version::DistVersion, SnmRes};
 
-#[derive(Debug, Clap)]
+#[derive(Debug, Parser)]
 pub struct Ls;
 
 impl super::Command for Ls {

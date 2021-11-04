@@ -8,10 +8,10 @@ use snm_core::{
     SnmRes,
 };
 
-use clap::Clap;
+use clap::Parser;
 use console::style;
 
-#[derive(Debug, Clap)]
+#[derive(Debug, Parser)]
 pub struct Install {
     /// A version string. Can be a partial semver or a LTS version name by the format lts/NAME
     version: UserVersion,

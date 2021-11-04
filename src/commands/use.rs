@@ -1,5 +1,5 @@
 use crate::cli::Config;
-use clap::Clap;
+use clap::Parser;
 use console::style;
 use snm_core::{
     linker::Linker,
@@ -7,7 +7,7 @@ use snm_core::{
     SnmRes,
 };
 
-#[derive(Debug, Clap)]
+#[derive(Debug, Parser)]
 pub struct Use {
     /// Can be a partial semver or a LTS version name by the format lts/NAME.
     version: Option<UserVersion>,

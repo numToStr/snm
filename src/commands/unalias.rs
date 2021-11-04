@@ -1,9 +1,9 @@
 use crate::cli::Config;
-use clap::Clap;
+use clap::Parser;
 use console::style;
 use snm_core::{linker::Linker, types::UserAlias, SnmRes};
 
-#[derive(Debug, Clap)]
+#[derive(Debug, Parser)]
 pub struct UnAlias {
     /// Name of the alias
     #[clap(conflicts_with = "all", required_unless_present = "all")]

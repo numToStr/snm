@@ -1,5 +1,5 @@
 use crate::cli::Config;
-use clap::Clap;
+use clap::Parser;
 use console::style;
 use snm_core::{
     linker::Linker,
@@ -8,7 +8,7 @@ use snm_core::{
     SnmRes,
 };
 
-#[derive(Debug, Clap)]
+#[derive(Debug, Parser)]
 pub struct UnInstall {
     /// Semver, Alias or Lts codename that needs to be removed
     version: UserVersion,

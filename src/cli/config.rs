@@ -1,4 +1,4 @@
-use clap::Clap;
+use clap::Parser;
 use dirs_next::home_dir;
 use snm_core::{
     types::{AliasDir, DownloadDir, ReleaseDir, UserAlias},
@@ -10,7 +10,7 @@ use std::{
 };
 use url::Url;
 
-#[derive(Clap, Debug)]
+#[derive(Parser, Debug)]
 pub struct Config {
     /// Root directory of the snm installation
     #[clap(long, name = "base-dir", env = "SNM_DIR", global = true)]

@@ -2,12 +2,12 @@ use crate::commands::{
     alias, completions, env, exec, install, latest, ls, ls_remote, lts, purge, r#use, unalias,
     uninstall, which, Command,
 };
-use clap::Subcommand;
+use clap::Parser;
 use snm_core::SnmRes;
 
 use super::Config;
 
-#[derive(Subcommand, Debug)]
+#[derive(Parser, Debug)]
 pub enum SubCommand {
     /// Alias a version to a common name
     #[clap(visible_alias = "a")]
