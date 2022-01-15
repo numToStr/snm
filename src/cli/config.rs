@@ -1,7 +1,6 @@
 use clap::Parser;
-use dirs_next::home_dir;
 use snm_core::{
-    types::{AliasDir, DownloadDir, ReleaseDir, UserAlias},
+    types::{AliasDir, DownloadDir, ReleaseDir, SnmDir, UserAlias},
     MIRROR,
 };
 use std::{
@@ -13,8 +12,14 @@ use url::Url;
 #[derive(Parser, Debug)]
 pub struct Config {
     /// Root directory of the snm installation
-    #[clap(long, name = "base-dir", env = "SNM_DIR", global = true)]
-    pub snm_dir: Option<PathBuf>,
+    #[clap(
+        long,
+        name = "base-dir",
+        env = "SNM_DIR",
+        global = true,
+        default_value_t
+    )]
+    pub snm_dir: SnmDir,
 
     /// Nodejs release mirror
     #[clap(
@@ -47,26 +52,20 @@ impl Config {
         path
     }
 
-    pub fn snm_home(&self) -> PathBuf {
-        self.snm_dir
-            .to_owned()
-            .unwrap_or_else(|| home_dir().expect("Can't get home directory.").join(".snm"))
-    }
-
     pub fn release_dir(&self) -> ReleaseDir {
-        let p = self.ensure_create(self.snm_home().join("releases"));
+        let p = self.ensure_create(self.snm_dir.as_ref().join("releases"));
 
         ReleaseDir::new(p)
     }
 
     pub fn alias_dir(&self) -> AliasDir {
-        let p = self.ensure_create(self.snm_home().join("aliases"));
+        let p = self.ensure_create(self.snm_dir.as_ref().join("aliases"));
 
         AliasDir::new(p)
     }
 
     pub fn download_dir(&self) -> DownloadDir {
-        let p = self.ensure_create(self.snm_home().join("downloads"));
+        let p = self.ensure_create(self.snm_dir.as_ref().join("downloads"));
 
         DownloadDir::new(p)
     }
