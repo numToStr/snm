@@ -35,16 +35,6 @@ impl super::Command for Env {
 
         // println!("{}", shell.env_var("SNM_LOGLEVEL", &config.log_level));
 
-        println!(
-            "{}",
-            shell.env_var("SNM_DIR", &config.snm_home().display().to_string())
-        );
-
-        println!(
-            "{}",
-            shell.env_var("SNM_NODE_DIST_MIRROR", &config.dist_mirror.to_string())
-        );
-
         if self.use_on_cd {
             println!("{}", shell.use_on_cd());
         }

@@ -1,4 +1,5 @@
 use std::{
+    convert::Infallible,
     fmt::{self, Display, Formatter},
     path::{Path, PathBuf},
     str::FromStr,
@@ -114,3 +115,33 @@ pub struct DownloadDir(PathBuf);
 as_ref!(DownloadDir, PathBuf);
 
 neww!(DownloadDir);
+
+/// snm home directory
+#[derive(Debug)]
+pub struct SnmDir(PathBuf);
+
+as_ref!(SnmDir, PathBuf);
+
+impl Default for SnmDir {
+    fn default() -> Self {
+        Self(
+            dirs_next::home_dir()
+                .expect("Can't get home directory.")
+                .join(".snm"),
+        )
+    }
+}
+
+impl Display for SnmDir {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.0.display())
+    }
+}
+
+impl FromStr for SnmDir {
+    type Err = Infallible;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let path = PathBuf::from_str(s)?;
+        Ok(Self(path))
+    }
+}

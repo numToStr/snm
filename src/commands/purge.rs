@@ -15,7 +15,7 @@ impl super::Command for Purge {
     fn init(self, config: Config) -> SnmRes<()> {
         // If all=true then nuke the snm home directory
         if self.all {
-            let snm_home = config.snm_home();
+            let snm_home = config.snm_dir.as_ref();
 
             if snm_home.exists() {
                 remove_dir_all(snm_home)?;

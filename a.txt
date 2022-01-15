@@ -1,0 +1,2 @@
+- Move env variable to default
+- Add `silent` to `use` so that I won't print everytime on `--use-on-cd`
