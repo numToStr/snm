@@ -25,7 +25,7 @@ console = "0.15.0"
 dirs-next = "2.0.0"
 indicatif = "0.16.2"
 indoc = "1.0.3"
-semver = "1.0.4"
+semver = "1.0.5"
 serde = { version = "1.0.132", features = ["derive"] }
 serde_json = "1.0.73"
 tempfile = "3.2.0"
