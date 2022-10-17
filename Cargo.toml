@@ -40,7 +40,7 @@ xz2 = "0.1.6"
 tar = "0.4.38"
 
 [target.'cfg(windows)'.dependencies]
-zip = "0.5.13"
+zip = "0.6.3"
 
 [profile.release]
 lto = true
