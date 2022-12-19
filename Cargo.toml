@@ -24,7 +24,7 @@ clap_generate = "3.0.0-beta.5"
 console = "0.15.0"
 dirs-next = "2.0.0"
 indicatif = "0.16.2"
-indoc = "1.0.3"
+indoc = "1.0.8"
 semver = "1.0.4"
 serde = { version = "1.0.132", features = ["derive"] }
 serde_json = "1.0.73"
